@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Shaypado</string>
+    <string name="home">Home</string>
+    <string name="pet">Pet</string>
+    <string name="progress">Progresso</string>
+    <string name="profile">Perfil</string>
+    <string name="settings">Configurações</string>
+</resources>
