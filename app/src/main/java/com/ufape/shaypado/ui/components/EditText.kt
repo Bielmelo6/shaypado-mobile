@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -19,13 +20,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.theme.textSecondary
 
 @Preview
 @Composable
@@ -35,15 +36,16 @@ fun CustomTextField(
     placeholder: String = ""
 ) {
     var textState by remember { mutableStateOf("") }
-    val containerColor = colorResource(id = R.color.box_light)
+    val containerColor = MaterialTheme.colorScheme.surface
     TextField(
         modifier = Modifier.fillMaxWidth(),
         value = textState,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         onValueChange = { textState = it },
         shape = RoundedCornerShape(15.dp),
+        textStyle = MaterialTheme.typography.labelMedium.plus(TextStyle(color = textSecondary)),
         singleLine = true,
-        placeholder = { Text(placeholder) },
+        placeholder = { Text(placeholder, style = MaterialTheme.typography.labelMedium) },
         colors = TextFieldDefaults.colors(
             disabledTextColor = Color.Transparent,
             focusedContainerColor = containerColor,
@@ -51,7 +53,6 @@ fun CustomTextField(
             disabledContainerColor = containerColor,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
         ),
         leadingIcon = leadingIcon,
     )
@@ -65,7 +66,7 @@ fun CustomPasswordTextField(
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-    val containerColor = colorResource(id = R.color.box_light)
+    val containerColor = MaterialTheme.colorScheme.surface
     TextField(
         modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
@@ -75,14 +76,13 @@ fun CustomPasswordTextField(
             disabledContainerColor = containerColor,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
         ),
         leadingIcon = leadingIcon,
         value = password,
         shape = RoundedCornerShape(15.dp),
         onValueChange = { password = it },
         singleLine = true,
-        placeholder = { Text("Password") },
+        placeholder = { Text("Password", style = MaterialTheme.typography.labelMedium) },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {

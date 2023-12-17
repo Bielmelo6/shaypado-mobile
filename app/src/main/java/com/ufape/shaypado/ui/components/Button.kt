@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.theme.textPrimary
 
 @Preview
 @Composable
@@ -40,19 +42,22 @@ fun CustomButton() {
 fun CustomButton(
     text: String = "Button",
     onClick: () -> Unit = { },
-    backgroundColor: Color = colorResource(id = R.color.primary),
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor
         ),
         shape = RoundedCornerShape(20.dp),
-
         onClick = onClick,
         modifier = Modifier
             .height(60.dp)
             .fillMaxWidth()
     ) {
-        Text(text = text, color = colorResource(id = R.color.black))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            color = textPrimary
+        )
     }
 }

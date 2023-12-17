@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,7 +65,7 @@ fun LoginScreen(navController: NavController) {
                 ){
                     CustomButton()
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Login")
+                    Text(text = "Entrar", style = MaterialTheme.typography.titleLarge)
                 }
                 Spacer(modifier = Modifier.height(100.dp))
 
@@ -82,7 +83,7 @@ fun LoginScreen(navController: NavController) {
                     )
                 })
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(50.dp))
 
                 CustomButton(text = "Entrar", onClick = {
                     navController.popBackStack()
