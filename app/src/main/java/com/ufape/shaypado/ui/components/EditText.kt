@@ -3,10 +3,6 @@ package com.ufape.shaypado.ui.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,11 +22,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ufape.shaypado.ui.theme.EyeIcon
+import com.ufape.shaypado.ui.theme.EyeSlashIcon
 import com.ufape.shaypado.ui.theme.textSecondary
 
 @Preview
 @Composable
-fun CustomTextField(
+fun PlainTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     leadingIcon: @Composable (() -> Unit)? = null,
     placeholder: String = ""
@@ -60,8 +58,9 @@ fun CustomTextField(
 
 @Composable
 @Preview
-fun CustomPasswordTextField(
-    leadingIcon: @Composable (() -> Unit)? = null
+fun PasswordTextField(
+    leadingIcon: @Composable (() -> Unit)? = null,
+    placeholder: String = ""
 ) {
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -82,18 +81,16 @@ fun CustomPasswordTextField(
         shape = RoundedCornerShape(15.dp),
         onValueChange = { password = it },
         singleLine = true,
-        placeholder = { Text("Password", style = MaterialTheme.typography.labelMedium) },
+        textStyle = MaterialTheme.typography.labelMedium.plus(TextStyle(color = textSecondary)),
+        placeholder = { Text(placeholder, style = MaterialTheme.typography.labelMedium) },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {
-            val image = if (passwordVisible)
-                Icons.Filled.Close
-            else Icons.Filled.Check
-
-            val description = if (passwordVisible) "Hide password" else "Show password"
-
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                Icon(imageVector = image, description)
+                if (passwordVisible)
+                    EyeIcon()
+                else
+                    EyeSlashIcon()
             }
         }
     )

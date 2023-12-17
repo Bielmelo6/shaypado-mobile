@@ -28,6 +28,13 @@ val Typography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
+    titleSmall = TextStyle(
+        fontFamily = Nunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
     bodySmall = TextStyle(
         fontFamily = Nunito,
         fontWeight = FontWeight.Normal,
@@ -41,5 +48,12 @@ val Typography = Typography(
         fontSize = 20.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp
-    )
+    ),
+    labelSmall = TextStyle(
+        fontFamily = Nunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.sp
+    ),
 )

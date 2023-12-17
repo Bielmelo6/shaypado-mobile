@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,14 +19,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
-import com.ufape.shaypado.ui.components.CustomButton
-import com.ufape.shaypado.ui.components.CustomPasswordTextField
-import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.FullWidthButton
+import com.ufape.shaypado.ui.components.Label
+import com.ufape.shaypado.ui.components.RoundedButton
+import com.ufape.shaypado.ui.components.PasswordTextField
+import com.ufape.shaypado.ui.components.PlainTextField
+import com.ufape.shaypado.ui.components.Title
 import com.ufape.shaypado.ui.routes.MobileNavigationScreen
+import com.ufape.shaypado.ui.theme.AtIcon
+import com.ufape.shaypado.ui.theme.KeyIcon
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -60,45 +68,64 @@ fun LoginScreen(navController: NavController) {
                     .padding(20.dp)
             )
             {
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
-                ){
-                    CustomButton()
+                ) {
+                    RoundedButton()
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Entrar", style = MaterialTheme.typography.titleLarge)
+                    Title(stringResource(id = R.string.sign_in_title))
                 }
                 Spacer(modifier = Modifier.height(100.dp))
-
-                CustomTextField(keyboardType = KeyboardType.Email, leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_at),
-                        contentDescription = "Email"
-                    )
-                }, placeholder = "Email")
+                PlainTextField(
+                    keyboardType = KeyboardType.Email,
+                    leadingIcon = { AtIcon() },
+                    placeholder = stringResource(id = R.string.input_email)
+                )
                 Spacer(modifier = Modifier.height(16.dp))
-                CustomPasswordTextField(leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_key),
-                        contentDescription = "Email"
-                    )
-                })
-
+                PasswordTextField(
+                    leadingIcon = { KeyIcon() },
+                    placeholder = stringResource(id = R.string.input_password)
+                )
                 Spacer(modifier = Modifier.height(50.dp))
-
-                CustomButton(text = "Entrar", onClick = {
-                    navController.popBackStack()
-                    navController.navigate(MobileNavigationScreen.NavRoot.route)
-                })
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                CustomButton(
-                    backgroundColor = colorResource(id = R.color.secondary),
-                    text = "Login com o Google",
+                FullWidthButton(
+                    text = stringResource(id = R.string.button_login),
                     onClick = {
                         navController.popBackStack()
                         navController.navigate(MobileNavigationScreen.NavRoot.route)
-                    })
+                    }
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                FullWidthButton(
+                    backgroundColor = MaterialTheme.colorScheme.secondary,
+                    text = stringResource(id = R.string.button_google),
+                    onClick = {
+                        navController.popBackStack()
+                        navController.navigate(MobileNavigationScreen.NavRoot.route)
+                    }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_google),
+                            contentDescription = "Google"
+                        )
+                        Spacer(modifier = Modifier.width(11.dp))
+                        Label(stringResource(id = R.string.button_google))
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    stringResource(id = R.string.sign_up_forgot_password),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+
+                )
             }
         }
     }

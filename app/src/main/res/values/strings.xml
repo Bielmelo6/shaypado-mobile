@@ -1,8 +1,33 @@
 <resources>
     <string name="app_name">Shaypado</string>
+
+    <!-- NavBar -->
     <string name="home">Home</string>
     <string name="pet">Pet</string>
     <string name="progress">Progresso</string>
     <string name="profile">Perfil</string>
     <string name="settings">Configurações</string>
+
+    <!-- Inputs -->
+    <string name="input_user_name">Nome do usuário</string>
+    <string name="input_email">E-mail</string>
+    <string name="input_email_confirmation">Confirmar E-mail</string>
+    <string name="input_password">Senha</string>
+    <string name="input_password_confirmation">Confirmar senha</string>
+
+    <!-- Buttons -->
+    <string name="button_next">Próximo</string>
+    <string name="button_login">Entrar</string>
+    <string name="button_google">Login com o Google</string>
+
+    <!-- Sign Up screens -->
+    <string name="sign_in_title">Entrar</string>
+    <string name="sign_up_title">Informações da conta</string>
+    <string name="sign_up_user_type_title">Que tipo de usuário você é?</string>
+    <string name="sign_up_workout_title">Monte seu treino</string>
+    <string name="sign_up_person_data_title">Informações pessoais</string>
+    <string name="sign_up_forgot_password">Esqueceu a senha?</string>
+    <string name="sign_up_label">Cadastre-se aqui!</string>
+    <string name="sign_up_no_account">Ainda não possui conta no Shaypado?</string>
+
 </resources>
