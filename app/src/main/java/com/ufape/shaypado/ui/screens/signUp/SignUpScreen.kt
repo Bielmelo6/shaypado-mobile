@@ -7,3 +7,18 @@ import androidx.navigation.NavController
 fun SignUpScreen(navController: NavController) {
 
 }
+
+@Composable
+fun UserType() {
+
+}
+
+@Composable
+fun UserData() {
+
+}
+
+@Composable
+fun UserTrainingStyle() {
+
+}
