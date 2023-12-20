@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Shaypado</string>
 
+    <!-- Login Screens -->
+    <string name="login_app_description">Uma experiência única na forma de\npraticar exercício físico</string>
+    <string name="login_sign_up">Cadastre-se aqui!</string>
+    <string name="login_no_account">Ainda não possui conta no Shaypado?</string>
+
     <!-- NavBar -->
     <string name="home">Home</string>
     <string name="pet">Pet</string>
@@ -14,6 +19,12 @@
     <string name="input_email_confirmation">Confirmar E-mail</string>
     <string name="input_password">Senha</string>
     <string name="input_password_confirmation">Confirmar senha</string>
+
+    <string name="input_weight">Qual o seu peso?</string>
+    <string name="input_height">Qual a sua altura?</string>
+    <string name="input_goal">Qual o seu objetivo?</string>
+    <string name="input_workout_per_week">Quantos treinos na semana?</string>
+    <string name="input_any_disease">Possui alguma comorbidade?</string>
 
     <!-- Buttons -->
     <string name="button_next">Próximo</string>
@@ -29,5 +40,17 @@
     <string name="sign_up_forgot_password">Esqueceu a senha?</string>
     <string name="sign_up_label">Cadastre-se aqui!</string>
     <string name="sign_up_no_account">Ainda não possui conta no Shaypado?</string>
+    <string name="sign_up_saved_workout">Treinos pré-prontos</string>
+    <string name="sign_up_yourself">Você mesmo</string>
+    <string name="sign_up_find_professional">Entrar em contato com um profissional</string>
+    <string name="sign_up_find_professional_usertype">Sou um profissional de educação física</string>
+    <string name="sign_up_find_normal_usertype">Sou alguém que quer praticar exercícios</string>
+
+    <!-- General -->
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="label">label</string>
+    <string name="sign_up_finish">Cadastrar</string>
+    <string name="welcome">Bem-vindo!</string>
 
 </resources>

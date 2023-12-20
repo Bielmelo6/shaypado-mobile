@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.theme
 
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
@@ -52,7 +53,65 @@ fun AtIcon(){
 @Preview
 fun UserIcon(){
     Icon(
+        tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_user),
         contentDescription = "Username"
+    )
+}
+
+@Composable
+@Preview
+fun UserOutlinedIcon(){
+    Icon(
+        tint = textSecondary,
+        painter = painterResource(id = R.drawable.ic_user_outlined),
+        contentDescription = "Password"
+    )
+}
+
+@Composable
+@Preview
+fun SmilingFaceIcon(){
+    Icon(
+        tint = textSecondary,
+        painter = painterResource(id = R.drawable.ic_smilling_face),
+        contentDescription = "Smiling Face"
+    )
+}
+
+@Composable
+@Preview
+fun BackIcon(){
+    Icon(
+        tint = textSecondary,
+        painter = painterResource(id = R.drawable.ic_back),
+        contentDescription = "Back"
+    )
+}
+
+@Composable
+@Preview
+fun ShaypadoImage(){
+    Image(
+        painter = painterResource(id = R.drawable.ic_shaypado_name),
+        contentDescription = "Shaypado"
+    )
+}
+
+@Composable
+@Preview
+fun GoogleImage(){
+    Image(
+        painter = painterResource(id = R.drawable.ic_google),
+        contentDescription = "Google"
+    )
+}
+
+@Composable
+@Preview
+fun ShaypadoPetImage(){
+    Image(
+        painter = painterResource(id = R.drawable.brand_logo),
+        contentDescription = "Shaypado logo"
     )
 }

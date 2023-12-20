@@ -1,6 +1,5 @@
 package com.ufape.shaypado.ui.screens.onBoard
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,17 +12,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
-import com.ufape.shaypado.ui.components.FullWidthButton
+import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
+import com.ufape.shaypado.ui.theme.ShaypadoPetImage
 import com.ufape.shaypado.ui.theme.White
 
 @Composable
@@ -43,23 +41,20 @@ fun OnBoardScreen(navController: NavController) {
         {
             AppText(
                 textType = TextType.TITLE_LARGE,
-                text = "Bem-vindo !!",
+                text = R.string.welcome,
                 color = White,
                 size = 59.sp,
             )
             AppText(
                 textType = TextType.TITLE_MEDIUM,
                 textAlignment = TextAlign.Center,
-                text = "Uma experiência única na forma de \n praticar exercício físico",
+                text = R.string.login_app_description,
                 color = White,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.brand_logo),
-                contentDescription = "Shaypado"
-            )
+            ShaypadoPetImage()
 
             Spacer(modifier = Modifier.height(147.dp))
 
@@ -75,9 +70,9 @@ fun OnBoardScreen(navController: NavController) {
             {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                FullWidthButton(
+                AppButton(
                     backgroundColor = MaterialTheme.colorScheme.secondary,
-                    text = stringResource(id = R.string.button_login),
+                    text = R.string.button_login,
                     onClick = {
                         navController.navigate(AuthNavigationScreen.Login.route)
                     }
@@ -86,13 +81,13 @@ fun OnBoardScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(36.dp))
                 AppText(
                     textType = TextType.LABEL_MEDIUM,
-                    text = "Ainda não possui conta no Shaypado?",
+                    text = R.string.login_no_account,
                     textAlignment = TextAlign.Center,
                     fillWidth = true
                 )
                 AppText(
                     textType = TextType.LABEL_MEDIUM,
-                    text = "Cadastre-se aqui!",
+                    text = R.string.login_sign_up,
                     textAlignment = TextAlign.Center,
                     fillWidth = true,
                     color = MaterialTheme.colorScheme.primary,

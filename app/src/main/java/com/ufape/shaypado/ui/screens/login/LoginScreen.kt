@@ -1,6 +1,5 @@
 package com.ufape.shaypado.ui.screens.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,16 +24,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
-import com.ufape.shaypado.ui.components.FullWidthButton
-import com.ufape.shaypado.ui.components.Label
+import com.ufape.shaypado.ui.components.AppText
+import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.RoundedButton
-import com.ufape.shaypado.ui.components.PasswordTextField
-import com.ufape.shaypado.ui.components.PlainTextField
-import com.ufape.shaypado.ui.components.Title
+import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.ui.theme.AtIcon
+import com.ufape.shaypado.ui.theme.GoogleImage
 import com.ufape.shaypado.ui.theme.KeyIcon
+import com.ufape.shaypado.ui.theme.ShaypadoImage
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -52,10 +51,7 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Image(
-                painter = painterResource(id = R.drawable.ic_shaypado_name),
-                contentDescription = "Shaypado"
-            )
+            ShaypadoImage()
 
             Spacer(modifier = Modifier.height(80.dp))
 
@@ -76,22 +72,23 @@ fun LoginScreen(navController: NavController) {
                         navController.popBackStack()
                     })
                     Spacer(modifier = Modifier.width(16.dp))
-                    Title(stringResource(id = R.string.sign_in_title))
+                    AppText(TextType.TITLE_MEDIUM, text = R.string.sign_in_title)
                 }
                 Spacer(modifier = Modifier.height(100.dp))
-                PlainTextField(
+                CustomTextField(
                     keyboardType = KeyboardType.Email,
                     leadingIcon = { AtIcon() },
-                    placeholder = stringResource(id = R.string.input_email)
+                    placeholder = R.string.input_email
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                PasswordTextField(
+                CustomTextField(
+                    keyboardType = KeyboardType.Password,
                     leadingIcon = { KeyIcon() },
-                    placeholder = stringResource(id = R.string.input_password)
+                    placeholder = R.string.input_password
                 )
                 Spacer(modifier = Modifier.height(50.dp))
-                FullWidthButton(
-                    text = stringResource(id = R.string.button_login),
+                AppButton(
+                    text = R.string.button_login,
                     onClick = {
                         navController.navigate(MobileNavigationScreen.NavRoot.route) {
                             popUpTo(AuthNavigationScreen.NavRoot.route) {
@@ -101,9 +98,9 @@ fun LoginScreen(navController: NavController) {
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                FullWidthButton(
+                AppButton(
                     backgroundColor = MaterialTheme.colorScheme.secondary,
-                    text = stringResource(id = R.string.button_google),
+                    text = R.string.button_google,
                     onClick = {
                         navController.popBackStack()
                         navController.navigate(MobileNavigationScreen.NavRoot.route)
@@ -112,12 +109,9 @@ fun LoginScreen(navController: NavController) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_google),
-                            contentDescription = "Google"
-                        )
+                        GoogleImage()
                         Spacer(modifier = Modifier.width(11.dp))
-                        Label(stringResource(id = R.string.button_google))
+                        AppText(textType = TextType.LABEL_MEDIUM, R.string.button_google)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))

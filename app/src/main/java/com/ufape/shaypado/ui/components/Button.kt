@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ufape.shaypado.R
@@ -42,8 +44,8 @@ fun RoundedButton(
 
 @Composable
 @Preview
-fun FullWidthButton(
-    text: String = "Title",
+fun AppButton(
+    @StringRes text: Int = R.string.label,
     onClick: () -> Unit = { },
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     content: @Composable (() -> Unit)? = null
@@ -63,7 +65,7 @@ fun FullWidthButton(
             content()
         }else {
             Text(
-                text = text,
+                text = stringResource(id = text),
                 style = MaterialTheme.typography.labelMedium,
                 color = textPrimary
             )
