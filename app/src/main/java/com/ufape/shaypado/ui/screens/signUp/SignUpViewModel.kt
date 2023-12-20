@@ -30,7 +30,10 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
 
     private val _hasValidationErrors = MutableStateFlow(false)
-    val hasValidationErrors = _hasValidationErrors.asStateFlow()
+    private val hasValidationErrors = _hasValidationErrors.asStateFlow()
+
+    private val _currentTabIndex = MutableStateFlow(0)
+    val currentTabIndex = _currentTabIndex.asStateFlow()
 
     private val registrationEventChannel = Channel<Result<Boolean>>()
     val registerEvent = registrationEventChannel.receiveAsFlow()
@@ -65,6 +68,10 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onTabSelected(index: Int) {
+        _currentTabIndex.value = index
+    }
+
     fun onPhysicalEvaluationDataEvent(event: UserPhysicalEvaluationFormEvent) {
         when (event) {
             is UserPhysicalEvaluationFormEvent.OnWeightChanged -> {
@@ -94,6 +101,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
             is UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 validatePhysicalEvaluationData()
+                register()
             }
 
         }
@@ -101,20 +109,32 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     fun onUserTypeChanged(userType: String) {
         userAccountDataState = userAccountDataState.copy(userType = userType)
+    }
+
+    fun onWorkoutTypeChanged(workoutType: String) {
+        userAccountDataState = userAccountDataState.copy(workoutType = workoutType)
+    }
+
+    fun onUserTypeNextButtonClicked() {
         val userTypeValidation = validateUserType(userAccountDataState.userType)
         userAccountDataState = userAccountDataState.copy(
             userTypeError = userTypeValidation.error
         )
         _hasValidationErrors.value = hasError(userTypeValidation)
+        if (!hasValidationErrors.value) {
+            _currentTabIndex.value = 1
+        }
     }
 
-    fun onWorkoutTypeChanged(workoutType: String) {
-        userAccountDataState = userAccountDataState.copy(workoutType = workoutType)
+    fun onWorkoutNextButtonClicked() {
         val workoutTypeValidation = validateWorkoutType(userAccountDataState.workoutType)
         userAccountDataState = userAccountDataState.copy(
             workoutTypeError = workoutTypeValidation.error
         )
         _hasValidationErrors.value = hasError(workoutTypeValidation)
+        if (!hasValidationErrors.value) {
+            _currentTabIndex.value = 2
+        }
     }
 
 
@@ -147,12 +167,17 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             passwordValidation,
             passwordConfirmationValidation
         )
+
+        if (!hasValidationErrors.value) {
+            _currentTabIndex.value = 3
+        }
     }
 
-    private fun validatePhysicalEvaluationData(){
+    private fun validatePhysicalEvaluationData() {
         val weightValidation = validateWeight(userPhysicalEvaluationDataState.weight)
         val heightValidation = validateHeight(userPhysicalEvaluationDataState.height)
-        val workoutFrequencyValidation = validateWorkoutFrequency(userPhysicalEvaluationDataState.workoutFrequency)
+        val workoutFrequencyValidation =
+            validateWorkoutFrequency(userPhysicalEvaluationDataState.workoutFrequency)
 
         userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(
             weightError = weightValidation.error,
@@ -168,6 +193,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun register() {
+        if (hasValidationErrors.value) return
         viewModelScope.launch {
             registrationEventChannel.send(Result.success(true))
         }

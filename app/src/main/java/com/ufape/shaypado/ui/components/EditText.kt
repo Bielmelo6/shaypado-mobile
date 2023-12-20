@@ -33,7 +33,7 @@ fun CustomTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     leadingIcon: @Composable (() -> Unit)? = null,
     @StringRes placeholder: Int = R.string.label,
-    errorMessage: String? = null,
+    @StringRes errorMessage: Int? = null,
     onValueChange: (String) -> Unit = {},
     format: (String) -> String = { it },
 ) {
@@ -74,4 +74,7 @@ fun CustomTextField(
             }
         }
     )
+    if (errorMessage != null) {
+        AppText(textType = TextType.LABEL_MEDIUM, text = errorMessage)
+    }
 }

@@ -29,6 +29,7 @@ fun ChipSelectionGroup(
     onChipSelected: (String) -> Unit,
     chips: List<Chip>,
     chipsHeight: Dp = 55.dp,
+    @StringRes errorMessage : Int? = null
 ) {
     var selected by rememberSaveable { mutableStateOf(selectedChip) }
 
@@ -58,5 +59,8 @@ fun ChipSelectionGroup(
             },
         )
         Spacer(modifier = Modifier.height(16.dp))
+    }
+    if (errorMessage != null) {
+        AppText(textType = TextType.LABEL_MEDIUM, text = errorMessage)
     }
 }

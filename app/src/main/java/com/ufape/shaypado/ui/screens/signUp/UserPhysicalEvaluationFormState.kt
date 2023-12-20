@@ -1,14 +1,16 @@
 package com.ufape.shaypado.ui.screens.signUp
 
+import androidx.annotation.StringRes
+
 data class UserPhysicalEvaluationFormState(
     val weight: String = "",
-    val weightError: String? = null,
+    @StringRes val weightError: Int? = null,
     val height: String = "",
-    val heightError: String? = null,
+    @StringRes val heightError: Int? = null,
     val objective: String = "",
-    val objectiveError: String? = null,
+    @StringRes  val objectiveError: Int? = null,
     val workoutFrequency: String = "",
-    val workoutFrequencyError: String? = null,
+    @StringRes  val workoutFrequencyError: Int? = null,
     val anyDisease: Boolean = false,
-    val anyDiseaseError: String? = null,
+    @StringRes val anyDiseaseError: Int? = null,
 )

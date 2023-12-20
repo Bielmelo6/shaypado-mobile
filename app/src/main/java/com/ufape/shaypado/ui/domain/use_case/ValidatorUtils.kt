@@ -1,8 +1,10 @@
 package com.ufape.shaypado.ui.domain.use_case
 
+import androidx.annotation.StringRes
+
 data class ValidationResult(
     val isValid: Boolean,
-    val error: String? = null
+    @StringRes val error: Int? = null
 )
 
 fun hasError(vararg validations: ValidationResult): Boolean {

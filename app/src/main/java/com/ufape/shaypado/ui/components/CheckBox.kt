@@ -13,6 +13,7 @@ fun LabeledCheckbox(
     @StringRes unCheckedLabel: Int = R.string.label,
     isChecked: Boolean = false,
     onCheckedChange: (Boolean) -> Unit,
+    @StringRes errorMessage: Int? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -25,5 +26,8 @@ fun LabeledCheckbox(
             text = if (isChecked) checkedLabel else unCheckedLabel,
             textType = TextType.LABEL_MEDIUM
         )
+    }
+    if (errorMessage != null) {
+        AppText(textType = TextType.LABEL_MEDIUM, text = errorMessage)
     }
 }

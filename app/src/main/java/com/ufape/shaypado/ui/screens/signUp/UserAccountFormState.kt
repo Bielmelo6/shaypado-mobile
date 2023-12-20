@@ -1,18 +1,20 @@
 package com.ufape.shaypado.ui.screens.signUp
 
+import androidx.annotation.StringRes
+
 data class UserAccountFormState(
     val userType : String = "",
-    val userTypeError: String? = null,
+    @StringRes val userTypeError: Int? = null,
     val name: String = "",
-    val nameError: String? = null,
+    @StringRes val nameError: Int? = null,
     val email: String = "",
-    val emailError: String? = null,
+    @StringRes val emailError: Int? = null,
     val emailConfirmation: String = "",
-    val emailConfirmationError: String? = null,
+    @StringRes val emailConfirmationError: Int? = null,
     val password: String = "",
-    val passwordError: String? = null,
+    @StringRes val passwordError: Int? = null,
     val passwordConfirmation: String = "",
-    val passwordConfirmationError: String? = null,
+    @StringRes  val passwordConfirmationError: Int? = null,
     val workoutType: String = "",
-    val workoutTypeError: String? = null,
+    @StringRes val workoutTypeError: Int? = null,
 )

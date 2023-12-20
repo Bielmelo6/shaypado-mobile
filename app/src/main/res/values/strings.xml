@@ -26,6 +26,27 @@
     <string name="input_workout_per_week">Quantos treinos na semana?</string>
     <string name="input_any_disease">Possui alguma comorbidade?</string>
 
+    <string name="input_validation_user_name_required">O nome do usuário é obrigatório</string>
+    <string name="input_validation_email_required">O e-mail é obrigatório</string>
+    <string name="input_validation_invalid_email">O e-mail é inválido</string>
+    <string name="input_validation_email_confirmation_required">A confirmação do e-mail é obrigatória</string>
+    <string name="input_validation_email_confirmation_invalid">A confirmação de e-mail não bate com o email original</string>
+    <string name="input_validation_password_required">A senha é obrigatória</string>
+    <string name="input_validation_password_wrong_length">A senha deve ter pelo menos 8 caracteres</string>
+    <string name="input_validation_password_confirmation_required">A confirmação da senha é obrigatória</string>
+    <string name="input_validation_password_confirmation_invalid">A confirmação de senha não bate com a senha fornecida</string>
+    <string name="input_validation_workout_type_required">A escolha do treino é obrigatória</string>
+    <string name="input_validation_user_type_required">A escolha do tipo de usuáro é obrigatória</string>
+    <string name="input_validation_weight_required">O peso é obrigatório</string>
+    <string name="input_validation_weight_numeric">O peso deve ser numérico</string>
+    <string name="input_validation_height_required">A altura é obrigatória</string>
+    <string name="input_validation_height_numeric">A altura deve ser numérica</string>
+    <string name="input_validation_workout_per_week_required">A quantidade de treinos por semana é obrigatória</string>
+    <string name="input_validation_workout_per_week_numeric">A quantidade de treinos por semana deve ser numérica</string>
+    <string name="input_validation_any_disease_required">A informação sobre comorbidade é obrigatória</string>
+
+
+
     <!-- Buttons -->
     <string name="button_next">Próximo</string>
     <string name="button_login">Entrar</string>

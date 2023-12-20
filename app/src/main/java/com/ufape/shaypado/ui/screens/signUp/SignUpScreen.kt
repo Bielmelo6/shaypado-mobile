@@ -15,11 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
@@ -28,7 +29,6 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.RoundedButton
 import com.ufape.shaypado.ui.theme.AtIcon
 import com.ufape.shaypado.ui.theme.KeyIcon
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ufape.shaypado.ui.components.AppText
@@ -36,14 +36,31 @@ import com.ufape.shaypado.ui.components.Chip
 import com.ufape.shaypado.ui.components.ChipSelectionGroup
 import com.ufape.shaypado.ui.components.LabeledCheckbox
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.routes.AuthNavigationScreen
+import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.ui.theme.ShaypadoImage
 import com.ufape.shaypado.ui.theme.SmilingFaceIcon
 import com.ufape.shaypado.ui.theme.UserOutlinedIcon
 
 @Composable
 fun SignUpScreen(navController: NavController) {
-    var activeTab by remember { mutableIntStateOf(0) }
     val viewModel: SignUpViewModel = viewModel()
+    val currentTabIndex by viewModel.currentTabIndex.collectAsState()
+
+    LaunchedEffect(key1 = LocalContext.current){
+        viewModel.registerEvent.collect{
+            if (it.isSuccess){
+                navController.navigate(MobileNavigationScreen.NavRoot.route){
+                    popUpTo(AuthNavigationScreen.NavRoot.route){
+                        inclusive = true
+                    }
+                }
+            } else {
+                //TODO: show error
+            }
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -76,15 +93,15 @@ fun SignUpScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     RoundedButton(onClick = {
-                        when (activeTab) {
+                        when (currentTabIndex) {
                             0 -> navController.popBackStack()
-                            else -> activeTab -= 1
+                            else -> viewModel.onTabSelected(currentTabIndex - 1)
                         }
                     })
                     Spacer(modifier = Modifier.width(16.dp))
                     AppText(
                         textType = TextType.TITLE_MEDIUM,
-                        text = when (activeTab) {
+                        text = when (currentTabIndex) {
                             0 -> R.string.sign_up_user_type_title
                             1 -> R.string.sign_up_title
                             2 -> R.string.sign_up_workout_title
@@ -102,7 +119,7 @@ fun SignUpScreen(navController: NavController) {
                         .verticalScroll(rememberScrollState())
                 )
                 {
-                    when (activeTab) {
+                    when (currentTabIndex) {
                         0 -> UserType(viewModel = viewModel)
                         1 -> UserAccountData(viewModel = viewModel)
                         2 -> UserTrainingStyle()
@@ -112,16 +129,30 @@ fun SignUpScreen(navController: NavController) {
 
                 AppButton(
                     backgroundColor = MaterialTheme.colorScheme.secondary,
-                    text = if (activeTab == 3) {
+                    text = if (currentTabIndex == 3) {
                         R.string.sign_up_finish
                     } else {
                         R.string.button_next
                     },
                     onClick = {
-                        if (activeTab == 3) {
-                            viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
-                        } else {
-                            activeTab += 1
+                        when (currentTabIndex) {
+                            0 -> {
+                                viewModel.onUserTypeNextButtonClicked()
+                            }
+
+                            1 -> {
+                                viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
+                            }
+
+                            2 -> {
+                                viewModel.onWorkoutNextButtonClicked()
+                            }
+
+                            3 -> {
+                                viewModel.onPhysicalEvaluationDataEvent(
+                                    UserPhysicalEvaluationFormEvent.OnSubmit
+                                )
+                            }
                         }
                     }
                 )
@@ -133,6 +164,7 @@ fun SignUpScreen(navController: NavController) {
 @Composable
 fun UserType(viewModel: SignUpViewModel) {
     ChipSelectionGroup(
+        errorMessage = viewModel.userAccountDataState.userTypeError,
         selectedChip = viewModel.userAccountDataState.userType,
         chips = listOf(
             Chip(
@@ -226,6 +258,7 @@ fun UserTrainingStyle(
     viewModel: SignUpViewModel = viewModel()
 ) {
     ChipSelectionGroup(
+        errorMessage = viewModel.userAccountDataState.workoutTypeError,
         selectedChip = viewModel.userAccountDataState.workoutType,
         chips = listOf(
             Chip(
@@ -316,7 +349,6 @@ fun UserMainData(
 
     Row(
         verticalAlignment = Alignment.CenterVertically
-
     )
     {
         AppText(text = R.string.input_any_disease, textType = TextType.LABEL_MEDIUM)
