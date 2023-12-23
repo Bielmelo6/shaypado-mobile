@@ -2,11 +2,11 @@ package com.ufape.shaypado.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Teal = Color(0xFF20C997)
-val Pink = Color(0xFFFFC9C9)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Teal = Color(0xFF20C896)
+val DarkTeal = Color(0xFF0CA578)
+val LightTeal = Color(0xFF95F1D6)
+val Pink = Color(0xFFFEC8C8)
+val White = Color(0xFFF9F9F9)
+val Grey = Color(0xFFEEEEEE)
+val DarkGrey = Color(0xFF1E1E1E)
+val Black = Color(0xFF121212)

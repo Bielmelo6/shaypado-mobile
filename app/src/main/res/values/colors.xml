@@ -8,18 +8,4 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary">#20C997</color>
-    <color name="primary_dark">#96F2D7</color>
-    <color name="primary_variation">#0CA678</color>
-    <color name="secondary">#FFC9C9</color>
-
-    <color name="text_light">#212121</color>
-    <color name="text_dark">#EFEFEF</color>
-
-    <color name="background_dark">#121212</color>
-    <color name="box_dark">#1E1E1E</color>
-
-    <color name="background_light">#E2E2E2</color>
-    <color name="box_light">#EFEFEF</color>
-
 </resources>
