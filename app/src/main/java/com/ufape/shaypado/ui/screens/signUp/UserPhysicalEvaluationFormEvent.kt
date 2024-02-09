@@ -6,5 +6,6 @@ sealed class UserPhysicalEvaluationFormEvent {
     data class OnObjectiveChanged(val objective: String) : UserPhysicalEvaluationFormEvent()
     data class OnWorkoutFrequencyChanged(val workoutFrequency: String) : UserPhysicalEvaluationFormEvent()
     data class OnAnyDiseaseChanged(val anyDisease: Boolean) : UserPhysicalEvaluationFormEvent()
+    data class OnCorporalDataChanged(val saveCorporalData: Boolean) : UserPhysicalEvaluationFormEvent()
     data object OnSubmit : UserPhysicalEvaluationFormEvent()
 }

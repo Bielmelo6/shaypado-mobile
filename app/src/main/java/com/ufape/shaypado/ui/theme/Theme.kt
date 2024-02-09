@@ -25,11 +25,17 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Teal,
+    primary = DarkTeal,
     secondary = Pink,
+    tertiaryContainer = Purple,
     background = White,
     tertiary = DarkTeal,
     surface = Grey,
+    onSurface = DarkGrey,
+    onPrimaryContainer = White,
+    primaryContainer = Teal,
+    error = Red,
+    surfaceVariant = LightTeal
 )
 
 val textPrimary: Color

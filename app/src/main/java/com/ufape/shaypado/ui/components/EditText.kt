@@ -1,11 +1,16 @@
 package com.ufape.shaypado.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -15,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,6 +31,8 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.theme.EyeIcon
 import com.ufape.shaypado.ui.theme.EyeSlashIcon
 import com.ufape.shaypado.ui.theme.textSecondary
+import androidx.compose.material3.Icon
+import androidx.compose.ui.focus.onFocusChanged
 
 @Preview
 @Composable
@@ -33,48 +41,77 @@ fun CustomTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     leadingIcon: @Composable (() -> Unit)? = null,
     @StringRes placeholder: Int = R.string.label,
+    @StringRes label: Int = R.string.label,
     @StringRes errorMessage: Int? = null,
     onValueChange: (String) -> Unit = {},
     format: (String) -> String = { it },
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-    val containerColor = MaterialTheme.colorScheme.surface
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = value,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        onValueChange = {
-            val formattedData = format(it)
-            onValueChange(formattedData)
-        },
-        isError = errorMessage != null,
-        shape = RoundedCornerShape(15.dp),
-        textStyle = MaterialTheme.typography.labelMedium.plus(TextStyle(color = textSecondary)),
-        singleLine = true,
-        placeholder = { AppText(textType = TextType.LABEL_MEDIUM, text = placeholder) },
-        visualTransformation = if (keyboardType == KeyboardType.Password && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
-        colors = TextFieldDefaults.colors(
-            disabledTextColor = Color.Transparent,
-            focusedContainerColor = containerColor,
-            unfocusedContainerColor = containerColor,
-            disabledContainerColor = containerColor,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        ),
-        leadingIcon = leadingIcon,
-        trailingIcon = {
-            if (keyboardType == KeyboardType.Password) {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    if (passwordVisible)
-                        EyeIcon()
-                    else
-                        EyeSlashIcon()
+    val hasError = errorMessage != null
+    val errorColor = if (hasError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+    val focusedBorderColor = if (hasError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+
+    Column(modifier = Modifier.fillMaxWidth())
+    {
+
+        AppText(
+            textType = TextType.TITLE_MEDIUM,
+            text = label,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .onFocusChanged {
+
+                }
+            ,
+            value = value,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            onValueChange = {
+                val formattedData = format(it)
+                onValueChange(formattedData)
+            },
+            isError = hasError,
+            shape = RoundedCornerShape(8.dp),
+            textStyle = MaterialTheme.typography.labelMedium.plus(TextStyle(color = textSecondary)),
+            singleLine = true,
+            placeholder = {
+                AppText(
+                    textType = TextType.LABEL_LARGE,
+                    text = placeholder,
+                    color = errorColor
+                )
+            },
+            visualTransformation = if (keyboardType == KeyboardType.Password && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Transparent,
+                errorBorderColor = Color.Red,
+                focusedBorderColor = focusedBorderColor,
+                focusedContainerColor =  Color.Transparent,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            ),
+            leadingIcon = leadingIcon ,
+            trailingIcon = {
+                if (keyboardType == KeyboardType.Password) {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        if (passwordVisible)
+                            EyeIcon()
+                        else
+                            EyeSlashIcon()
+                    }
                 }
             }
+        )
+        if (hasError) {
+            AppText(
+                textType = TextType.LABEL_MEDIUM,
+                text = errorMessage!!,
+                color = MaterialTheme.colorScheme.error
+            )
         }
-    )
-    if (errorMessage != null) {
-        AppText(textType = TextType.LABEL_MEDIUM, text = errorMessage)
     }
 }

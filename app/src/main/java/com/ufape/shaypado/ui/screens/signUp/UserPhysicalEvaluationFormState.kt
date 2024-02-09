@@ -13,4 +13,6 @@ data class UserPhysicalEvaluationFormState(
     @StringRes  val workoutFrequencyError: Int? = null,
     val anyDisease: Boolean = false,
     @StringRes val anyDiseaseError: Int? = null,
+    val saveCorporalData: Boolean = false,
+    @StringRes val saveCorporalDataError: Int? = null,
 )

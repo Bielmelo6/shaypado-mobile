@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import com.ufape.shaypado.R
 
 @Composable
-fun LabeledCheckbox(
+fun GroupedLabeledCheckbox(
     @StringRes checkedLabel: Int = R.string.label,
     @StringRes unCheckedLabel: Int = R.string.label,
     isChecked: Boolean = false,
@@ -23,7 +23,16 @@ fun LabeledCheckbox(
             onCheckedChange(it)
         })
         AppText(
-            text = if (isChecked) checkedLabel else unCheckedLabel,
+            text = checkedLabel,
+            textType = TextType.LABEL_MEDIUM
+        )
+
+        Checkbox(checked = !isChecked, onCheckedChange = {
+            onCheckedChange(!it)
+        })
+
+        AppText(
+            text = unCheckedLabel,
             textType = TextType.LABEL_MEDIUM
         )
     }

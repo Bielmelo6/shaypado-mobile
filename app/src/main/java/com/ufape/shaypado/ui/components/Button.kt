@@ -47,7 +47,7 @@ fun RoundedButton(
 fun AppButton(
     @StringRes text: Int = R.string.label,
     onClick: () -> Unit = { },
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
     content: @Composable (() -> Unit)? = null
 ) {
 
@@ -55,7 +55,7 @@ fun AppButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(8.dp),
         onClick = onClick,
         modifier = Modifier
             .height(60.dp)
@@ -64,10 +64,10 @@ fun AppButton(
         if (content != null) {
             content()
         }else {
-            Text(
-                text = stringResource(id = text),
-                style = MaterialTheme.typography.labelMedium,
-                color = textPrimary
+            AppText(
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                text = text,
+                textType = TextType.TITLE_MEDIUM,
             )
         }
     }

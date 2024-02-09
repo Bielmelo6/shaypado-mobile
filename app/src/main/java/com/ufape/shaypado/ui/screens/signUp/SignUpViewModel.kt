@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.model.LoginResponse
+import com.ufape.shaypado.data.model.UserData
+import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validateEmailConfirmation
@@ -23,9 +26,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.ufape.shaypado.util.Result
+
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor() : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val authRepository: IAuthRepository,
+) : ViewModel() {
     var userAccountDataState by mutableStateOf(UserAccountFormState())
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
 
@@ -35,7 +42,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     private val _currentTabIndex = MutableStateFlow(0)
     val currentTabIndex = _currentTabIndex.asStateFlow()
 
-    private val registrationEventChannel = Channel<Result<Boolean>>()
+    private val registrationEventChannel = Channel<Result<LoginResponse>>()
     val registerEvent = registrationEventChannel.receiveAsFlow()
 
     fun onUserDataEvent(event: UserAccountFormEvent) {
@@ -99,6 +106,11 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                     userPhysicalEvaluationDataState.copy(anyDisease = event.anyDisease)
             }
 
+            is UserPhysicalEvaluationFormEvent.OnCorporalDataChanged -> {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(saveCorporalData = event.saveCorporalData)
+            }
+
             is UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 validatePhysicalEvaluationData()
                 register()
@@ -122,7 +134,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         )
         _hasValidationErrors.value = hasError(userTypeValidation)
         if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 1
+            _currentTabIndex.value = 2
         }
     }
 
@@ -133,7 +145,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         )
         _hasValidationErrors.value = hasError(workoutTypeValidation)
         if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 2
+            _currentTabIndex.value = 3
         }
     }
 
@@ -169,7 +181,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         )
 
         if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 3
+            _currentTabIndex.value = 1
         }
     }
 
@@ -195,7 +207,18 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     private fun register() {
         if (hasValidationErrors.value) return
         viewModelScope.launch {
-            registrationEventChannel.send(Result.success(true))
+            val userData = UserData(
+                name = userAccountDataState.name,
+                email = userAccountDataState.email,
+                password = userAccountDataState.password,
+                userType = userAccountDataState.userType,
+                weight = userPhysicalEvaluationDataState.weight,
+                height = userPhysicalEvaluationDataState.height,
+                objective = userPhysicalEvaluationDataState.objective,
+                anyDisease = userPhysicalEvaluationDataState.anyDisease.toString()
+            )
+            val result = authRepository.register(userData)
+            registrationEventChannel.send(result)
         }
     }
 }
