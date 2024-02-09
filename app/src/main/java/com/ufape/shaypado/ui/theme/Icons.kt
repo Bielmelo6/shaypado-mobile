@@ -32,7 +32,7 @@ fun EyeIcon(){
 fun EyeSlashIcon(){
     Icon(
         tint = textSecondary,
-        painter = painterResource(id = R.drawable.ic_eye_show),
+        painter = painterResource(id = R.drawable.ic_eye_hide),
         contentDescription = "Password"
     )
 }

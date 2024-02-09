@@ -92,5 +92,8 @@
     <string name="input_email_confirmation_placeholder">Confirme seu email</string>
     <string name="input_password_placeholder">Insira sua senha</string>
     <string name="input_password_confirmation_placeholder">Confirme sua senha</string>
+    <string name="forgout_password_title">Recuperação de senha</string>
+    <string name="input_email_forgot_placeholder">Informe seu Email para recuperação</string>
+    <string name="button_recovery_password">Recuperar senha</string>
 
 </resources>
