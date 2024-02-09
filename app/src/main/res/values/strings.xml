@@ -62,9 +62,9 @@
     <string name="sign_up_user_type_title">Escolha o seu perfil!</string>
     <string name="sign_up_workout_title">Como voce deseja montar o seu treino?</string>
     <string name="sign_up_person_data_title">Informações pessoais</string>
-    <string name="sign_up_forgot_password">Esqueceu a senha?</string>
+    <string name="sign_up_forgot_password">Esqueceu sua senha?</string>
     <string name="sign_up_label">Cadastre-se aqui!</string>
-    <string name="sign_up_no_account">Ainda não possui conta no Shaypado?</string>
+    <string name="sign_up_no_account">Ainda não possui conta?</string>
     <string name="sign_up_saved_workout">Treinos pré-prontos</string>
     <string name="sign_up_yourself">Eu mesmo</string>
     <string name="sign_up_find_professional">Com um profissional</string>
