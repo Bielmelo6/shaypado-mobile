@@ -15,10 +15,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
@@ -31,9 +34,26 @@ import com.ufape.shaypado.ui.theme.EmailIcon
 import com.ufape.shaypado.ui.theme.GoogleImage
 import com.ufape.shaypado.ui.theme.KeyIcon
 import com.ufape.shaypado.ui.theme.ShaypadoImage
+import com.ufape.shaypado.util.Result
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    val viewModel = hiltViewModel<LoginViewModel>()
+
+    LaunchedEffect(key1 = LocalContext.current) {
+        viewModel.loginEvent.collect {
+            if (it is Result.Success) {
+                navController.navigate(MobileNavigationScreen.NavRoot.route) {
+                    popUpTo(AuthNavigationScreen.NavRoot.route) {
+                        inclusive = true
+                    }
+                }
+            } else {
+                //TODO: show error
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -66,6 +86,11 @@ fun LoginScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 CustomTextField(
+                    value = viewModel.loginDataState.email,
+                    onValueChange = {
+                        viewModel.onLoginDataEvent(LoginFormEvent.OnEmailChanged(it))
+                    },
+                    errorMessage = viewModel.loginDataState.emailError,
                     keyboardType = KeyboardType.Email,
                     leadingIcon = { EmailIcon() },
                     placeholder = R.string.input_email_placeholder,
@@ -73,6 +98,11 @@ fun LoginScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 CustomTextField(
+                    value = viewModel.loginDataState.password,
+                    onValueChange = {
+                        viewModel.onLoginDataEvent(LoginFormEvent.OnPasswordChanged(it))
+                    },
+                    errorMessage = viewModel.loginDataState.passwordError,
                     keyboardType = KeyboardType.Password,
                     leadingIcon = { KeyIcon() },
                     placeholder = R.string.input_password_placeholder,
@@ -86,11 +116,7 @@ fun LoginScreen(navController: NavController) {
                 AppButton(
                     text = R.string.button_login,
                     onClick = {
-                        navController.navigate(MobileNavigationScreen.NavRoot.route) {
-                            popUpTo(AuthNavigationScreen.NavRoot.route) {
-                                inclusive = true
-                            }
-                        }
+                        viewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))

@@ -144,12 +144,16 @@ fun UserType(viewModel: SignUpViewModel) {
         Chip(
             value = "0",
             icon = R.drawable.personal_chip,
-            label = R.string.sign_up_find_professional_usertype
+            label = R.string.sign_up_find_professional_usertype,
+            informationText = "Título fsw few efw fewf ewfr ew fewf ewfew fgrewg rtegfre greg",
+            informationTitle = "Título"
         ),
         Chip(
             value = "1",
             icon = R.drawable.common_chip,
-            label = R.string.sign_up_find_normal_usertype
+            label = R.string.sign_up_find_normal_usertype,
+            informationText = "Título fsw few efw fewf ewfr ew fewf ewfew fgrewg rtegfre greg",
+            informationTitle = "Título"
         )
     )
 
