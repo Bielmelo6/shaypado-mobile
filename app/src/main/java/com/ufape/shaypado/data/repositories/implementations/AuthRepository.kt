@@ -6,6 +6,7 @@ import com.ufape.shaypado.data.model.LoginResponse
 import com.ufape.shaypado.data.model.UserData
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getApiError
 
 class AuthRepository(
     private val api: AuthApi
@@ -15,6 +16,7 @@ class AuthRepository(
         return if(res.isSuccessful){
             Result.Success(res.body()!!)
         }else{
+            val error = res.getApiError()
             Result.Error(Exception())
         }
     }

@@ -95,5 +95,7 @@
     <string name="forgout_password_title">Recuperação de senha</string>
     <string name="input_email_forgot_placeholder">Informe seu Email para recuperação</string>
     <string name="button_recovery_password">Recuperar senha</string>
+    <string name="no_network">Verifique sua conexão com a internet</string>
+    <string name="unknown_error">Erro desconhecido</string>
 
 </resources>

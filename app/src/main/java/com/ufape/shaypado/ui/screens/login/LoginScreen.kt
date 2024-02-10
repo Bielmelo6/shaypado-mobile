@@ -16,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +31,7 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.SnackBar
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.routes.MobileNavigationScreen
@@ -35,12 +40,16 @@ import com.ufape.shaypado.ui.theme.GoogleImage
 import com.ufape.shaypado.ui.theme.KeyIcon
 import com.ufape.shaypado.ui.theme.ShaypadoImage
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun LoginScreen(navController: NavController) {
     val viewModel = hiltViewModel<LoginViewModel>()
+    var snackBarMessage by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(key1 = LocalContext.current) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = context) {
         viewModel.loginEvent.collect {
             if (it is Result.Success) {
                 navController.navigate(MobileNavigationScreen.NavRoot.route) {
@@ -48,105 +57,111 @@ fun LoginScreen(navController: NavController) {
                         inclusive = true
                     }
                 }
-            } else {
-                //TODO: show error
+            } else if (it is Result.Error) {
+                snackBarMessage = it.exception.getErrorMessage(context)
+
             }
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-            )
-            .padding(top = 24.dp)
+    SnackBar (
+        message = snackBarMessage,
+        reset = { snackBarMessage = null }
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        )
-        {
-            ShaypadoImage()
-
-            Spacer(modifier = Modifier.height(24.dp))
-
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                )
+                .padding(top = 24.dp)
+        ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.background,
-                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-                    )
-                    .padding(16.dp)
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                AppText(TextType.HEADLINE_MEDIUM, text = R.string.sign_in_title)
+                ShaypadoImage()
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                CustomTextField(
-                    value = viewModel.loginDataState.email,
-                    onValueChange = {
-                        viewModel.onLoginDataEvent(LoginFormEvent.OnEmailChanged(it))
-                    },
-                    errorMessage = viewModel.loginDataState.emailError,
-                    keyboardType = KeyboardType.Email,
-                    leadingIcon = { EmailIcon() },
-                    placeholder = R.string.input_email_placeholder,
-                    label = R.string.input_email
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                        )
+                        .padding(16.dp)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                CustomTextField(
-                    value = viewModel.loginDataState.password,
-                    onValueChange = {
-                        viewModel.onLoginDataEvent(LoginFormEvent.OnPasswordChanged(it))
-                    },
-                    errorMessage = viewModel.loginDataState.passwordError,
-                    keyboardType = KeyboardType.Password,
-                    leadingIcon = { KeyIcon() },
-                    placeholder = R.string.input_password_placeholder,
-                    label = R.string.input_password
-                )
-                TextButton(onClick = {
-                    navController.navigate(AuthNavigationScreen.ForgotPassword.route)
-                }) {
-                    AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_forgot_password)
-                }
-                AppButton(
-                    text = R.string.button_login,
-                    onClick = {
-                        viewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
+                {
+                    AppText(TextType.HEADLINE_MEDIUM, text = R.string.sign_in_title)
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    CustomTextField(
+                        value = viewModel.loginDataState.email,
+                        onValueChange = {
+                            viewModel.onLoginDataEvent(LoginFormEvent.OnEmailChanged(it))
+                        },
+                        errorMessage = viewModel.loginDataState.emailError,
+                        keyboardType = KeyboardType.Email,
+                        leadingIcon = { EmailIcon() },
+                        placeholder = R.string.input_email_placeholder,
+                        label = R.string.input_email
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    CustomTextField(
+                        value = viewModel.loginDataState.password,
+                        onValueChange = {
+                            viewModel.onLoginDataEvent(LoginFormEvent.OnPasswordChanged(it))
+                        },
+                        errorMessage = viewModel.loginDataState.passwordError,
+                        keyboardType = KeyboardType.Password,
+                        leadingIcon = { KeyIcon() },
+                        placeholder = R.string.input_password_placeholder,
+                        label = R.string.input_password
+                    )
+                    TextButton(onClick = {
+                        navController.navigate(AuthNavigationScreen.ForgotPassword.route)
+                    }) {
+                        AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_forgot_password)
                     }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                AppButton(
-                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    text = R.string.button_google,
-                    onClick = {
-                        navController.popBackStack()
-                        navController.navigate(MobileNavigationScreen.NavRoot.route)
+                    AppButton(
+                        text = R.string.button_login,
+                        onClick = {
+                            viewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    AppButton(
+                        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        text = R.string.button_google,
+                        onClick = {
+                            navController.popBackStack()
+                            navController.navigate(MobileNavigationScreen.NavRoot.route)
+                        }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            GoogleImage()
+                            Spacer(modifier = Modifier.width(8.dp))
+                            AppText(textType = TextType.TITLE_MEDIUM, R.string.button_google, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                        }
                     }
-                ) {
-                    Row(
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        GoogleImage()
-                        Spacer(modifier = Modifier.width(8.dp))
-                        AppText(textType = TextType.TITLE_MEDIUM, R.string.button_google, color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_no_account )
-                    TextButton(onClick = {
-                        navController.navigate(AuthNavigationScreen.SignUp.route)
-                    }) {
-                        AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_label, color = MaterialTheme.colorScheme.onSurface)
+                        AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_no_account )
+                        TextButton(onClick = {
+                            navController.navigate(AuthNavigationScreen.SignUp.route)
+                        }) {
+                            AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_label, color = MaterialTheme.colorScheme.onSurface)
+                        }
                     }
                 }
             }

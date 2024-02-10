@@ -11,6 +11,7 @@ import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
+import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
+    private val handler: ISafeNetworkHandler
 ) : ViewModel() {
     var loginDataState by mutableStateOf(LoginFormState())
 
@@ -44,7 +46,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun validate() : Boolean {
+    private fun validate(): Boolean {
         val emailValidation = validateEmail(loginDataState.email)
         val passwordValidation = validatePassword(loginDataState.password)
 
@@ -59,7 +61,7 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    fun login(){
+    fun login() {
         val hasError = validate()
 
         if (hasError) return
@@ -69,7 +71,9 @@ class LoginViewModel @Inject constructor(
                 email = loginDataState.email,
                 password = loginDataState.password,
             )
-            val result = authRepository.login(loginData)
+            val result = handler.makeSafeApiCall {
+                authRepository.login(loginData)
+            }
             loginEventChannel.send(result)
         }
     }
