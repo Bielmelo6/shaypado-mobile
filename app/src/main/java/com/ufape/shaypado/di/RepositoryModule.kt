@@ -1,6 +1,7 @@
 package com.ufape.shaypado.di
 
 import com.ufape.shaypado.data.api.AuthApi
+import com.ufape.shaypado.data.local.ISessionManager
 import com.ufape.shaypado.data.repositories.implementations.AuthRepository
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import dagger.Module
@@ -15,5 +16,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideAuthRepository(api: AuthApi): IAuthRepository = AuthRepository(api)
+    fun provideAuthRepository(
+        api: AuthApi,
+        sessionManager: ISessionManager
+    ): IAuthRepository = AuthRepository(api, sessionManager)
 }

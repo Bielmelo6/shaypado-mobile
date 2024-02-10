@@ -7,7 +7,7 @@ import com.ufape.shaypado.data.model.ApiError
 import com.ufape.shaypado.exceptions.ApiErrorException
 import retrofit2.Response
 
-fun Response<*>.getApiError(): ApiErrorException? {
+fun Response<*>.getApiError(): Exception {
     val response = this
     return if (!response.isSuccessful) {
         try {
@@ -17,10 +17,10 @@ fun Response<*>.getApiError(): ApiErrorException? {
                 message = converted.message
             )
         } catch (e: Exception) {
-            null
+            Exception()
         }
     } else {
-        null
+        Exception()
     }
 }
 

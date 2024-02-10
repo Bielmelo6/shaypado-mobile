@@ -7,7 +7,12 @@ import com.ufape.shaypado.util.Result
 
 interface IAuthRepository {
     suspend fun login(data: LoginData): Result<LoginResponse>
-
     suspend fun register(data: UserData): Result<LoginResponse>
+    fun logout()
+    fun saveUser(user: LoginResponse)
+
+    fun fetchUser(): LoginResponse?
+
+    fun fetchAuthToken(): String?
 
 }
