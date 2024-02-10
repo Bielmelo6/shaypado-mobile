@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 
 @Composable
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun SnackBar(message: String? = null, reset: () -> Unit, content: @Composable () -> Unit) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -42,13 +44,7 @@ fun SnackBar(message: String? = null, reset: () -> Unit, content: @Composable ()
                 hostState = snackbarHostState
             )
         }
-    ) { contentPadding ->
-        Column (
-            modifier = Modifier.fillMaxSize().padding(
-                top = contentPadding.calculateTopPadding(),
-            )
-        ) {
-            content()
-        }
+    ) {
+        content()
     }
 }
