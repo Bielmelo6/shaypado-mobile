@@ -38,7 +38,8 @@ fun UserFormScreen(
         buttonText = R.string.button_next,
         onButtonClicked = {
             viewModel.onUserDataEvent(UserAccountFormEvent.ValidateUserData)
-        }
+        },
+        navController = navController
     ){
         CustomTextField(
             value = viewModel.userAccountDataState.name,

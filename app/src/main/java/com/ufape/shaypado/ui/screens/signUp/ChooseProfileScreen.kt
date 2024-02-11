@@ -20,6 +20,7 @@ fun ChooseProfileScreen(
 
     SignUpScreenBase(
         title = R.string.sign_up_user_type_title,
+        navController = navController
     ) {
         val chips = listOf(
             Chip(

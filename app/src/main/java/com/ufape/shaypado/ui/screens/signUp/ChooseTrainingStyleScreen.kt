@@ -22,7 +22,8 @@ fun ChooseTrainingStyle(
         buttonText = R.string.button_next,
         onButtonClicked = {
             viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
-        }
+        },
+        navController = navController
     ) {
         val chips = listOf(
             Chip(

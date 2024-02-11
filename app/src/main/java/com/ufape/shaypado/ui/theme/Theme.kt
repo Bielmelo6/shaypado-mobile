@@ -35,7 +35,10 @@ private val LightColorScheme = lightColorScheme(
     onPrimaryContainer = White,
     primaryContainer = Teal,
     error = Red,
-    surfaceVariant = LightTeal
+    surfaceVariant = LightTeal,
+    secondaryContainer = Color(
+        0xFFC3F1DA
+    )
 )
 
 val textPrimary: Color

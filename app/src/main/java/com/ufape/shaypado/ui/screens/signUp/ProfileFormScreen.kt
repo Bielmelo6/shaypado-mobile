@@ -43,7 +43,8 @@ fun ProfileFormScreen(
         buttonText = if (viewModel.userAccountDataState.saveCorporalData) R.string.button_next else R.string.sign_up_finish,
         onButtonClicked = {
             viewModel.onUserDataEvent(UserAccountFormEvent.ValidateProfileData)
-        }
+        },
+        navController = navController
     ) {
         CustomTextField(
             value = viewModel.userAccountDataState.weight,
