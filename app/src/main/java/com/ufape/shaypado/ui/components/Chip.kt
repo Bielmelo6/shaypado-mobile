@@ -34,7 +34,8 @@ data class Chip(
     @StringRes val label: Int,
     @DrawableRes val icon: Int,
     val informationTitle : String? = null,
-    val informationText : String? = null
+    val informationText : String? = null,
+    val onClick: () -> Unit = {}
 )
 
 
@@ -62,12 +63,13 @@ fun ChipSelectionGroup(
                     ambientColor = Color(0x40000000)
                 )
                 .background(
-                    if (selected == value) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceVariant,
+                    if (selected == value) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceVariant,
                     RoundedCornerShape(size = 8.dp)
                 )
                 .clickable(onClick = {
                     onChipSelected(value)
                     selected = value
+                    chip.onClick()
                 })
                 .padding(8.dp),
             verticalArrangement = Arrangement.Center,

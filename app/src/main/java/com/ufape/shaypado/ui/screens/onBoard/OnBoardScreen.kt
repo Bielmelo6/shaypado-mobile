@@ -92,7 +92,7 @@ fun OnBoardScreen(navController: NavController) {
                     fillWidth = true,
                     color = MaterialTheme.colorScheme.primary,
                     onPress = {
-                        navController.navigate(AuthNavigationScreen.SignUp.route)
+                        navController.navigate(AuthNavigationScreen.SignUpUserForm.route)
                     }
                 )
             }

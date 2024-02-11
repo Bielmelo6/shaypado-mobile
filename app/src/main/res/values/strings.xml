@@ -97,5 +97,10 @@
     <string name="button_recovery_password">Recuperar senha</string>
     <string name="no_network">Verifique sua conexão com a internet</string>
     <string name="unknown_error">Erro desconhecido</string>
+    <string name="input_height_cm">CM</string>
+    <string name="input_terms_acceptance">Aceitar os</string>
+    <string name="input_terms_link">termos de uso</string>
+    <string name="input_terms_acceptance2">do aplicativo.</string>
+    <string name="input_objective_kg">KG</string>
 
 </resources>

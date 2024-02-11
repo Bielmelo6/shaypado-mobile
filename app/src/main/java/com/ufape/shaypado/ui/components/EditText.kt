@@ -44,6 +44,7 @@ fun CustomTextField(
     @StringRes label: Int = R.string.label,
     @StringRes errorMessage: Int? = null,
     onValueChange: (String) -> Unit = {},
+    trailingIcon: @Composable (() -> Unit) = {},
     format: (String) -> String = { it },
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -103,6 +104,8 @@ fun CustomTextField(
                         else
                             EyeSlashIcon()
                     }
+                }else{
+                    trailingIcon.invoke()
                 }
             }
         )

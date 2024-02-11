@@ -158,7 +158,7 @@ fun LoginScreen(navController: NavController) {
                     ) {
                         AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_no_account )
                         TextButton(onClick = {
-                            navController.navigate(AuthNavigationScreen.SignUp.route)
+                            navController.navigate(AuthNavigationScreen.SignUpUserForm.route)
                         }) {
                             AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_label, color = MaterialTheme.colorScheme.onSurface)
                         }
