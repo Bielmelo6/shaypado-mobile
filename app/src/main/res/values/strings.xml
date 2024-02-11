@@ -102,5 +102,18 @@
     <string name="input_terms_link">termos de uso</string>
     <string name="input_terms_acceptance2">do aplicativo.</string>
     <string name="input_objective_kg">KG</string>
+    <string name="input_percentage">%</string>
+    <string name="input_fat_percentage_placeholder">Insira seu percentual de gordura</string>
+    <string name="input_fat_percentage">Gordura</string>
+    <string name="input_arm_circumference">Circunferência do braço</string>
+    <string name="input_arm_circumference_placeholder">Insira a circunferência do seu braço</string>
+    <string name="input_waist_circumference">Circunferência da cintura</string>
+    <string name="input_waist_circumference_placeholder">Insira a circunferência da sua cintura</string>
+    <string name="input_abdomen_circumference">Circunferência do abdômen</string>
+    <string name="input_abdomen_circumference_placeholder">Insira a circunferência do seu abdômen</string>
+    <string name="input_hip_circumference">Circunferência do quadril</string>
+    <string name="input_hip_circumference_placeholder">Insira a circunferência do seu quadril</string>
+    <string name="input_thigh_circumference">Circunferência da coxa</string>
+    <string name="input_thigh_circumference_placeholder">Insira a circunferência da sua coxa</string>
 
 </resources>

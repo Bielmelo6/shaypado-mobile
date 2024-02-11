@@ -3,16 +3,16 @@ package com.ufape.shaypado.ui.screens.signUp
 import androidx.annotation.StringRes
 
 data class UserPhysicalEvaluationFormState(
-    val weight: String = "",
-    @StringRes val weightError: Int? = null,
-    val height: String = "",
-    @StringRes val heightError: Int? = null,
-    val objective: String = "",
-    @StringRes  val objectiveError: Int? = null,
-    val workoutFrequency: String = "",
-    @StringRes  val workoutFrequencyError: Int? = null,
-    val anyDisease: Boolean = false,
-    @StringRes val anyDiseaseError: Int? = null,
-    val saveCorporalData: Boolean = false,
-    @StringRes val saveCorporalDataError: Int? = null,
+    val fatPercentage: String = "",
+    @StringRes val fatPercentageError: Int? = null,
+    val armCircumference: String = "",
+    @StringRes val armCircumferenceError: Int? = null,
+    val waistCircumference: String = "",
+    @StringRes val waistCircumferenceError: Int? = null,
+    val abdomenCircumference: String = "",
+    @StringRes val abdomenCircumferenceError: Int? = null,
+    val hipCircumference: String = "",
+    @StringRes val hipCircumferenceError: Int? = null,
+    val thighCircumference: String = "",
+    @StringRes val thighCircumferenceError: Int? = null
 )

@@ -108,41 +108,27 @@ class SignUpViewModel @Inject constructor(
 
     fun onPhysicalEvaluationDataEvent(event: UserPhysicalEvaluationFormEvent) {
         when (event) {
-            is UserPhysicalEvaluationFormEvent.OnWeightChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(weight = event.weight)
+            is UserPhysicalEvaluationFormEvent.OnFatPercentageChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(fatPercentage = event.fatPercentage)
             }
-
-            is UserPhysicalEvaluationFormEvent.OnHeightChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(height = event.height)
+            is UserPhysicalEvaluationFormEvent.OnArmCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(armCircumference = event.armCircumference)
             }
-
-            is UserPhysicalEvaluationFormEvent.OnObjectiveChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(objective = event.objective)
+            is UserPhysicalEvaluationFormEvent.OnWaistCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(waistCircumference = event.waistCircumference)
             }
-
-            is UserPhysicalEvaluationFormEvent.OnWorkoutFrequencyChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(workoutFrequency = event.workoutFrequency)
+            is UserPhysicalEvaluationFormEvent.OnAbdomenCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(abdomenCircumference = event.abdomenCircumference)
             }
-
-            is UserPhysicalEvaluationFormEvent.OnAnyDiseaseChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(anyDisease = event.anyDisease)
+            is UserPhysicalEvaluationFormEvent.OnHipCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(hipCircumference = event.hipCircumference)
             }
-
-            is UserPhysicalEvaluationFormEvent.OnCorporalDataChanged -> {
-                userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(saveCorporalData = event.saveCorporalData)
+            is UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(thighCircumference = event.thighCircumference)
             }
-
             is UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 validatePhysicalEvaluationData()
-                register()
             }
-
         }
     }
 
@@ -215,10 +201,10 @@ class SignUpViewModel @Inject constructor(
                 email = userAccountDataState.email,
                 password = userAccountDataState.password,
                 userType = userAccountDataState.userType,
-                weight = userPhysicalEvaluationDataState.weight,
-                height = userPhysicalEvaluationDataState.height,
-                objective = userPhysicalEvaluationDataState.objective,
-                anyDisease = userPhysicalEvaluationDataState.anyDisease.toString()
+                weight = userAccountDataState.weight,
+                height = userAccountDataState.height,
+                objective = userAccountDataState.objective,
+                anyDisease = userAccountDataState.anyDisease.toString()
             )
             val result = authRepository.register(userData)
             registrationEventChannel.send(result)

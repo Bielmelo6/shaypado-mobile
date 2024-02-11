@@ -3,6 +3,7 @@ package com.ufape.shaypado.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +37,31 @@ fun BackButton(
             painter = painterResource(id = R.drawable.ic_back_arrow),
             contentDescription = "Back",
             tint = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CameraButton(
+    onClick: () -> Unit = { },
+    enabled: Boolean = true,
+) {
+    FilledIconButton(
+        modifier = Modifier
+            .width(60.dp)
+            .height(60.dp),
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_camera),
+            contentDescription = "Camera",
+            tint = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
