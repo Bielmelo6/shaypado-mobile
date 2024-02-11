@@ -11,16 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -30,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.screens.login.LoginViewModel
 
 data class BottomBarItemStyle(
     @StringRes val title: Int,
@@ -169,7 +173,25 @@ fun MobileRoutes(navController: NavHostController = rememberNavController()) {
 
 @Composable
 fun Home(navController: NavController) {
-    Text(text = "Home")
+    val viewModel = hiltViewModel<LoginViewModel>()
+
+    LaunchedEffect(key1 = viewModel.loggedInState) {
+        viewModel.loggedInState.collect {
+            if (!it.isLogged) {
+                navController.navigate(AuthNavigationScreen.NavRoot.route) {
+                    popUpTo(MobileNavigationScreen.NavRoot.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+    }
+
+    Button(onClick = {
+        viewModel.logout()
+    }) {
+        Text(text = "Logout")
+    }
 }
 
 @Composable

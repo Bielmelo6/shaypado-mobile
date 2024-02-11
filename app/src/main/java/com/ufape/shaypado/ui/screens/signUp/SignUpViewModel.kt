@@ -126,6 +126,9 @@ class SignUpViewModel @Inject constructor(
             is UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged -> {
                 userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(thighCircumference = event.thighCircumference)
             }
+            is UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(legCircumference = event.legCircumference)
+            }
             is UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 validatePhysicalEvaluationData()
             }

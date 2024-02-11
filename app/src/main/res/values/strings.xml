@@ -115,5 +115,7 @@
     <string name="input_hip_circumference_placeholder">Insira a circunferência do seu quadril</string>
     <string name="input_thigh_circumference">Circunferência da coxa</string>
     <string name="input_thigh_circumference_placeholder">Insira a circunferência da sua coxa</string>
+    <string name="input_leg_circumference">Circunferencia da perna</string>
+    <string name="input_leg_circumference_placeholder">Insira a Circunferencia da perna</string>
 
 </resources>

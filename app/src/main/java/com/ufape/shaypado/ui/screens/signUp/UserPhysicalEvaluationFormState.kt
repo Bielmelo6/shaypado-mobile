@@ -14,5 +14,7 @@ data class UserPhysicalEvaluationFormState(
     val hipCircumference: String = "",
     @StringRes val hipCircumferenceError: Int? = null,
     val thighCircumference: String = "",
-    @StringRes val thighCircumferenceError: Int? = null
+    @StringRes val thighCircumferenceError: Int? = null,
+    val legCircumference: String = "",
+    @StringRes val legCircumferenceError: Int? = null
 )

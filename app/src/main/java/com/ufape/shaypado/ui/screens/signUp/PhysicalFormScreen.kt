@@ -2,10 +2,13 @@ package com.ufape.shaypado.ui.screens.signUp
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -40,33 +43,44 @@ fun PhysicalFormScreen(
         onButtonClicked = {
             viewModel.onUserDataEvent(UserAccountFormEvent.ValidateProfileData)
         },
-        navController = navController
+        navController = navController,
+        topTitleSpacing = 24
     ) {
-        Row {
-            CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.fatPercentage,
-                errorMessage = viewModel.userPhysicalEvaluationDataState.fatPercentageError,
-                keyboardType = KeyboardType.Number,
-                onValueChange = {
-                    viewModel.onPhysicalEvaluationDataEvent(
-                        UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(
-                            it
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
+        )
+        {
+            Row (
+                modifier = Modifier.weight(1f)
+            ) {
+                CustomTextField(
+                    value = viewModel.userPhysicalEvaluationDataState.fatPercentage,
+                    errorMessage = viewModel.userPhysicalEvaluationDataState.fatPercentageError,
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = {
+                        viewModel.onPhysicalEvaluationDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(
+                                it
+                            )
                         )
-                    )
-                },
-                trailingIcon = {
-                    AppText(
-                        color = MaterialTheme.colorScheme.primary,
-                        text = R.string.input_percentage,
-                        textType = TextType.LABEL_LARGE
-                    )
-                },
-                placeholder = R.string.input_fat_percentage_placeholder,
-                label = R.string.input_fat_percentage
-            )
-            CameraButton()
+                    },
+                    trailingIcon = {
+                        AppText(
+                            color = MaterialTheme.colorScheme.primary,
+                            text = R.string.input_percentage,
+                            textType = TextType.LABEL_LARGE
+                        )
+                    },
+                    placeholder = R.string.input_fat_percentage_placeholder,
+                    label = R.string.input_fat_percentage
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Row{
+                CameraButton()
+            }
         }
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -187,5 +201,31 @@ fun PhysicalFormScreen(
         placeholder = R.string.input_thigh_circumference_placeholder,
         label = R.string.input_thigh_circumference
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            value = viewModel.userPhysicalEvaluationDataState.legCircumference,
+            errorMessage = viewModel.userPhysicalEvaluationDataState.legCircumferenceError,
+            keyboardType = KeyboardType.Number,
+            onValueChange = {
+                viewModel.onPhysicalEvaluationDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged(
+                        it
+                    )
+                )
+            },
+            trailingIcon = {
+                AppText(
+                    color = MaterialTheme.colorScheme.primary,
+                    text = R.string.input_height_cm,
+                    textType = TextType.LABEL_LARGE
+                )
+            },
+            placeholder = R.string.input_leg_circumference_placeholder,
+            label = R.string.input_leg_circumference
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

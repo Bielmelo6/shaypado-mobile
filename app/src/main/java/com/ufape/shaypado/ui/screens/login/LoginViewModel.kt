@@ -15,6 +15,8 @@ import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,8 +28,19 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     var loginDataState by mutableStateOf(LoginFormState())
 
+    private val _loggedInState = MutableStateFlow(LoggedState())
+    val loggedInState = _loggedInState.asStateFlow()
+
     private val loginEventChannel = Channel<Result<LoginResponse>>()
     val loginEvent = loginEventChannel.receiveAsFlow()
+
+    init {
+        _loggedInState.value = LoggedState(
+            token = "",
+            isLogged = false,
+            isTokenValid = false
+        )
+    }
 
     fun onLoginDataEvent(event: LoginFormEvent) {
         when (event) {
@@ -44,6 +57,14 @@ class LoginViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun logout(){
+        _loggedInState.value = LoggedState(
+            token = "token",
+            isLogged = false,
+            isTokenValid = false
+        )
     }
 
     private fun validate(): Boolean {

@@ -7,6 +7,6 @@ sealed class UserPhysicalEvaluationFormEvent {
     data class OnAbdomenCircumferenceChanged(val abdomenCircumference: String) : UserPhysicalEvaluationFormEvent()
     data class OnHipCircumferenceChanged(val hipCircumference: String) : UserPhysicalEvaluationFormEvent()
     data class OnThighCircumferenceChanged(val thighCircumference: String) : UserPhysicalEvaluationFormEvent()
-
+    data class OnLegCircumferenceChanged(val legCircumference: String) : UserPhysicalEvaluationFormEvent()
     data object OnSubmit : UserPhysicalEvaluationFormEvent()
 }

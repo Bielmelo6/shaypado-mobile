@@ -49,8 +49,8 @@ fun CameraButton(
 ) {
     FilledIconButton(
         modifier = Modifier
-            .width(60.dp)
-            .height(60.dp),
+            .width(56.dp)
+            .height(56.dp),
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
