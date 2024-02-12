@@ -33,6 +33,7 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
     var userAccountDataState by mutableStateOf(UserAccountFormState())
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
+    var personalFormDataState by mutableStateOf(PersonalFormState())
 
     private val _hasUserDataValidationErrors = MutableStateFlow<Result<Unit>>(Result.Loading)
     val validationStatus = _hasUserDataValidationErrors.asStateFlow()
@@ -133,6 +134,48 @@ class SignUpViewModel @Inject constructor(
                 validatePhysicalEvaluationData()
             }
         }
+    }
+
+    fun onPersonalDataEvent(event: PersonalFormEvent) {
+        when (event) {
+            is PersonalFormEvent.OnNameChanged -> {
+                personalFormDataState = personalFormDataState.copy(name = event.name)
+            }
+            is PersonalFormEvent.OnEmailChanged -> {
+                personalFormDataState = personalFormDataState.copy(email = event.email)
+            }
+            is PersonalFormEvent.OnProfilePictureChanged -> {
+                personalFormDataState = personalFormDataState.copy(profilePicture = event.profilePicture)
+            }
+            is PersonalFormEvent.OnPhoneChanged -> {
+                personalFormDataState = personalFormDataState.copy(phone = event.phone)
+            }
+            is PersonalFormEvent.OnSpecialtiesChanged -> {
+                personalFormDataState = personalFormDataState.copy(specialties = event.specialties)
+            }
+            is PersonalFormEvent.OnAgeChanged -> {
+                personalFormDataState = personalFormDataState.copy(age = event.age)
+            }
+            is PersonalFormEvent.OnStateChanged -> {
+                personalFormDataState = personalFormDataState.copy(state = event.state)
+            }
+            is PersonalFormEvent.OnCityChanged -> {
+                personalFormDataState = personalFormDataState.copy(city = event.city)
+            }
+            is PersonalFormEvent.OnWorkLocationChanged -> {
+                personalFormDataState = personalFormDataState.copy(workLocation = event.workLocation)
+            }
+            is PersonalFormEvent.OnPlansDocumentChanged -> {
+                personalFormDataState = personalFormDataState.copy(plansDocument = event.plansDocument)
+            }
+            is PersonalFormEvent.OnSubmit -> {
+                validatePersonalData()
+            }
+        }
+    }
+
+    fun validatePersonalData(){
+
     }
 
     fun resetValidationStatus() {

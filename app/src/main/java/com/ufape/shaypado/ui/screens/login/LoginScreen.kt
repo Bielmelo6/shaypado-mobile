@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.SnackBar
 import com.ufape.shaypado.ui.components.TextType
@@ -64,7 +65,7 @@ fun LoginScreen(navController: NavController) {
         }
     }
 
-    SnackBar (
+    SnackBar(
         message = snackBarMessage,
         reset = { snackBarMessage = null }
     ) {
@@ -135,32 +136,30 @@ fun LoginScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     AppButton(
-                        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        variant = ButtonVariant.TERTIARY,
                         text = R.string.button_google,
                         onClick = {
                             navController.popBackStack()
                             navController.navigate(MobileNavigationScreen.NavRoot.route)
                         }
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            GoogleImage()
-                            Spacer(modifier = Modifier.width(8.dp))
-                            AppText(textType = TextType.TITLE_MEDIUM, R.string.button_google, color = MaterialTheme.colorScheme.onPrimaryContainer)
-                        }
+                        GoogleImage()
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_no_account )
+                        AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_no_account)
                         TextButton(onClick = {
                             navController.navigate(AuthNavigationScreen.SignUpUserForm.route)
                         }) {
-                            AppText(TextType.BODY_MEDIUM, text = R.string.sign_up_label, color = MaterialTheme.colorScheme.onSurface)
+                            AppText(
+                                TextType.BODY_MEDIUM,
+                                text = R.string.sign_up_label,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                 }

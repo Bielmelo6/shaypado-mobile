@@ -1,7 +1,9 @@
 package com.ufape.shaypado.ui.components
 
+import android.widget.Space
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -62,14 +64,12 @@ fun CustomTextField(
             color = MaterialTheme.colorScheme.onSurface
         )
 
+        Spacer(modifier = Modifier.height(4.dp))
+
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
-                .onFocusChanged {
-
-                }
-            ,
+                .height(56.dp),
             value = value,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             onValueChange = {

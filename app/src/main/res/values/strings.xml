@@ -118,4 +118,28 @@
     <string name="input_leg_circumference">Circunferencia da perna</string>
     <string name="input_leg_circumference_placeholder">Insira a Circunferencia da perna</string>
 
+    <!-- Labels -->
+    <string name="input_profile_picture">Foto de perfil</string>
+    <string name="input_full_name">Nome completo</string>
+    <string name="input_contact_email">Email</string>
+    <string name="input_phone">Telefone</string>
+    <string name="input_specialties">Especialidades</string>
+    <string name="input_age">Idade</string>
+    <string name="input_state">Estado</string>
+    <string name="input_city">Cidade</string>
+    <string name="input_work_location">Local de trabalho</string>
+    <string name="input_plans_document">Documento de planos</string>
+
+    <!-- Placeholders -->
+    <string name="input_profile_picture_placeholder">Insira sua foto de perfil</string>
+    <string name="input_full_name_placeholder">Insira seu  completo</string>
+    <string name="input_contact_email_placeholder">Insira seu email</string>
+    <string name="input_phone_placeholder">Insira seu telefone</string>
+    <string name="input_specialties_placeholder">Insira suas especialidades</string>
+    <string name="input_age_placeholder">Insira sua idade</string>
+    <string name="input_state_placeholder">Insira seu estado</string>
+    <string name="input_city_placeholder">Insira sua cidade</string>
+    <string name="input_work_location_placeholder">Insira seu local de trabalho presencial (se houver)</string>
+    <string name="input_plans_document_placeholder">Anexe seu documento de planos</string>
+
 </resources>
