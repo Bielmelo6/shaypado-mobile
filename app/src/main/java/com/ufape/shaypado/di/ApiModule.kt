@@ -1,19 +1,12 @@
 package com.ufape.shaypado.di
 
 import com.ufape.shaypado.data.api.AuthApi
-import com.ufape.shaypado.data.model.LoginData
-import com.ufape.shaypado.data.model.LoginResponse
-import com.ufape.shaypado.data.model.UserData
-import com.ufape.shaypado.data.model.UserResponse
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit

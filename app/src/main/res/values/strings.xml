@@ -141,5 +141,6 @@
     <string name="input_city_placeholder">Insira sua cidade</string>
     <string name="input_work_location_placeholder">Insira seu local de trabalho presencial (se houver)</string>
     <string name="input_plans_document_placeholder">Anexe seu documento de planos</string>
+    <string name="input_validation_strong_password_required">Sua senha é muito fraca</string>
 
 </resources>

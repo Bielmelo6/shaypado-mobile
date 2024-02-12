@@ -5,12 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ufape.shaypado.data.model.LoginData
+import com.ufape.shaypado.data.model.LoginRequest
 import com.ufape.shaypado.data.model.LoginResponse
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
+import com.ufape.shaypado.ui.model.LoginData
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +32,7 @@ class LoginViewModel @Inject constructor(
     private val _loggedInState = MutableStateFlow(LoggedState())
     val loggedInState = _loggedInState.asStateFlow()
 
-    private val loginEventChannel = Channel<Result<LoginResponse>>()
+    private val loginEventChannel = Channel<Result<LoginData>>()
     val loginEvent = loginEventChannel.receiveAsFlow()
 
     init {
@@ -88,12 +89,12 @@ class LoginViewModel @Inject constructor(
         if (hasError) return
 
         viewModelScope.launch {
-            val loginData = LoginData(
+            val loginRequest = LoginRequest(
                 email = loginDataState.email,
                 password = loginDataState.password,
             )
             val result = handler.makeSafeApiCall {
-                authRepository.login(loginData)
+                authRepository.login(loginRequest)
             }
             loginEventChannel.send(result)
         }

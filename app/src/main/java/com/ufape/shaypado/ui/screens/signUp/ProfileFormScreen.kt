@@ -21,7 +21,9 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
+import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.util.Result
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun ProfileFormScreen(
@@ -32,8 +34,20 @@ fun ProfileFormScreen(
     LaunchedEffect(key1 = viewModel.validationStatus) {
         viewModel.validationStatus.collect {
             if (it is Result.Success) {
-                navController.navigate(AuthNavigationScreen.SignUpPhysicalForm.route)
-                viewModel.resetValidationStatus()
+                if (viewModel.userAccountDataState.saveCorporalData) {
+                    navController.navigate(MobileNavigationScreen.NavRoot.route)
+                    viewModel.resetValidationStatus()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.registerEvent) {
+        viewModel.registerEvent.collect {
+            if (it is Result.Success) {
+                if (viewModel.userAccountDataState.saveCorporalData) {
+                    navController.navigate(AuthNavigationScreen.SignUpPhysicalForm.route)
+                }
             }
         }
     }
@@ -42,7 +56,11 @@ fun ProfileFormScreen(
         title = R.string.sign_up_person_data_title,
         buttonText = if (viewModel.userAccountDataState.saveCorporalData) R.string.button_next else R.string.sign_up_finish,
         onButtonClicked = {
-            viewModel.onUserDataEvent(UserAccountFormEvent.ValidateProfileData)
+            if (viewModel.userAccountDataState.saveCorporalData) {
+                viewModel.onUserDataEvent(UserAccountFormEvent.ValidateProfileData)
+            } else {
+                viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
+            }
         },
         navController = navController
     ) {
@@ -55,6 +73,13 @@ fun ProfileFormScreen(
                     UserAccountFormEvent.OnWeightChanged(
                         it
                     )
+                )
+            },
+            trailingIcon = {
+                AppText(
+                    color = MaterialTheme.colorScheme.primary,
+                    text = R.string.input_objective_kg,
+                    textType = TextType.LABEL_LARGE
                 )
             },
             placeholder = R.string.input_weight_placeholder,
@@ -95,13 +120,6 @@ fun ProfileFormScreen(
                     UserAccountFormEvent.OnObjectiveChanged(
                         it
                     )
-                )
-            },
-            trailingIcon = {
-                AppText(
-                    color = MaterialTheme.colorScheme.primary,
-                    text = R.string.input_objective_kg,
-                    textType = TextType.LABEL_LARGE
                 )
             },
             placeholder = R.string.input_goal_placeholder,

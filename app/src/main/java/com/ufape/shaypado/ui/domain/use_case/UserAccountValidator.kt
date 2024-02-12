@@ -27,6 +27,10 @@ fun validatePassword(password: String): ValidationResult {
     if (password.length < 8) {
         return ValidationResult(false,  R.string.input_validation_password_wrong_length)
     }
+
+    if (!password.matches(ValidatorUtils.STRONG_PASSWORD_REGEX)) {
+        return ValidationResult(false,  R.string.input_validation_strong_password_required)
+    }
     return ValidationResult(true)
 }
 
@@ -43,20 +47,6 @@ fun validatePasswordConfirmation(password: String, passwordConfirmation: String)
 fun validateName(name: String): ValidationResult {
     if (name.isEmpty()) {
         return ValidationResult(false, R.string.input_validation_user_name_required)
-    }
-    return ValidationResult(true)
-}
-
-fun validateWorkoutType(workoutType: String): ValidationResult {
-    if (workoutType.isEmpty()) {
-        return ValidationResult(false, R.string.input_validation_workout_type_required)
-    }
-    return ValidationResult(true)
-}
-
-fun validateUserType(userType: String): ValidationResult {
-    if (userType.isEmpty()) {
-        return ValidationResult(false, R.string.input_validation_user_type_required)
     }
     return ValidationResult(true)
 }
