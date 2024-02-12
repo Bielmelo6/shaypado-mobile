@@ -7,10 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ufape.shaypado.ui.screens.login.LoginViewModel
+import com.ufape.shaypado.ui.screens.signUp.SignUpViewModel
 
 @Composable
 fun Routes(navController: NavHostController) {
     val authViewModel = hiltViewModel<LoginViewModel>()
+    val signUpViewModel = hiltViewModel<SignUpViewModel>()
 
     LaunchedEffect(key1 = authViewModel.loggedInState) {
         authViewModel.loggedInState.collect {
@@ -23,7 +25,7 @@ fun Routes(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = AuthNavigationScreen.NavRoot.route) {
-        authNavGraph(navController = navController)
+        authNavGraph(navController = navController, signUpViewModel = signUpViewModel)
         composable(route = MobileNavigationScreen.NavRoot.route) {
             MobileRoutes()
         }

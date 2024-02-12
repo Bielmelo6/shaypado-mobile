@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.Chip
@@ -14,9 +13,9 @@ import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 
 @Composable
 fun ChooseProfileScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SignUpViewModel
 ) {
-    val viewModel = hiltViewModel<SignUpViewModel>()
 
     SignUpScreenBase(
         title = R.string.sign_up_user_type_title,

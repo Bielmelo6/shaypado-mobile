@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
@@ -24,9 +23,9 @@ import com.ufape.shaypado.util.Result
 
 @Composable
 fun PhysicalFormScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SignUpViewModel
 ) {
-    val viewModel = hiltViewModel<SignUpViewModel>()
 
     LaunchedEffect(key1 = viewModel.validationStatus) {
         viewModel.validationStatus.collect {

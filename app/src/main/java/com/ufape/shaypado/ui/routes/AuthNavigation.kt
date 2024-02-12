@@ -11,6 +11,7 @@ import com.ufape.shaypado.ui.screens.signUp.ChooseProfileScreen
 import com.ufape.shaypado.ui.screens.signUp.PersonalFormScreen
 import com.ufape.shaypado.ui.screens.signUp.PhysicalFormScreen
 import com.ufape.shaypado.ui.screens.signUp.ProfileFormScreen
+import com.ufape.shaypado.ui.screens.signUp.SignUpViewModel
 import com.ufape.shaypado.ui.screens.signUp.UserFormScreen
 
 sealed class AuthNavigationScreen(val route: String) {
@@ -25,7 +26,7 @@ sealed class AuthNavigationScreen(val route: String) {
     data object OnBoard : AuthNavigationScreen("on_board")
 }
 
-fun NavGraphBuilder.authNavGraph(navController: NavController) {
+fun NavGraphBuilder.authNavGraph(navController: NavController, signUpViewModel: SignUpViewModel) {
     navigation(
         route = AuthNavigationScreen.NavRoot.route,
         startDestination = AuthNavigationScreen.OnBoard.route
@@ -42,19 +43,19 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
 
         //Sign up screens
         composable(AuthNavigationScreen.SignUpUserForm.route) {
-            UserFormScreen(navController)
+            UserFormScreen(navController, signUpViewModel)
         }
         composable(AuthNavigationScreen.SignUpChooseProfile.route) {
-            ChooseProfileScreen(navController)
+            ChooseProfileScreen(navController, signUpViewModel)
         }
         composable(AuthNavigationScreen.SignUpProfileForm.route) {
-            ProfileFormScreen(navController)
+            ProfileFormScreen(navController, signUpViewModel)
         }
         composable(AuthNavigationScreen.SignUpPhysicalForm.route) {
-            PhysicalFormScreen(navController)
+            PhysicalFormScreen(navController, signUpViewModel)
         }
         composable(AuthNavigationScreen.SignUpPersonalForm.route) {
-            PersonalFormScreen(navController)
+            PersonalFormScreen(navController, signUpViewModel)
         }
     }
 }

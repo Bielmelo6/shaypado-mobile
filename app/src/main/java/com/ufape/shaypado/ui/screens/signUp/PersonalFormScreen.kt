@@ -1,6 +1,5 @@
 package com.ufape.shaypado.ui.screens.signUp
 
-import android.widget.Space
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -27,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
@@ -40,9 +37,9 @@ import com.ufape.shaypado.util.Result
 
 @Composable
 fun PersonalFormScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SignUpViewModel
 ) {
-    val viewModel = hiltViewModel<SignUpViewModel>()
 
     LaunchedEffect(key1 = viewModel.validationStatus) {
         viewModel.validationStatus.collect {
