@@ -31,7 +31,7 @@ class AuthRepository(
         return if (res.isSuccessful) {
             Result.Success(res.body()!!.toUiModel())
         } else {
-            Result.Error(Exception())
+            Result.Error(res.getApiError())
         }
     }
 

@@ -14,6 +14,7 @@ import com.ufape.shaypado.ui.domain.use_case.validateHeight
 import com.ufape.shaypado.ui.domain.use_case.validatePasswordConfirmation
 import com.ufape.shaypado.ui.domain.use_case.validateName
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
+import com.ufape.shaypado.ui.domain.use_case.validateTermsAndConditions
 import com.ufape.shaypado.ui.domain.use_case.validateWeight
 import com.ufape.shaypado.ui.model.UserData
 import com.ufape.shaypado.util.ISafeNetworkHandler
@@ -44,7 +45,7 @@ class SignUpViewModel @Inject constructor(
     val registerEvent = registrationEventChannel.receiveAsFlow()
 
     private fun registerUser() {
-        if (validationStatus.value is Result.Success) return
+        if (validationStatus.value !is Result.Success) return
         viewModelScope.launch {
             val userRequest = UserRequest(
                 name = userAccountDataState.name,
@@ -53,7 +54,7 @@ class SignUpViewModel @Inject constructor(
                 userType = userAccountDataState.userType,
                 weight = userAccountDataState.weight,
                 height = userAccountDataState.height,
-                objective = userAccountDataState.objective,
+//                objective = userAccountDataState.objective,
                 anyDisease = userAccountDataState.anyDisease
             )
             val result = handler.makeSafeApiCall { authRepository.register(userRequest) }
@@ -129,6 +130,10 @@ class SignUpViewModel @Inject constructor(
             is UserAccountFormEvent.ValidateProfileData -> {
                 _hasUserDataValidationErrors.value = Result.Loading
                 validateProfileData()
+            }
+
+            is UserAccountFormEvent.OnUserTypeChanged -> {
+                userAccountDataState = userAccountDataState.copy(userType = event.userType)
             }
 
             is UserAccountFormEvent.OnSubmit -> {
@@ -274,15 +279,18 @@ class SignUpViewModel @Inject constructor(
     private fun validateProfileData() : Boolean {
         val weightValidation = validateWeight(userAccountDataState.weight)
         val heightValidation = validateHeight(userAccountDataState.height)
+        val termsAcceptedValidation = validateTermsAndConditions(userAccountDataState.termsAccepted)
 
         userAccountDataState = userAccountDataState.copy(
             weightError = weightValidation.error,
             heightError = heightValidation.error,
+            termsAcceptedError = termsAcceptedValidation.error
         )
 
         val hasAnyError = hasError(
             weightValidation,
             heightValidation,
+            termsAcceptedValidation
         )
         return if (hasAnyError) {
             _hasUserDataValidationErrors.value = Result.Error(Exception())

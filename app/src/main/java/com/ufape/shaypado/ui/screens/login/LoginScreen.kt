@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
@@ -32,7 +31,7 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
-import com.ufape.shaypado.ui.components.SnackBar
+import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.routes.MobileNavigationScreen
@@ -65,7 +64,7 @@ fun LoginScreen(navController: NavController) {
         }
     }
 
-    SnackBar(
+    AppSnackBar(
         message = snackBarMessage,
         reset = { snackBarMessage = null }
     ) {

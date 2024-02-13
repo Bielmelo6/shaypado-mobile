@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.ufape.shaypado.R
 import com.ufape.shaypado.data.model.ApiError
 import com.ufape.shaypado.exceptions.ApiErrorException
+import com.ufape.shaypado.exceptions.UiTextException
 import retrofit2.Response
 
 fun Response<*>.getApiError(): Exception {
@@ -31,6 +32,7 @@ fun Exception.getErrorMessage(context: Context): String {
     return when (this) {
         is ApiErrorException -> this.message ?: context.getString(R.string.unknown_error)
         is NoNetworkException -> context.getString(this.messageRes)
-        else -> context.getString(R.string.unknown_error)
+        is UiTextException ->  this.errorMessage.asString(context)
+        else -> context.getString(R.string.unknown_error) + " ${this.message}"
     }
 }

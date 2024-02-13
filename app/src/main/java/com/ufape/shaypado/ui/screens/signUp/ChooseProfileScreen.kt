@@ -28,6 +28,9 @@ fun ChooseProfileScreen(
                 label = R.string.sign_up_find_normal_usertype,
                 onClick = {
                     navController.navigate(AuthNavigationScreen.SignUpProfileForm.route)
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnUserTypeChanged("student")
+                    )
                 }
             ),
             Chip(
@@ -36,6 +39,9 @@ fun ChooseProfileScreen(
                 label = R.string.sign_up_find_professional_usertype,
                 onClick = {
                     navController.navigate(AuthNavigationScreen.SignUpPersonalForm.route)
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnUserTypeChanged("teacher")
+                    )
                 }
             )
         )

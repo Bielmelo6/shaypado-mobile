@@ -50,3 +50,10 @@ fun validateName(name: String): ValidationResult {
     }
     return ValidationResult(true)
 }
+
+fun validateTermsAndConditions(termsAndConditions: Boolean): ValidationResult {
+    if (!termsAndConditions) {
+        return ValidationResult(false, R.string.input_validation_terms_and_conditions_required)
+    }
+    return ValidationResult(true)
+}

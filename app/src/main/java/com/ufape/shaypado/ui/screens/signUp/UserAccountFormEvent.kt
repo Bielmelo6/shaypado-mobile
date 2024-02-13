@@ -9,9 +9,10 @@ sealed class UserAccountFormEvent {
     data class OnWeightChanged(val weight: String) : UserAccountFormEvent()
     data class OnHeightChanged(val height: String) : UserAccountFormEvent()
     data class OnObjectiveChanged(val objective: String) : UserAccountFormEvent()
-    data class OnAnyDiseaseChanged(val anyDisease: Boolean) : UserAccountFormEvent()
+    data class OnAnyDiseaseChanged(val anyDisease: String) : UserAccountFormEvent()
     data class OnCorporalDataChanged(val saveCorporalData: Boolean) : UserAccountFormEvent()
     data class OnTermsAcceptedChanged(val termsAccepted: Boolean) : UserAccountFormEvent()
+    data class OnUserTypeChanged(val userType: String) : UserAccountFormEvent()
 
     data object ValidateUserData : UserAccountFormEvent()
 

@@ -23,7 +23,7 @@ data class UserAccountFormState(
     @StringRes val heightError: Int? = null,
     val objective: String = "",
     @StringRes  val objectiveError: Int? = null,
-    val anyDisease: Boolean = false,
+    val anyDisease: String = "" ,
     @StringRes val anyDiseaseError: Int? = null,
     val saveCorporalData: Boolean = false,
     @StringRes val saveCorporalDataError: Int? = null,

@@ -12,14 +12,14 @@ data class UserRequest(
     val password: String,
     @SerializedName("userType")
     val userType: String,
-    @SerializedName("weight")
+    @SerializedName("weigth") //TODO  wrong name
     val weight: String?,
     @SerializedName("height")
     val height: String?,
-    @SerializedName("objective")
-    val objective : String?,
+//    @SerializedName("objective")
+//    val objective : String?,
     @SerializedName("any_disease")
-    val anyDisease : Boolean
+    val anyDisease : String
 )
 
 data class UserResponse(
