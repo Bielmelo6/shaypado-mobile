@@ -36,7 +36,7 @@ data class UserResponse(
     @SerializedName("objective")
     val objective : String?,
     @SerializedName("any_disease")
-    val anyDisease : Boolean
+    val anyDisease : String
 )
 
 fun UserResponse.toUiModel(): UserData {

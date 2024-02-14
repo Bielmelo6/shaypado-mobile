@@ -1,6 +1,9 @@
 package com.ufape.shaypado.di
 
+import com.ufape.shaypado.data.AuthInterceptor
+import com.ufape.shaypado.data.TokenAuthenticator
 import com.ufape.shaypado.data.api.AuthApi
+import com.ufape.shaypado.data.local.ISessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +22,17 @@ object ApiModule {
 
     @Singleton
     @Provides
+    fun provideAuthInterceptor(manager: ISessionManager) = AuthInterceptor(manager)
+
+    @Singleton
+    @Provides
+    fun provideTokenAuth(
+        sessionManager: ISessionManager,
+    ): TokenAuthenticator =
+        TokenAuthenticator(sessionManager)
+
+    @Singleton
+    @Provides
     fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
         .apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -28,12 +42,16 @@ object ApiModule {
     @Provides
     fun providesOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+        authInterceptor: AuthInterceptor
     ): OkHttpClient {
         return OkHttpClient
             .Builder()
             .callTimeout(60L, TimeUnit.SECONDS)
             .readTimeout(60L, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .build()
     }
 

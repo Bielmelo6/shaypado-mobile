@@ -43,8 +43,8 @@ class AuthRepository(
         local.saveUser(user)
     }
 
-    override fun fetchUser(): LoginResponse? {
-        return local.fetchUser()
+    override fun fetchUser(): LoginData? {
+        return local.fetchUser()?.toUiModel()
     }
 
     override fun fetchAuthToken(): String? {

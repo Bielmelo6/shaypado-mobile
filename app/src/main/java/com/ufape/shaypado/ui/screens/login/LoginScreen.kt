@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
@@ -43,14 +42,13 @@ import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val viewModel = hiltViewModel<LoginViewModel>()
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     var snackBarMessage by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
 
     LaunchedEffect(key1 = context) {
-        viewModel.loginEvent.collect {
+        authViewModel.loginEvent.collect {
             if (it is Result.Success) {
                 navController.navigate(MobileNavigationScreen.NavRoot.route) {
                     popUpTo(AuthNavigationScreen.NavRoot.route) {
@@ -100,11 +98,11 @@ fun LoginScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(32.dp))
 
                     CustomTextField(
-                        value = viewModel.loginDataState.email,
+                        value = authViewModel.loginDataState.email,
                         onValueChange = {
-                            viewModel.onLoginDataEvent(LoginFormEvent.OnEmailChanged(it))
+                            authViewModel.onLoginDataEvent(LoginFormEvent.OnEmailChanged(it))
                         },
-                        errorMessage = viewModel.loginDataState.emailError,
+                        errorMessage = authViewModel.loginDataState.emailError,
                         keyboardType = KeyboardType.Email,
                         leadingIcon = { EmailIcon() },
                         placeholder = R.string.input_email_placeholder,
@@ -112,11 +110,11 @@ fun LoginScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     CustomTextField(
-                        value = viewModel.loginDataState.password,
+                        value = authViewModel.loginDataState.password,
                         onValueChange = {
-                            viewModel.onLoginDataEvent(LoginFormEvent.OnPasswordChanged(it))
+                            authViewModel.onLoginDataEvent(LoginFormEvent.OnPasswordChanged(it))
                         },
-                        errorMessage = viewModel.loginDataState.passwordError,
+                        errorMessage = authViewModel.loginDataState.passwordError,
                         keyboardType = KeyboardType.Password,
                         leadingIcon = { KeyIcon() },
                         placeholder = R.string.input_password_placeholder,
@@ -130,7 +128,7 @@ fun LoginScreen(navController: NavController) {
                     AppButton(
                         text = R.string.button_login,
                         onClick = {
-                            viewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
+                            authViewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -138,8 +136,7 @@ fun LoginScreen(navController: NavController) {
                         variant = ButtonVariant.TERTIARY,
                         text = R.string.button_google,
                         onClick = {
-                            navController.popBackStack()
-                            navController.navigate(MobileNavigationScreen.NavRoot.route)
+                            authViewModel.mockedLogin()
                         }
                     ) {
                         GoogleImage()

@@ -144,5 +144,8 @@
     <string name="input_validation_strong_password_required">Sua senha é muito fraca</string>
     <string name="input_validation_terms_and_conditions_required">Você deve aceitar os termos de uso.</string>
     <string name="input_any_disease">Comorbidades</string>
+    <string name="sign_up_user_created_title">Parabéns, você criou sua conta.\nAgora, confirme seu e-mail para ter acesso ao app.</string>
+    <string name="sign_up_user_created_button">Ir para tela de login</string>
+    <string name="sign_up_successful_title">Cadastro realizado!</string>
 
 </resources>

@@ -8,5 +8,5 @@ data class UserData(
     val weight: String?,
     val height: String?,
     val objective : String?,
-    val anyDisease : Boolean?
+    val anyDisease : String?
 )

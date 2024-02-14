@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.Chip
 import com.ufape.shaypado.ui.components.ChipSelectionGroup
+import com.ufape.shaypado.ui.model.UserType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 
 @Composable
@@ -29,7 +30,7 @@ fun ChooseProfileScreen(
                 onClick = {
                     navController.navigate(AuthNavigationScreen.SignUpProfileForm.route)
                     viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnUserTypeChanged("student")
+                        UserAccountFormEvent.OnUserTypeChanged(userType = UserType.USER.value)
                     )
                 }
             ),
@@ -40,7 +41,7 @@ fun ChooseProfileScreen(
                 onClick = {
                     navController.navigate(AuthNavigationScreen.SignUpPersonalForm.route)
                     viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnUserTypeChanged("teacher")
+                        UserAccountFormEvent.OnUserTypeChanged(UserType.TRAINER.value)
                     )
                 }
             )

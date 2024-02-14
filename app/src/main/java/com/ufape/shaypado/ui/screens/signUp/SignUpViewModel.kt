@@ -59,7 +59,17 @@ class SignUpViewModel @Inject constructor(
             )
             val result = handler.makeSafeApiCall { authRepository.register(userRequest) }
 
-            registrationEventChannel.send(result)
+            registrationEventChannel.send(Result.Success(
+                UserData(
+                    name = userAccountDataState.name,
+                    email = userAccountDataState.email,
+                    userType = userAccountDataState.userType,
+                    weight = userAccountDataState.weight,
+                    height = userAccountDataState.height,
+                    objective = userAccountDataState.objective,
+                    anyDisease = userAccountDataState.anyDisease
+                )
+            ))
             resetValidationStatus()
         }
     }

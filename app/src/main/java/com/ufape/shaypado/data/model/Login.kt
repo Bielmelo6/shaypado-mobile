@@ -2,6 +2,7 @@ package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.ufape.shaypado.ui.model.LoginData
+import com.ufape.shaypado.ui.model.UserType
 
 data class LoginRequest(
     @SerializedName("email")
@@ -18,10 +19,15 @@ data class LoginResponse(
 )
 
 fun LoginResponse.toUiModel(): LoginData {
+    val userType = when (user.userType) {
+        "student" -> UserType.USER
+        "trainer" -> UserType.TRAINER
+        else -> throw IllegalArgumentException("Unknown user type")
+    }
+
     return LoginData(
         token = this.token,
-        isFirstLogin = true,
         isEmailValid = true,
-        userType = "user"
+        userType = userType
     )
 }

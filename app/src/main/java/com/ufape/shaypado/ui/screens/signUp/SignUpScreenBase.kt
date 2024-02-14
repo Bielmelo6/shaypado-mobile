@@ -28,14 +28,17 @@ fun SignUpScreenBase(
     @StringRes title: Int,
     @StringRes buttonText: Int? = null,
     onButtonClicked: () -> Unit = {},
+    onBackButtonClicked: (() -> Unit)? = null,
     navController: NavController,
     topTitleSpacing: Int = 56,
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(
-            start = 16.dp, end = 16.dp
-        ),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = 16.dp, end = 16.dp
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
@@ -49,7 +52,11 @@ fun SignUpScreenBase(
         ) {
             BackButton(
                 onClick = {
-                    navController.popBackStack()
+                    if (onBackButtonClicked != null) {
+                        onBackButtonClicked()
+                    } else {
+                        navController.popBackStack()
+                    }
                 }
             )
             AppText(

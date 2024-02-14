@@ -51,7 +51,7 @@ fun ProfileFormScreen(
     LaunchedEffect(key1 = viewModel.registerEvent) {
         viewModel.registerEvent.collect {
             if (it is Result.Success) {
-                navController.navigate(MobileNavigationScreen.NavRoot.route)
+                navController.navigate(AuthNavigationScreen.SignUserCreated.route)
             } else if (it is Result.Error) {
                 snackbarMessage = it.exception.getErrorMessage(context)
             }

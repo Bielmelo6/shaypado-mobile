@@ -13,7 +13,7 @@ interface IAuthRepository {
     fun logout()
     fun saveUser(user: LoginResponse)
 
-    fun fetchUser(): LoginResponse?
+    fun fetchUser(): LoginData?
 
     fun fetchAuthToken(): String?
 
