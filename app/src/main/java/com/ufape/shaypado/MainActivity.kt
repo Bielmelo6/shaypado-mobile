@@ -31,6 +31,6 @@ class MainActivity : ComponentActivity(), GlobalNavigationHandler {
     }
 
     override fun sessionExpired() {
-        authViewModel.logout()
+        authViewModel.sessionExpired()
     }
 }

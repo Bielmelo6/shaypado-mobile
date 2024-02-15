@@ -32,6 +32,9 @@ class AuthViewModel @Inject constructor(
     private val _loggedInState = MutableStateFlow(LoggedState())
     val loggedInState = _loggedInState.asStateFlow()
 
+    private val _sessionExpired = MutableStateFlow(false)
+    val sessionExpired = _sessionExpired.asStateFlow()
+
     private val loginEventChannel = Channel<Result<LoginData>>()
     val loginEvent = loginEventChannel.receiveAsFlow()
 
@@ -68,6 +71,11 @@ class AuthViewModel @Inject constructor(
             userType = null,
             isEmailValid = false
         )
+        _sessionExpired.value = false
+    }
+
+    fun sessionExpired() {
+        _sessionExpired.value = true
     }
 
     private fun validate(): Boolean {
@@ -86,6 +94,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun mockedLogin() {
+        _sessionExpired.value = false
         _loggedInState.value = LoggedState(
             token = "token",
             userType = UserType.USER,

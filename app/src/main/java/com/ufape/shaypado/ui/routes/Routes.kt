@@ -79,6 +79,23 @@ fun Routes(authViewModel: AuthViewModel) {
         }
     }
 
+    LaunchedEffect(key1 = authViewModel.sessionExpired) {
+        authViewModel.sessionExpired.collect { didSessionExpire ->
+            if (didSessionExpire) {
+                authViewModel.loggedInState.collect {
+                    when (it.userType) {
+                        UserType.USER -> navigateFromUserToRoot()
+
+                        UserType.TRAINER -> navigateFromTrainerToRoot()
+
+                        else -> navigateToRoot()
+                    }
+                    authViewModel.logout()
+                }
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = AuthNavigationScreen.NavRoot.route
