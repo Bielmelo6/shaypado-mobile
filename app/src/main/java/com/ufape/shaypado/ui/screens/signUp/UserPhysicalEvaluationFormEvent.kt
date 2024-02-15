@@ -1,10 +1,12 @@
 package com.ufape.shaypado.ui.screens.signUp
 
 sealed class UserPhysicalEvaluationFormEvent {
-    data class OnWeightChanged(val weight: String) : UserPhysicalEvaluationFormEvent()
-    data class OnHeightChanged(val height: String) : UserPhysicalEvaluationFormEvent()
-    data class OnObjectiveChanged(val objective: String) : UserPhysicalEvaluationFormEvent()
-    data class OnWorkoutFrequencyChanged(val workoutFrequency: String) : UserPhysicalEvaluationFormEvent()
-    data class OnAnyDiseaseChanged(val anyDisease: Boolean) : UserPhysicalEvaluationFormEvent()
+    data class OnFatPercentageChanged(val fatPercentage: String) : UserPhysicalEvaluationFormEvent()
+    data class OnArmCircumferenceChanged(val armCircumference: String) : UserPhysicalEvaluationFormEvent()
+    data class OnWaistCircumferenceChanged(val waistCircumference: String) : UserPhysicalEvaluationFormEvent()
+    data class OnAbdomenCircumferenceChanged(val abdomenCircumference: String) : UserPhysicalEvaluationFormEvent()
+    data class OnHipCircumferenceChanged(val hipCircumference: String) : UserPhysicalEvaluationFormEvent()
+    data class OnThighCircumferenceChanged(val thighCircumference: String) : UserPhysicalEvaluationFormEvent()
+    data class OnLegCircumferenceChanged(val legCircumference: String) : UserPhysicalEvaluationFormEvent()
     data object OnSubmit : UserPhysicalEvaluationFormEvent()
 }

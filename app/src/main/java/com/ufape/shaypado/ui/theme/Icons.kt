@@ -22,7 +22,7 @@ fun KeyIcon(){
 fun EyeIcon(){
     Icon(
         tint = textSecondary,
-        painter = painterResource(id = R.drawable.ic_eye),
+        painter = painterResource(id = R.drawable.ic_eye_show),
         contentDescription = "Password"
     )
 }
@@ -32,7 +32,7 @@ fun EyeIcon(){
 fun EyeSlashIcon(){
     Icon(
         tint = textSecondary,
-        painter = painterResource(id = R.drawable.ic_eye_slash),
+        painter = painterResource(id = R.drawable.ic_eye_hide),
         contentDescription = "Password"
     )
 }
@@ -45,6 +45,26 @@ fun AtIcon(){
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_at),
+        contentDescription = "Email"
+    )
+}
+
+@Composable
+@Preview
+fun EmailIcon(){
+    Icon(
+        tint = textSecondary,
+        painter = painterResource(id = R.drawable.ic_email),
+        contentDescription = "Email"
+    )
+}
+
+@Composable
+@Preview
+fun PersonIcon(){
+    Icon(
+        tint = textSecondary,
+        painter = painterResource(id = R.drawable.ic_person),
         contentDescription = "Email"
     )
 }
@@ -113,5 +133,14 @@ fun ShaypadoPetImage(){
     Image(
         painter = painterResource(id = R.drawable.brand_logo),
         contentDescription = "Shaypado logo"
+    )
+}
+
+@Composable
+@Preview
+fun InfoIcon(){
+    Icon(
+        painter = painterResource(id = R.drawable.ic_info),
+        contentDescription = "Info"
     )
 }

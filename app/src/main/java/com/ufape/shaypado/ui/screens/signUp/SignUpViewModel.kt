@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.model.UserRequest
+import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validateEmailConfirmation
@@ -12,10 +14,10 @@ import com.ufape.shaypado.ui.domain.use_case.validateHeight
 import com.ufape.shaypado.ui.domain.use_case.validatePasswordConfirmation
 import com.ufape.shaypado.ui.domain.use_case.validateName
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
-import com.ufape.shaypado.ui.domain.use_case.validateUserType
+import com.ufape.shaypado.ui.domain.use_case.validateTermsAndConditions
 import com.ufape.shaypado.ui.domain.use_case.validateWeight
-import com.ufape.shaypado.ui.domain.use_case.validateWorkoutFrequency
-import com.ufape.shaypado.ui.domain.use_case.validateWorkoutType
+import com.ufape.shaypado.ui.model.UserData
+import com.ufape.shaypado.util.ISafeNetworkHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,20 +25,62 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.ufape.shaypado.util.Result
+import java.lang.Exception
+
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor() : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val authRepository: IAuthRepository,
+    private val handler: ISafeNetworkHandler
+) : ViewModel() {
     var userAccountDataState by mutableStateOf(UserAccountFormState())
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
+    var personalFormDataState by mutableStateOf(PersonalFormState())
 
-    private val _hasValidationErrors = MutableStateFlow(false)
-    private val hasValidationErrors = _hasValidationErrors.asStateFlow()
+    private val _hasUserDataValidationErrors = MutableStateFlow<Result<Unit>>(Result.Loading)
+    val validationStatus = _hasUserDataValidationErrors.asStateFlow()
 
-    private val _currentTabIndex = MutableStateFlow(0)
-    val currentTabIndex = _currentTabIndex.asStateFlow()
-
-    private val registrationEventChannel = Channel<Result<Boolean>>()
+    private val registrationEventChannel = Channel<Result<UserData>>()
     val registerEvent = registrationEventChannel.receiveAsFlow()
+
+    private fun registerUser() {
+        if (validationStatus.value !is Result.Success) return
+        viewModelScope.launch {
+            val userRequest = UserRequest(
+                name = userAccountDataState.name,
+                email = userAccountDataState.email,
+                password = userAccountDataState.password,
+                userType = userAccountDataState.userType,
+                weight = userAccountDataState.weight,
+                height = userAccountDataState.height,
+//                objective = userAccountDataState.objective,
+                anyDisease = userAccountDataState.anyDisease
+            )
+            val result = handler.makeSafeApiCall { authRepository.register(userRequest) }
+
+            registrationEventChannel.send(Result.Success(
+                UserData(
+                    name = userAccountDataState.name,
+                    email = userAccountDataState.email,
+                    userType = userAccountDataState.userType,
+                    weight = userAccountDataState.weight,
+                    height = userAccountDataState.height,
+                    objective = userAccountDataState.objective,
+                    anyDisease = userAccountDataState.anyDisease
+                )
+            ))
+            resetValidationStatus()
+        }
+    }
+
+    fun registerUserWithPhysicalEvaluation() {
+        //TODO Implement this
+    }
+
+    fun registerPersonalData() {
+        //TODO Implement this
+    }
 
     fun onUserDataEvent(event: UserAccountFormEvent) {
         when (event) {
@@ -62,83 +106,149 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                     userAccountDataState.copy(passwordConfirmation = event.passwordConfirmation)
             }
 
-            is UserAccountFormEvent.OnSubmit -> {
+            is UserAccountFormEvent.OnWeightChanged -> {
+                userAccountDataState = userAccountDataState.copy(weight = event.weight)
+            }
+
+            is UserAccountFormEvent.OnHeightChanged -> {
+                userAccountDataState = userAccountDataState.copy(height = event.height)
+            }
+
+            is UserAccountFormEvent.OnObjectiveChanged -> {
+                userAccountDataState = userAccountDataState.copy(objective = event.objective)
+            }
+
+            is UserAccountFormEvent.OnAnyDiseaseChanged -> {
+                userAccountDataState = userAccountDataState.copy(anyDisease = event.anyDisease)
+            }
+
+            is UserAccountFormEvent.OnCorporalDataChanged -> {
+                userAccountDataState =
+                    userAccountDataState.copy(saveCorporalData = event.saveCorporalData)
+            }
+
+            is UserAccountFormEvent.OnTermsAcceptedChanged -> {
+                userAccountDataState =
+                    userAccountDataState.copy(termsAccepted = event.termsAccepted)
+            }
+
+            is UserAccountFormEvent.ValidateUserData -> {
+                _hasUserDataValidationErrors.value = Result.Loading
                 validateUserData()
             }
-        }
-    }
 
-    fun onTabSelected(index: Int) {
-        _currentTabIndex.value = index
+            is UserAccountFormEvent.ValidateProfileData -> {
+                _hasUserDataValidationErrors.value = Result.Loading
+                validateProfileData()
+            }
+
+            is UserAccountFormEvent.OnUserTypeChanged -> {
+                userAccountDataState = userAccountDataState.copy(userType = event.userType)
+            }
+
+            is UserAccountFormEvent.OnSubmit -> {
+               _hasUserDataValidationErrors.value = if (!validateUserData() && !validateProfileData())  Result.Success(Unit) else Result.Error(Exception("Validation error"))
+                if (_hasUserDataValidationErrors.value is Result.Success) {
+                    registerUser()
+                }
+            }
+        }
     }
 
     fun onPhysicalEvaluationDataEvent(event: UserPhysicalEvaluationFormEvent) {
         when (event) {
-            is UserPhysicalEvaluationFormEvent.OnWeightChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnFatPercentageChanged -> {
                 userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(weight = event.weight)
+                    userPhysicalEvaluationDataState.copy(fatPercentage = event.fatPercentage)
             }
 
-            is UserPhysicalEvaluationFormEvent.OnHeightChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnArmCircumferenceChanged -> {
                 userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(height = event.height)
+                    userPhysicalEvaluationDataState.copy(armCircumference = event.armCircumference)
             }
 
-            is UserPhysicalEvaluationFormEvent.OnObjectiveChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnWaistCircumferenceChanged -> {
                 userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(objective = event.objective)
+                    userPhysicalEvaluationDataState.copy(waistCircumference = event.waistCircumference)
             }
 
-            is UserPhysicalEvaluationFormEvent.OnWorkoutFrequencyChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnAbdomenCircumferenceChanged -> {
                 userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(workoutFrequency = event.workoutFrequency)
+                    userPhysicalEvaluationDataState.copy(abdomenCircumference = event.abdomenCircumference)
             }
 
-            is UserPhysicalEvaluationFormEvent.OnAnyDiseaseChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnHipCircumferenceChanged -> {
                 userPhysicalEvaluationDataState =
-                    userPhysicalEvaluationDataState.copy(anyDisease = event.anyDisease)
+                    userPhysicalEvaluationDataState.copy(hipCircumference = event.hipCircumference)
+            }
+
+            is UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged -> {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(thighCircumference = event.thighCircumference)
+            }
+
+            is UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged -> {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(legCircumference = event.legCircumference)
             }
 
             is UserPhysicalEvaluationFormEvent.OnSubmit -> {
-                validatePhysicalEvaluationData()
-                register()
+            }
+        }
+    }
+
+    fun onPersonalDataEvent(event: PersonalFormEvent) {
+        when (event) {
+            is PersonalFormEvent.OnNameChanged -> {
+                personalFormDataState = personalFormDataState.copy(name = event.name)
             }
 
+            is PersonalFormEvent.OnEmailChanged -> {
+                personalFormDataState = personalFormDataState.copy(email = event.email)
+            }
+
+            is PersonalFormEvent.OnProfilePictureChanged -> {
+                personalFormDataState =
+                    personalFormDataState.copy(profilePicture = event.profilePicture)
+            }
+
+            is PersonalFormEvent.OnPhoneChanged -> {
+                personalFormDataState = personalFormDataState.copy(phone = event.phone)
+            }
+
+            is PersonalFormEvent.OnSpecialtiesChanged -> {
+                personalFormDataState = personalFormDataState.copy(specialties = event.specialties)
+            }
+
+            is PersonalFormEvent.OnAgeChanged -> {
+                personalFormDataState = personalFormDataState.copy(age = event.age)
+            }
+
+            is PersonalFormEvent.OnStateChanged -> {
+                personalFormDataState = personalFormDataState.copy(state = event.state)
+            }
+
+            is PersonalFormEvent.OnCityChanged -> {
+                personalFormDataState = personalFormDataState.copy(city = event.city)
+            }
+
+            is PersonalFormEvent.OnWorkLocationChanged -> {
+                personalFormDataState =
+                    personalFormDataState.copy(workLocation = event.workLocation)
+            }
+
+            is PersonalFormEvent.OnPlansDocumentChanged -> {
+                personalFormDataState =
+                    personalFormDataState.copy(plansDocument = event.plansDocument)
+            }
+
+            is PersonalFormEvent.OnSubmit -> {
+                validatePersonalData()
+            }
         }
     }
 
-    fun onUserTypeChanged(userType: String) {
-        userAccountDataState = userAccountDataState.copy(userType = userType)
-    }
-
-    fun onWorkoutTypeChanged(workoutType: String) {
-        userAccountDataState = userAccountDataState.copy(workoutType = workoutType)
-    }
-
-    fun onUserTypeNextButtonClicked() {
-        val userTypeValidation = validateUserType(userAccountDataState.userType)
-        userAccountDataState = userAccountDataState.copy(
-            userTypeError = userTypeValidation.error
-        )
-        _hasValidationErrors.value = hasError(userTypeValidation)
-        if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 1
-        }
-    }
-
-    fun onWorkoutNextButtonClicked() {
-        val workoutTypeValidation = validateWorkoutType(userAccountDataState.workoutType)
-        userAccountDataState = userAccountDataState.copy(
-            workoutTypeError = workoutTypeValidation.error
-        )
-        _hasValidationErrors.value = hasError(workoutTypeValidation)
-        if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 2
-        }
-    }
-
-
-    private fun validateUserData() {
+    private fun validateUserData(): Boolean {
         val nameValidation = validateName(userAccountDataState.name)
         val emailValidation = validateEmail(userAccountDataState.email)
         val emailConfirmationValidation = validateEmailConfirmation(
@@ -160,42 +270,57 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             emailConfirmationError = emailConfirmationValidation.error,
         )
 
-        _hasValidationErrors.value = hasError(
+        val hasAnyError = hasError(
             nameValidation,
             emailValidation,
             emailConfirmationValidation,
             passwordValidation,
             passwordConfirmationValidation
         )
-
-        if (!hasValidationErrors.value) {
-            _currentTabIndex.value = 3
+        return if (hasAnyError) {
+            _hasUserDataValidationErrors.value = Result.Error(Exception())
+            true
+        } else {
+            _hasUserDataValidationErrors.value = Result.Success(Unit)
+            false
         }
     }
 
-    private fun validatePhysicalEvaluationData() {
-        val weightValidation = validateWeight(userPhysicalEvaluationDataState.weight)
-        val heightValidation = validateHeight(userPhysicalEvaluationDataState.height)
-        val workoutFrequencyValidation =
-            validateWorkoutFrequency(userPhysicalEvaluationDataState.workoutFrequency)
+    private fun validateProfileData() : Boolean {
+        val weightValidation = validateWeight(userAccountDataState.weight)
+        val heightValidation = validateHeight(userAccountDataState.height)
+        val termsAcceptedValidation = validateTermsAndConditions(userAccountDataState.termsAccepted)
 
-        userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(
+        userAccountDataState = userAccountDataState.copy(
             weightError = weightValidation.error,
             heightError = heightValidation.error,
-            workoutFrequencyError = workoutFrequencyValidation.error,
+            termsAcceptedError = termsAcceptedValidation.error
         )
 
-        _hasValidationErrors.value = hasError(
+        val hasAnyError = hasError(
             weightValidation,
             heightValidation,
-            workoutFrequencyValidation,
+            termsAcceptedValidation
         )
-    }
-
-    private fun register() {
-        if (hasValidationErrors.value) return
-        viewModelScope.launch {
-            registrationEventChannel.send(Result.success(true))
+        return if (hasAnyError) {
+            _hasUserDataValidationErrors.value = Result.Error(Exception())
+            true
+        } else {
+            _hasUserDataValidationErrors.value = Result.Success(Unit)
+            false
         }
     }
+
+    fun validatePersonalData() {
+        //TODO Implement this
+    }
+
+    fun validaTePhysicalEvaluationData() {
+        //TODO Implement this
+    }
+
+    fun resetValidationStatus() {
+        _hasUserDataValidationErrors.value = Result.Loading
+    }
+
 }

@@ -20,11 +20,15 @@
     <string name="input_password">Senha</string>
     <string name="input_password_confirmation">Confirmar senha</string>
 
-    <string name="input_weight">Qual o seu peso?</string>
-    <string name="input_height">Qual a sua altura?</string>
-    <string name="input_goal">Qual o seu objetivo?</string>
+    <string name="input_weight">Peso</string>
+    <string name="input_weight_placeholder">Informe o seu peso</string>
+    <string name="input_height">Altura</string>
+    <string name="input_height_placeholder">Informe a sua altura</string>
+    <string name="input_goal">Objetivo</string>
+    <string name="input_goal_placeholder">Qual o seu objetivo?</string>
     <string name="input_workout_per_week">Quantos treinos na semana?</string>
-    <string name="input_any_disease">Possui alguma comorbidade?</string>
+    <string name="input_any_disease_placeholder">Informe se tiver alguma comobridade</string>
+    <string name="input_register_corporal_data">Deseja registrar suas medidas corporais?</string>
 
     <string name="input_validation_user_name_required">O nome do usuário é obrigatório</string>
     <string name="input_validation_email_required">O e-mail é obrigatório</string>
@@ -54,18 +58,18 @@
 
     <!-- Sign Up screens -->
     <string name="sign_in_title">Entrar</string>
-    <string name="sign_up_title">Informações da conta</string>
-    <string name="sign_up_user_type_title">Que tipo de usuário você é?</string>
-    <string name="sign_up_workout_title">Monte seu treino</string>
+    <string name="sign_up_title">Informações de acesso</string>
+    <string name="sign_up_user_type_title">Escolha o seu perfil!</string>
+    <string name="sign_up_workout_title">Como voce deseja montar o seu treino?</string>
     <string name="sign_up_person_data_title">Informações pessoais</string>
-    <string name="sign_up_forgot_password">Esqueceu a senha?</string>
+    <string name="sign_up_forgot_password">Esqueceu sua senha?</string>
     <string name="sign_up_label">Cadastre-se aqui!</string>
-    <string name="sign_up_no_account">Ainda não possui conta no Shaypado?</string>
+    <string name="sign_up_no_account">Ainda não possui conta?</string>
     <string name="sign_up_saved_workout">Treinos pré-prontos</string>
-    <string name="sign_up_yourself">Você mesmo</string>
-    <string name="sign_up_find_professional">Entrar em contato com um profissional</string>
-    <string name="sign_up_find_professional_usertype">Sou um profissional de educação física</string>
-    <string name="sign_up_find_normal_usertype">Sou alguém que quer praticar exercícios</string>
+    <string name="sign_up_yourself">Eu mesmo</string>
+    <string name="sign_up_find_professional">Com um profissional</string>
+    <string name="sign_up_find_professional_usertype">Sou um profissional</string>
+    <string name="sign_up_find_normal_usertype">Sou um usuario!</string>
 
     <!-- General -->
     <string name="yes">Sim</string>
@@ -73,5 +77,75 @@
     <string name="label">label</string>
     <string name="sign_up_finish">Cadastrar</string>
     <string name="welcome">Bem-vindo!</string>
+    <string name="letter">s</string>
+
+    <string name="sunday_short">D</string>
+    <string name="monday_short">S</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">Q</string>
+    <string name="thursday_short">Q</string>
+    <string name="friday_short">S</string>
+    <string name="saturday_short">S</string>
+    <string name="input_training_name">Nome para o treino</string>
+    <string name="input_user_name_placeholder">Insira seu nome de usuario</string>
+    <string name="input_email_placeholder">Insira seu email</string>
+    <string name="input_email_confirmation_placeholder">Confirme seu email</string>
+    <string name="input_password_placeholder">Insira sua senha</string>
+    <string name="input_password_confirmation_placeholder">Confirme sua senha</string>
+    <string name="forgout_password_title">Recuperação de senha</string>
+    <string name="input_email_forgot_placeholder">Informe seu Email para recuperação</string>
+    <string name="button_recovery_password">Recuperar senha</string>
+    <string name="no_network">Verifique sua conexão com a internet</string>
+    <string name="unknown_error">Erro desconhecido</string>
+    <string name="input_height_cm">CM</string>
+    <string name="input_terms_acceptance">Aceitar os</string>
+    <string name="input_terms_link">termos de uso</string>
+    <string name="input_terms_acceptance2">do aplicativo.</string>
+    <string name="input_objective_kg">KG</string>
+    <string name="input_percentage">%</string>
+    <string name="input_fat_percentage_placeholder">Insira seu percentual de gordura</string>
+    <string name="input_fat_percentage">Gordura</string>
+    <string name="input_arm_circumference">Circunferência do braço</string>
+    <string name="input_arm_circumference_placeholder">Insira a circunferência do seu braço</string>
+    <string name="input_waist_circumference">Circunferência da cintura</string>
+    <string name="input_waist_circumference_placeholder">Insira a circunferência da sua cintura</string>
+    <string name="input_abdomen_circumference">Circunferência do abdômen</string>
+    <string name="input_abdomen_circumference_placeholder">Insira a circunferência do seu abdômen</string>
+    <string name="input_hip_circumference">Circunferência do quadril</string>
+    <string name="input_hip_circumference_placeholder">Insira a circunferência do seu quadril</string>
+    <string name="input_thigh_circumference">Circunferência da coxa</string>
+    <string name="input_thigh_circumference_placeholder">Insira a circunferência da sua coxa</string>
+    <string name="input_leg_circumference">Circunferencia da perna</string>
+    <string name="input_leg_circumference_placeholder">Insira a Circunferencia da perna</string>
+
+    <!-- Labels -->
+    <string name="input_profile_picture">Foto de perfil</string>
+    <string name="input_full_name">Nome completo</string>
+    <string name="input_contact_email">Email</string>
+    <string name="input_phone">Telefone</string>
+    <string name="input_specialties">Especialidades</string>
+    <string name="input_age">Idade</string>
+    <string name="input_state">Estado</string>
+    <string name="input_city">Cidade</string>
+    <string name="input_work_location">Local de trabalho</string>
+    <string name="input_plans_document">Documento de planos</string>
+
+    <!-- Placeholders -->
+    <string name="input_profile_picture_placeholder">Insira sua foto de perfil</string>
+    <string name="input_full_name_placeholder">Insira seu  completo</string>
+    <string name="input_contact_email_placeholder">Insira seu email</string>
+    <string name="input_phone_placeholder">Insira seu telefone</string>
+    <string name="input_specialties_placeholder">Insira suas especialidades</string>
+    <string name="input_age_placeholder">Insira sua idade</string>
+    <string name="input_state_placeholder">Insira seu estado</string>
+    <string name="input_city_placeholder">Insira sua cidade</string>
+    <string name="input_work_location_placeholder">Insira seu local de trabalho presencial (se houver)</string>
+    <string name="input_plans_document_placeholder">Anexe seu documento de planos</string>
+    <string name="input_validation_strong_password_required">Sua senha é muito fraca</string>
+    <string name="input_validation_terms_and_conditions_required">Você deve aceitar os termos de uso.</string>
+    <string name="input_any_disease">Comorbidades</string>
+    <string name="sign_up_user_created_title">Parabéns, você criou sua conta.\nAgora, confirme seu e-mail para ter acesso ao app.</string>
+    <string name="sign_up_user_created_button">Ir para tela de login</string>
+    <string name="sign_up_successful_title">Cadastro realizado!</string>
 
 </resources>

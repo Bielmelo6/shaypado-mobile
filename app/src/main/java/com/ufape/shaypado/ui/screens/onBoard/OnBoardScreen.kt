@@ -71,7 +71,6 @@ fun OnBoardScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 AppButton(
-                    backgroundColor = MaterialTheme.colorScheme.secondary,
                     text = R.string.button_login,
                     onClick = {
                         navController.navigate(AuthNavigationScreen.Login.route)
@@ -92,7 +91,7 @@ fun OnBoardScreen(navController: NavController) {
                     fillWidth = true,
                     color = MaterialTheme.colorScheme.primary,
                     onPress = {
-                        navController.navigate(AuthNavigationScreen.SignUp.route)
+                        navController.navigate(AuthNavigationScreen.SignUpUserForm.route)
                     }
                 )
             }

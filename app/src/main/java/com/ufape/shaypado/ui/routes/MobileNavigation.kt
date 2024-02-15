@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -139,7 +140,10 @@ fun BottomTabItem(
 }
 
 @Composable
-fun MobileRoutes(navController: NavHostController = rememberNavController()) {
+fun MobileRoutes(
+    logOutAction: () -> Unit
+) {
+    val navController: NavHostController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { innerPadding ->
@@ -149,7 +153,7 @@ fun MobileRoutes(navController: NavHostController = rememberNavController()) {
             Modifier.padding(innerPadding)
         ) {
             composable(MobileNavigationScreen.Home.route) {
-                Home(navController)
+                Home(navController, logOutAction)
             }
             composable(MobileNavigationScreen.Pet.route) {
                 Pet(navController)
@@ -168,8 +172,13 @@ fun MobileRoutes(navController: NavHostController = rememberNavController()) {
 }
 
 @Composable
-fun Home(navController: NavController) {
-    Text(text = "Home")
+fun Home(navController: NavController, logOutAction: () -> Unit) {
+
+    Button(onClick = {
+        logOutAction()
+    }) {
+        Text(text = "Logout")
+    }
 }
 
 @Composable

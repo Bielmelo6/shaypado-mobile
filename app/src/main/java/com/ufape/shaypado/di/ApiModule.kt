@@ -1,36 +1,72 @@
 package com.ufape.shaypado.di
 
+import com.ufape.shaypado.data.AuthInterceptor
+import com.ufape.shaypado.data.TokenAuthenticator
 import com.ufape.shaypado.data.api.AuthApi
-import com.ufape.shaypado.data.model.LoginData
-import com.ufape.shaypado.data.model.LoginResponse
-import com.ufape.shaypado.data.model.UserResponse
+import com.ufape.shaypado.data.local.ISessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody.Companion.toResponseBody
-import retrofit2.Response
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
+    val BASE_URL = "http://192.168.1.110:3001"
 
-    //ToDo: Provide real api
     @Singleton
     @Provides
-    fun provideAuthApi(): AuthApi = object : AuthApi {
-        override suspend fun login(data: LoginData): Response<LoginResponse> {
-            return if (data.email == "teste@email.com" && data.password == "123456") {
-                Response.success(200, LoginResponse("token", UserResponse("Usuário de Teste")))
-            } else {
-                return Response.error(
-                    401,
-                    "{\"error\":[\"wrong credentials\"]}"
-                        .toResponseBody("application/json".toMediaTypeOrNull())
-                )
-            }
+    fun provideAuthInterceptor(manager: ISessionManager) = AuthInterceptor(manager)
+
+    @Singleton
+    @Provides
+    fun provideTokenAuth(
+        sessionManager: ISessionManager,
+    ): TokenAuthenticator =
+        TokenAuthenticator(sessionManager)
+
+    @Singleton
+    @Provides
+    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
+        .apply {
+            level = HttpLoggingInterceptor.Level.BODY
         }
+
+    @Singleton
+    @Provides
+    fun providesOkHttpClient(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
+        return OkHttpClient
+            .Builder()
+            .callTimeout(60L, TimeUnit.SECONDS)
+            .readTimeout(60L, TimeUnit.SECONDS)
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
+            .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .build()
+
+
+    @Singleton
+    @Provides
+    fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
 }
