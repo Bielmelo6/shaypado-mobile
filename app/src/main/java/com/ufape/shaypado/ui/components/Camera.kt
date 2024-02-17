@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -28,8 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -56,15 +53,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.ufape.shaypado.ui.data.ia.MLKitAnalyzer
 import com.ufape.shaypado.util.buildBitmap
-import com.ufape.shaypado.util.toTempFile
-
 
 @Composable
 fun Camera(
     context: Context,
     onBackButton: () -> Unit = {},
     mlKitAnalyzer: MLKitAnalyzer? = null,
-    onPicture: (Uri) -> Unit = {}
+    onPicture: (Bitmap) -> Unit = {}
 ) {
     var shouldShowImageDialog by remember { mutableStateOf(false) }
     var shouldOpenGallery by remember { mutableStateOf(false) }
@@ -165,9 +160,7 @@ fun Camera(
                 shouldShowImageDialog = false
             }, onConfirmation = {
                 onPicture(
-                    Uri.fromFile(
-                        selectedBitmap!!.toTempFile(context)
-                    )
+                    selectedBitmap!!
                 )
 
                 shouldShowImageDialog = false

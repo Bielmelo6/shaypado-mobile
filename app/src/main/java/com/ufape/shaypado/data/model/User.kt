@@ -39,16 +39,3 @@ data class UserResponse(
     val anyDisease : String
 )
 
-fun UserResponse.toUiModel(): UserData {
-    return UserData(
-        name = this.name,
-        email = this.email,
-        userType = this.userType,
-        weight = this.weight,
-        height = this.height,
-        objective = this.objective,
-        anyDisease = this.anyDisease
-    )
-}
-
-

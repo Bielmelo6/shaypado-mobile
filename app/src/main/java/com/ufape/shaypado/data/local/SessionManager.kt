@@ -36,7 +36,7 @@ class SessionManager(private val prefs: SharedPreferences) : ISessionManager {
      */
     override fun fetchAuthToken(): String? {
         val user = prefs.getString(USER, null)
-        val token = gson.fromJson(user, LoginResponse::class.java).token
+        val token = gson.fromJson(user, LoginResponse::class.java)?.token
         return if (isTokenValid(token)) {
             token
         } else {

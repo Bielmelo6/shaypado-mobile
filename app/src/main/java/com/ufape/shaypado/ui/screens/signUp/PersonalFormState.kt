@@ -3,7 +3,7 @@ package com.ufape.shaypado.ui.screens.signUp
 import androidx.annotation.StringRes
 
 data class PersonalFormState(
-    val profilePicture: String = "",
+    val profilePicture: String? = null,
     @StringRes val profilePictureError: Int? = null,
     val name: String = "",
     @StringRes val nameError: Int? = null,
@@ -21,6 +21,6 @@ data class PersonalFormState(
     @StringRes val cityError: Int? = null,
     val workLocation: String = "",
     @StringRes val workLocationError: Int? = null,
-    val plansDocument: String = "",
+    val plansDocument: String? = null,
     @StringRes val plansDocumentError: Int? = null,
 )

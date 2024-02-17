@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ufape.shaypado.R
@@ -82,6 +83,7 @@ enum class ButtonVariant {
 fun AppButton(
     @StringRes text: Int = R.string.label,
     onClick: () -> Unit = { },
+    @StringRes errorMessage: Int? = null,
     backgroundColor: Color? = null,
     variant : ButtonVariant = ButtonVariant.PRIMARY,
     leftIcon: @Composable (() -> Unit)? = null
@@ -119,10 +121,77 @@ fun AppButton(
                 Spacer(modifier = Modifier.width(8.dp))
             }
             AppText(
+                textAlignment = TextAlign.Center,
                 text = text,
                 textType = TextType.TITLE_MEDIUM,
                 color = textColor
             )
         }
+    }
+    if (errorMessage != null) {
+        AppText(
+            textType = TextType.LABEL_MEDIUM,
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error
+        )
+    }
+}
+
+@Composable
+@Preview
+fun AppButton(
+    text: String = "Label",
+    onClick: () -> Unit = { },
+    @StringRes errorMessage: Int? = null,
+    backgroundColor: Color? = null,
+    variant : ButtonVariant = ButtonVariant.PRIMARY,
+    leftIcon: @Composable (() -> Unit)? = null
+) {
+
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primaryContainer
+        ButtonVariant.SECONDARY -> MaterialTheme.colorScheme.secondary
+        ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.secondaryContainer
+        ButtonVariant.TERTIARY -> MaterialTheme.colorScheme.tertiaryContainer
+    }
+
+    val textColor = when (variant) {
+        ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.onSecondaryContainer
+        else -> MaterialTheme.colorScheme.onPrimaryContainer
+    }
+
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor ?: containerColor
+        ),
+        shape = RoundedCornerShape(8.dp),
+        onClick = onClick,
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+    ) {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (leftIcon != null) {
+                leftIcon()
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+            AppText(
+                textAlignment = TextAlign.Center,
+                text = text,
+                textType = TextType.TITLE_MEDIUM,
+                color = textColor
+            )
+        }
+    }
+    if (errorMessage != null) {
+        AppText(
+            textType = TextType.LABEL_MEDIUM,
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error
+        )
     }
 }

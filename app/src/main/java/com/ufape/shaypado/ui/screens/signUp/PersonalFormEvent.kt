@@ -1,8 +1,7 @@
 package com.ufape.shaypado.ui.screens.signUp
 
 sealed class PersonalFormEvent {
-    data class OnProfilePictureChanged(val profilePicture: String) : PersonalFormEvent()
-
+    data class OnProfilePictureChanged(val profilePicture: String?) : PersonalFormEvent()
     data class OnNameChanged(val name: String) : PersonalFormEvent()
 
     data class OnEmailChanged(val email: String) : PersonalFormEvent()
@@ -19,7 +18,7 @@ sealed class PersonalFormEvent {
 
     data class OnWorkLocationChanged(val workLocation: String) : PersonalFormEvent()
 
-    data class OnPlansDocumentChanged(val plansDocument: String) : PersonalFormEvent()
+    data class OnPlansDocumentChanged(val plansDocument: String?) : PersonalFormEvent()
 
     data object OnSubmit : PersonalFormEvent()
 }
