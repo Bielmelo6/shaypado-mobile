@@ -147,5 +147,13 @@
     <string name="sign_up_user_created_title">Parabéns, você criou sua conta.\nAgora, confirme seu e-mail para ter acesso ao app.</string>
     <string name="sign_up_user_created_button">Ir para tela de login</string>
     <string name="sign_up_successful_title">Cadastro realizado!</string>
+    <string name="input_validation_phone_required">Informe o número de telefone</string>
+    <string name="input_validation_invalid_phone">O telefone informado é inválido</string>
+    <string name="input_validation_specialties_required">Informe suas especialidades</string>
+    <string name="input_validation_age_numeric">A idade deve ser numérica</string>
+    <string name="input_validation_age_required">Informe sua idade</string>
+    <string name="input_validation_state_required">Informe seu estado</string>
+    <string name="input_validation_city_required">Informe sua cidade</string>
+    <string name="input_validation_plans_document_required">Envie seu documento de planos</string>
 
 </resources>

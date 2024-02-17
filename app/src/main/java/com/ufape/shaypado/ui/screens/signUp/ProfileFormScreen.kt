@@ -26,7 +26,6 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
-import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
 
@@ -48,8 +47,8 @@ fun ProfileFormScreen(
         }
     }
 
-    LaunchedEffect(key1 = viewModel.registerEvent) {
-        viewModel.registerEvent.collect {
+    LaunchedEffect(key1 = viewModel.userRegisterEvent) {
+        viewModel.userRegisterEvent.collect {
             if (it is Result.Success) {
                 navController.navigate(AuthNavigationScreen.SignUserCreated.route)
             } else if (it is Result.Error) {

@@ -5,18 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.model.TrainerRequest
 import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
+import com.ufape.shaypado.ui.domain.use_case.validateAge
+import com.ufape.shaypado.ui.domain.use_case.validateCity
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validateEmailConfirmation
 import com.ufape.shaypado.ui.domain.use_case.validateHeight
 import com.ufape.shaypado.ui.domain.use_case.validatePasswordConfirmation
 import com.ufape.shaypado.ui.domain.use_case.validateName
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
+import com.ufape.shaypado.ui.domain.use_case.validatePhone
+import com.ufape.shaypado.ui.domain.use_case.validatePlansDocument
+import com.ufape.shaypado.ui.domain.use_case.validateSpecialties
+import com.ufape.shaypado.ui.domain.use_case.validateState
 import com.ufape.shaypado.ui.domain.use_case.validateTermsAndConditions
 import com.ufape.shaypado.ui.domain.use_case.validateWeight
-import com.ufape.shaypado.ui.model.UserData
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -38,11 +44,14 @@ class SignUpViewModel @Inject constructor(
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
     var personalFormDataState by mutableStateOf(PersonalFormState())
 
-    private val _hasUserDataValidationErrors = MutableStateFlow<Result<Unit>>(Result.Loading)
-    val validationStatus = _hasUserDataValidationErrors.asStateFlow()
+    private val _hasValidationErrors = MutableStateFlow<Result<Unit>>(Result.Loading)
+    val validationStatus = _hasValidationErrors.asStateFlow()
 
-    private val registrationEventChannel = Channel<Result<UserData>>()
-    val registerEvent = registrationEventChannel.receiveAsFlow()
+    private val _trainerRegistrationEventChannel = Channel<Result<Unit>>()
+    val trainerRegisterEvent = _trainerRegistrationEventChannel.receiveAsFlow()
+
+    private val userRegistrationEventChannel = Channel<Result<Unit>>()
+    val userRegisterEvent = userRegistrationEventChannel.receiveAsFlow()
 
     private fun registerUser() {
         if (validationStatus.value !is Result.Success) return
@@ -57,19 +66,8 @@ class SignUpViewModel @Inject constructor(
 //                objective = userAccountDataState.objective,
                 anyDisease = userAccountDataState.anyDisease
             )
-            val result = handler.makeSafeApiCall { authRepository.register(userRequest) }
-
-            registrationEventChannel.send(Result.Success(
-                UserData(
-                    name = userAccountDataState.name,
-                    email = userAccountDataState.email,
-                    userType = userAccountDataState.userType,
-                    weight = userAccountDataState.weight,
-                    height = userAccountDataState.height,
-                    objective = userAccountDataState.objective,
-                    anyDisease = userAccountDataState.anyDisease
-                )
-            ))
+            val result = handler.makeSafeApiCall { authRepository.registerUser(userRequest) }
+            userRegistrationEventChannel.send(result)
             resetValidationStatus()
         }
     }
@@ -78,8 +76,30 @@ class SignUpViewModel @Inject constructor(
         //TODO Implement this
     }
 
-    fun registerPersonalData() {
-        //TODO Implement this
+    private fun registerPersonal() {
+        if (_hasValidationErrors.value !is Result.Success) return
+        viewModelScope.launch {
+            val data = TrainerRequest(
+                name = userAccountDataState.name,
+                email = userAccountDataState.email,
+                password = userAccountDataState.password,
+                userType = userAccountDataState.userType,
+
+                fullName = personalFormDataState.name,
+                contactPhone = personalFormDataState.phone,
+                contactEmail = personalFormDataState.email,
+                specialties = personalFormDataState.specialties,
+                age = personalFormDataState.age,
+                state = personalFormDataState.state,
+                city = personalFormDataState.city,
+                workLocation = personalFormDataState.workLocation,
+                plansDocument = personalFormDataState.plansDocument!!,
+                profilePicture = personalFormDataState.profilePicture
+            )
+            val result = handler.makeSafeApiCall { authRepository.registerTrainer(data) }
+            _trainerRegistrationEventChannel.send(result)
+            resetValidationStatus()
+        }
     }
 
     fun onUserDataEvent(event: UserAccountFormEvent) {
@@ -133,12 +153,12 @@ class SignUpViewModel @Inject constructor(
             }
 
             is UserAccountFormEvent.ValidateUserData -> {
-                _hasUserDataValidationErrors.value = Result.Loading
+                _hasValidationErrors.value = Result.Loading
                 validateUserData()
             }
 
             is UserAccountFormEvent.ValidateProfileData -> {
-                _hasUserDataValidationErrors.value = Result.Loading
+                _hasValidationErrors.value = Result.Loading
                 validateProfileData()
             }
 
@@ -147,8 +167,11 @@ class SignUpViewModel @Inject constructor(
             }
 
             is UserAccountFormEvent.OnSubmit -> {
-               _hasUserDataValidationErrors.value = if (!validateUserData() && !validateProfileData())  Result.Success(Unit) else Result.Error(Exception("Validation error"))
-                if (_hasUserDataValidationErrors.value is Result.Success) {
+                _hasValidationErrors.value =
+                    if (!validateUserData() && !validateProfileData()) Result.Success(Unit) else Result.Error(
+                        Exception("Validation error")
+                    )
+                if (_hasValidationErrors.value is Result.Success) {
                     registerUser()
                 }
             }
@@ -243,7 +266,8 @@ class SignUpViewModel @Inject constructor(
             }
 
             is PersonalFormEvent.OnSubmit -> {
-                validatePersonalData()
+                validateTrainerData()
+                registerPersonal()
             }
         }
     }
@@ -278,15 +302,15 @@ class SignUpViewModel @Inject constructor(
             passwordConfirmationValidation
         )
         return if (hasAnyError) {
-            _hasUserDataValidationErrors.value = Result.Error(Exception())
+            _hasValidationErrors.value = Result.Error(Exception())
             true
         } else {
-            _hasUserDataValidationErrors.value = Result.Success(Unit)
+            _hasValidationErrors.value = Result.Success(Unit)
             false
         }
     }
 
-    private fun validateProfileData() : Boolean {
+    private fun validateProfileData(): Boolean {
         val weightValidation = validateWeight(userAccountDataState.weight)
         val heightValidation = validateHeight(userAccountDataState.height)
         val termsAcceptedValidation = validateTermsAndConditions(userAccountDataState.termsAccepted)
@@ -303,16 +327,52 @@ class SignUpViewModel @Inject constructor(
             termsAcceptedValidation
         )
         return if (hasAnyError) {
-            _hasUserDataValidationErrors.value = Result.Error(Exception())
+            _hasValidationErrors.value = Result.Error(Exception())
             true
         } else {
-            _hasUserDataValidationErrors.value = Result.Success(Unit)
+            _hasValidationErrors.value = Result.Success(Unit)
             false
         }
     }
 
-    fun validatePersonalData() {
-        //TODO Implement this
+    fun validateTrainerData(): Boolean {
+        val nameValidation = validateName(personalFormDataState.name)
+        val emailValidation = validateEmail(personalFormDataState.email)
+        val phoneValidation = validatePhone(personalFormDataState.phone)
+        val specialtiesValidation = validateSpecialties(personalFormDataState.specialties)
+        val ageValidation = validateAge(personalFormDataState.age)
+        val stateValidation = validateState(personalFormDataState.state)
+        val cityValidation = validateCity(personalFormDataState.city)
+        val plansDocumentValidation = validatePlansDocument(personalFormDataState.plansDocument)
+
+        personalFormDataState = personalFormDataState.copy(
+            nameError = nameValidation.error,
+            emailError = emailValidation.error,
+            phoneError = phoneValidation.error,
+            specialtiesError = specialtiesValidation.error,
+            ageError = ageValidation.error,
+            stateError = stateValidation.error,
+            cityError = cityValidation.error,
+            plansDocumentError = plansDocumentValidation.error
+        )
+
+        val hasAnyError = hasError(
+            nameValidation,
+            emailValidation,
+            phoneValidation,
+            specialtiesValidation,
+            ageValidation,
+            stateValidation,
+            cityValidation,
+            plansDocumentValidation
+        )
+        return if (hasAnyError) {
+            _hasValidationErrors.value = Result.Error(Exception())
+            true
+        } else {
+            _hasValidationErrors.value = Result.Success(Unit)
+            false
+        }
     }
 
     fun validaTePhysicalEvaluationData() {
@@ -320,7 +380,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun resetValidationStatus() {
-        _hasUserDataValidationErrors.value = Result.Loading
+        _hasValidationErrors.value = Result.Loading
     }
 
 }
