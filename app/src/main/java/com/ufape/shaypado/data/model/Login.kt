@@ -27,7 +27,6 @@ fun LoginResponse.toUiModel(): LoginData {
 
     return LoginData(
         token = this.token,
-        isEmailValid = true,
         userType = userType
     )
 }

@@ -10,7 +10,6 @@ import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
 import com.ufape.shaypado.ui.domain.use_case.validatePassword
-import com.ufape.shaypado.ui.model.LoginData
 import com.ufape.shaypado.ui.model.UserType
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
@@ -35,7 +34,7 @@ class AuthViewModel @Inject constructor(
     private val _sessionExpired = MutableStateFlow(false)
     val sessionExpired = _sessionExpired.asStateFlow()
 
-    private val loginEventChannel = Channel<Result<LoginData>>()
+    private val loginEventChannel = Channel<Result<LoggedState>>()
     val loginEvent = loginEventChannel.receiveAsFlow()
 
     init {
@@ -43,7 +42,6 @@ class AuthViewModel @Inject constructor(
         _loggedInState.value = LoggedState(
             token = user?.token,
             userType = user?.userType,
-            isEmailValid = user?.isEmailValid ?: false
         )
     }
 
@@ -64,12 +62,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun logout(){
+    fun logout() {
         authRepository.logout()
         _loggedInState.value = LoggedState(
             token = null,
             userType = null,
-            isEmailValid = false
         )
         _sessionExpired.value = false
     }
@@ -98,7 +95,6 @@ class AuthViewModel @Inject constructor(
         _loggedInState.value = LoggedState(
             token = "token",
             userType = UserType.USER,
-            isEmailValid = true
         )
     }
 
@@ -115,7 +111,15 @@ class AuthViewModel @Inject constructor(
             val result = handler.makeSafeApiCall {
                 authRepository.login(loginRequest)
             }
-            loginEventChannel.send(result)
+
+            if (result is Result.Success) {
+                _loggedInState.value = LoggedState(
+                    token = result.data.token,
+                    userType = result.data.userType,
+                )
+            } else if (result is Result.Error){
+                loginEventChannel.send(result)
+            }
         }
     }
 }

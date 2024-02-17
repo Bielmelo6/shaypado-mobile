@@ -1,7 +1,6 @@
 package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
-import com.ufape.shaypado.ui.model.UserData
 
 data class UserRequest(
     @SerializedName("name")
