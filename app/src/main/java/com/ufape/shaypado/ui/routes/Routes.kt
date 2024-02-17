@@ -64,16 +64,12 @@ fun Routes(authViewModel: AuthViewModel) {
     LaunchedEffect(key1 = authViewModel.loggedInState) {
         authViewModel.loggedInState.collect {
             if (it.token?.isNotEmpty() == true) {
-                if (!it.isEmailValid) {
-                    navController.navigate(AuthNavigationScreen.SignUserCreated.route)
-                } else {
-                    when (it.userType) {
-                        UserType.USER -> navigateToUser()
+                when (it.userType) {
+                    UserType.USER -> navigateToUser()
 
-                        UserType.TRAINER -> navigateToTrainer()
+                    UserType.TRAINER -> navigateToTrainer()
 
-                        else -> navigateToRoot()
-                    }
+                    else -> navigateToRoot()
                 }
             }
         }

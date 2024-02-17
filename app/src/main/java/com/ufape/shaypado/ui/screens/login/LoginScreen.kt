@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.exceptions.ApiErrorException
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.ButtonVariant
@@ -33,7 +34,6 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
-import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.ui.theme.EmailIcon
 import com.ufape.shaypado.ui.theme.GoogleImage
 import com.ufape.shaypado.ui.theme.KeyIcon
@@ -49,15 +49,17 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
 
     LaunchedEffect(key1 = context) {
         authViewModel.loginEvent.collect {
-            if (it is Result.Success) {
-                navController.navigate(MobileNavigationScreen.NavRoot.route) {
-                    popUpTo(AuthNavigationScreen.NavRoot.route) {
-                        inclusive = true
+            if (it is Result.Error) {
+                if (it.exception is ApiErrorException){
+                    val error = it.exception.message
+                    if (error == "validate email") {
+                        navController.navigate(AuthNavigationScreen.SignUpUserForm.route)
+                    } else {
+                        snackBarMessage = it.exception.getErrorMessage(context)
                     }
+                }else {
+                    snackBarMessage = it.exception.getErrorMessage(context)
                 }
-            } else if (it is Result.Error) {
-                snackBarMessage = it.exception.getErrorMessage(context)
-
             }
         }
     }

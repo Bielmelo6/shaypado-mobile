@@ -9,6 +9,5 @@ enum class UserType(
 
 data class LoginData(
     val token : String,
-    val isEmailValid : Boolean,
     val userType : UserType,
 )
