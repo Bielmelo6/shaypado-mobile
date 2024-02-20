@@ -117,6 +117,31 @@
     <string name="input_thigh_circumference_placeholder">Insira a circunferência da sua coxa</string>
     <string name="input_leg_circumference">Circunferencia da perna</string>
     <string name="input_leg_circumference_placeholder">Insira a Circunferencia da perna</string>
+    <string name="input_shoulder_circumference">Circunferência do ombro</string>
+    <string name="input_shoulder_circumference_placeholder">Insira a circunferência do seu ombro</string>
+    <string name="input_triceps_fold">Dobra tríceps</string>
+    <string name="input_triceps_fold_placeholder">Insira a dobra tríceps</string>
+    <string name="input_biceps_fold">Dobra bíceps</string>
+    <string name="input_biceps_fold_placeholder">Insira a dobra bíceps</string>
+    <string name="input_chest_fold">Dobra torácica</string>
+    <string name="input_chest_fold_placeholder">Insira a dobra torácica</string>
+    <string name="input_axial_fold">Dobra axial</string>
+    <string name="input_axial_fold_placeholder">Insira a dobra axial</string>
+    <string name="input_suprailiac_fold">Dobra suprailíaca</string>
+    <string name="input_suprailiac_fold_placeholder">Insira a dobra suprailíaca</string>
+    <string name="input_abdominal_fold">Dobra abdominal</string>
+    <string name="input_abdominal_fold_placeholder">Insira a dobra abdominal</string>
+    <string name="input_thigh_fold">Dobra da coxa</string>
+    <string name="input_thigh_fold_placeholder">Insira a dobra da coxa</string>
+    <string name="input_leg_fold">Dobra de perna</string>
+    <string name="input_leg_fold_placeholder">Insira a dobra de perna</string>
+    <string name="input_health_issue">Problema de saúde</string>
+    <string name="input_health_issue_placeholder">Descreva seu problema de saúde</string>
+    <string name="input_exercise_experience">Experiência na prática de exercícios</string>
+    <string name="input_exercise_experience_placeholder">Descreva sua experiência na prática de exercícios</string>
+    <string name="input_spine_problem">Problema na coluna</string>
+    <string name="input_smoker">É fumante</string>
+
 
     <!-- Labels -->
     <string name="input_profile_picture">Foto de perfil</string>

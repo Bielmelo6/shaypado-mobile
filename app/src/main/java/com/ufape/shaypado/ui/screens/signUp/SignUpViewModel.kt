@@ -215,7 +215,8 @@ class SignUpViewModel @Inject constructor(
                     userPhysicalEvaluationDataState.copy(legCircumference = event.legCircumference)
             }
 
-            is UserPhysicalEvaluationFormEvent.OnSubmit -> {
+            else -> {
+                //TODO Implement this
             }
         }
     }

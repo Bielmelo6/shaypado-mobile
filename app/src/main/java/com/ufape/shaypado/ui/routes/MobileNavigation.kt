@@ -31,6 +31,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.screens.addTraining.AddTrainingScreen
+import com.ufape.shaypado.ui.screens.trainer.AddUserScreen
 
 data class BottomBarItemStyle(
     @StringRes val title: Int,
@@ -173,12 +175,7 @@ fun MobileRoutes(
 
 @Composable
 fun Home(navController: NavController, logOutAction: () -> Unit) {
-
-    Button(onClick = {
-        logOutAction()
-    }) {
-        Text(text = "Logout")
-    }
+    AddUserScreen()
 }
 
 @Composable
