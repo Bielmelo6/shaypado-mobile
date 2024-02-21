@@ -25,5 +25,7 @@ sealed class UserPhysicalEvaluationFormEvent {
     data class OnSpineProblemChanged(val hasSpineProblem: Boolean) : UserPhysicalEvaluationFormEvent()
     data class OnSmokerChanged(val isSmoker: Boolean) : UserPhysicalEvaluationFormEvent()
     data class OnScapularFoldChanged(val scapularFold: String) : UserPhysicalEvaluationFormEvent()
+    data class OnObjectiveChanged(val objective: String) : UserPhysicalEvaluationFormEvent()
+
     data object OnSubmit : UserPhysicalEvaluationFormEvent()
 }

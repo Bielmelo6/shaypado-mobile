@@ -14,12 +14,12 @@ import com.ufape.shaypado.R
 sealed class TrainerNavigationScreen(val route: String, val barItemStyle: BottomBarItemStyle) {
     data object NavRoot : TrainerNavigationScreen(
         "trainer_root",
-        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weigth, R.drawable.ic_nav_weigth)
+        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
     )
 
     data object Home : TrainerNavigationScreen(
         "trainer_home",
-        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weigth, R.drawable.ic_nav_weigth)
+        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
     )
 
     data object Pet : TrainerNavigationScreen(

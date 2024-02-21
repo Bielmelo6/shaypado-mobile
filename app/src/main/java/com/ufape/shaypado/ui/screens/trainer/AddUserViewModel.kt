@@ -45,22 +45,6 @@ class AddUserViewModel @Inject constructor(
                     userAccountDataState.copy(passwordConfirmation = event.passwordConfirmation)
             }
 
-            is UserAccountFormEvent.OnWeightChanged -> {
-                userAccountDataState = userAccountDataState.copy(weight = event.weight)
-            }
-
-            is UserAccountFormEvent.OnHeightChanged -> {
-                userAccountDataState = userAccountDataState.copy(height = event.height)
-            }
-
-            is UserAccountFormEvent.OnObjectiveChanged -> {
-                userAccountDataState = userAccountDataState.copy(objective = event.objective)
-            }
-
-            is UserAccountFormEvent.OnAnyDiseaseChanged -> {
-                userAccountDataState = userAccountDataState.copy(anyDisease = event.anyDisease)
-            }
-
             is UserAccountFormEvent.OnCorporalDataChanged -> {
                 userAccountDataState =
                     userAccountDataState.copy(saveCorporalData = event.saveCorporalData)
@@ -75,8 +59,7 @@ class AddUserViewModel @Inject constructor(
                 userAccountDataState = userAccountDataState.copy(userType = event.userType)
             }
 
-            else -> {
-            }
+            else -> {}
         }
     }
 
@@ -202,7 +185,12 @@ class AddUserViewModel @Inject constructor(
                     userPhysicalEvaluationDataState.copy(scapularFold = event.scapularFold)
             }
 
-            UserPhysicalEvaluationFormEvent.OnSubmit -> {
+            is UserPhysicalEvaluationFormEvent.OnObjectiveChanged -> {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(objective = event.objective)
+            }
+
+            is UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 registerUser()
             }
         }

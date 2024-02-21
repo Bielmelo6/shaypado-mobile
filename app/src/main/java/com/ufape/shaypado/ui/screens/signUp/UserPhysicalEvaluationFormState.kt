@@ -45,6 +45,8 @@ data class UserPhysicalEvaluationFormState(
     @StringRes val healthIssueError: Int? = null,
     val scapularFold: String = "",
     @StringRes val scapularFoldError: Int? = null,
+    val objective: String = "",
+    @StringRes val objectiveError: Int? = null,
     val exerciseExperience: Boolean = false,
     val spineProblem: Boolean = false,
     val isSmoker: Boolean = false

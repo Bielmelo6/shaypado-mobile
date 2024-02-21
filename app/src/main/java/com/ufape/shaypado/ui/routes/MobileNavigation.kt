@@ -3,13 +3,17 @@ package com.ufape.shaypado.ui.routes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -19,9 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -43,12 +51,12 @@ data class BottomBarItemStyle(
 sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomBarItemStyle) {
     data object NavRoot : MobileNavigationScreen(
         "mobile_root",
-        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weigth, R.drawable.ic_nav_weigth)
+        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
     )
 
     data object Home : MobileNavigationScreen(
         "home",
-        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weigth, R.drawable.ic_nav_weigth)
+        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
     )
 
     data object Pet : MobileNavigationScreen(
@@ -63,12 +71,12 @@ sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomB
 
     data object Profile : MobileNavigationScreen(
         "profile",
-        BottomBarItemStyle(R.string.profile, R.drawable.ic_nav_user, R.drawable.ic_nav_user)
+        BottomBarItemStyle(R.string.profile, R.drawable.ic_nav_home, R.drawable.ic_nav_home)
     )
 
     data object Settings : MobileNavigationScreen(
         "settings",
-        BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_nut, R.drawable.ic_nav_nut)
+        BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_settings, R.drawable.ic_nav_settings)
     )
 }
 
@@ -93,8 +101,12 @@ fun BottomBar(navController: NavHostController) {
 
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .fillMaxWidth(),
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .fillMaxWidth()
+            .padding(
+                horizontal = 8.dp,
+            )
+        ,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -112,8 +124,51 @@ fun BottomTabItem(
     navController: NavController,
     route: String
 ) {
+    if (isSelected) {
+        Box(modifier = Modifier
+            .zIndex(2f)
+            .graphicsLayer {
+                translationY = -40f
+            }
+            .clickable(
+                onClick = {
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(60.dp)
+                    .background(
+                        shape = RoundedCornerShape(50.dp),
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                    .border(
+                        width = 4.dp,
+                        color = Color.White,
+                        shape = RoundedCornerShape(50.dp)
+                    ),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = style.icon),
+                    contentDescription = "icon",
+                    tint =  MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+        }
+        return
+    }
+
     Box(modifier = Modifier
-        .height(60.dp)
         .clickable(
             onClick = {
                 navController.navigate(route) {
@@ -135,7 +190,7 @@ fun BottomTabItem(
             Icon(
                 painter = painterResource(id = style.icon),
                 contentDescription = "icon",
-                tint = colorResource(id = R.color.white)
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
     }

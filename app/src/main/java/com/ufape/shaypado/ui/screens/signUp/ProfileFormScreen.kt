@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -71,12 +71,12 @@ fun ProfileFormScreen(
             navController = navController
         ) {
             CustomTextField(
-                value = viewModel.userAccountDataState.weight,
-                errorMessage = viewModel.userAccountDataState.weightError,
+                value = viewModel.userPhysicalEvaluationDataState.weight,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.weightError,
                 keyboardType = KeyboardType.Number,
                 onValueChange = {
-                    viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnWeightChanged(
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnWeightChanged(
                             it
                         )
                     )
@@ -95,12 +95,12 @@ fun ProfileFormScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomTextField(
-                value = viewModel.userAccountDataState.height,
-                errorMessage = viewModel.userAccountDataState.heightError,
+                value = viewModel.userPhysicalEvaluationDataState.height,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.heightError,
                 keyboardType = KeyboardType.Number,
                 onValueChange = {
-                    viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnHeightChanged(
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnHeightChanged(
                             it
                         )
                     )
@@ -119,11 +119,11 @@ fun ProfileFormScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomTextField(
-                value = viewModel.userAccountDataState.objective,
-                errorMessage = viewModel.userAccountDataState.objectiveError,
+                value = viewModel.userPhysicalEvaluationDataState.objective,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.objectiveError,
                 onValueChange = {
-                    viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnObjectiveChanged(
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnObjectiveChanged(
                             it
                         )
                     )
@@ -135,11 +135,11 @@ fun ProfileFormScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomTextField(
-                value = viewModel.userAccountDataState.anyDisease,
-                errorMessage = viewModel.userAccountDataState.anyDiseaseError,
+                value = viewModel.userPhysicalEvaluationDataState.healthIssue,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.healthIssueError,
                 onValueChange = {
-                    viewModel.onUserDataEvent(
-                        UserAccountFormEvent.OnAnyDiseaseChanged(
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnHealthIssueChanged(
                             it
                         )
                     )
@@ -163,7 +163,7 @@ fun ProfileFormScreen(
                 })
 
             if (!viewModel.userAccountDataState.saveCorporalData) {
-                Divider()
+                HorizontalDivider()
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically
