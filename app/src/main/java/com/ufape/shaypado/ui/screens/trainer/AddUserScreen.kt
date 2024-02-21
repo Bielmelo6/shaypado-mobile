@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,8 @@ import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
+import com.ufape.shaypado.ui.components.NextButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.screens.signUp.UserAccountFormEvent
 import com.ufape.shaypado.ui.screens.signUp.UserPhysicalEvaluationFormEvent
@@ -39,9 +42,48 @@ fun CmLabel() {
 }
 
 @Composable
+fun KgLabel() {
+    AppText(
+        color = MaterialTheme.colorScheme.primary,
+        text = R.string.input_objective_kg,
+        textType = TextType.LABEL_LARGE
+    )
+}
+
+@Composable
+fun MmLabel() {
+    AppText(
+        color = MaterialTheme.colorScheme.primary,
+        text = R.string.input_mm,
+        textType = TextType.LABEL_LARGE
+    )
+}
+
+
+@Composable
+fun AgesLabel() {
+    AppText(
+        color = MaterialTheme.colorScheme.primary,
+        text = R.string.input_ages,
+        textType = TextType.LABEL_LARGE
+    )
+}
+
+
+@Composable
+fun PercentageLabel() {
+    AppText(
+        color = MaterialTheme.colorScheme.primary,
+        text = "%",
+        textType = TextType.LABEL_LARGE
+    )
+}
+
+
+@Composable
 @Preview
 fun AddUserScreen() {
-    val viewModel : AddUserViewModel = hiltViewModel()
+    val viewModel: AddUserViewModel = hiltViewModel()
 
     Column(
         modifier = Modifier
@@ -70,10 +112,9 @@ fun AddUserScreen() {
                 textType = TextType.HEADLINE_MEDIUM,
                 textAlignment = TextAlign.Center,
                 text = "title",
-                fillWidth = true
             )
 
-            BackButton(
+            NextButton(
                 onClick = {
 
                 }
@@ -89,24 +130,92 @@ fun AddUserScreen() {
                 .verticalScroll(rememberScrollState())
         )
         {
-            // Exemplo para altura
             CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.height,
-                errorMessage = viewModel.userPhysicalEvaluationDataState.heightError,
-                keyboardType = KeyboardType.Number,
+                value = viewModel.userAccountDataState.name,
+                errorMessage = viewModel.userAccountDataState.nameError,
                 onValueChange = {
-                    viewModel.onPhysicalEvaluationDataEvent(
-                        UserPhysicalEvaluationFormEvent.OnHeightChanged(it)
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnNameChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
-                placeholder = R.string.input_height_placeholder,
-                label = R.string.input_height
+                placeholder = R.string.input_full_name_placeholder,
+                label = R.string.input_full_name
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Exemplo para idade
+            CustomTextField(
+                value = viewModel.userAccountDataState.email,
+                errorMessage = viewModel.userAccountDataState.emailError,
+                onValueChange = {
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnEmailChanged(it)
+                    )
+                },
+                placeholder = R.string.input_email_placeholder,
+                label = R.string.input_email
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CustomTextField(
+                value = viewModel.userAccountDataState.password,
+                errorMessage = viewModel.userAccountDataState.passwordError,
+                onValueChange = {
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnPasswordChanged(it)
+                    )
+                },
+                placeholder = R.string.input_password_placeholder,
+                label = R.string.input_password
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    CustomTextField(
+                        value = viewModel.userPhysicalEvaluationDataState.height,
+                        errorMessage = viewModel.userPhysicalEvaluationDataState.heightError,
+                        keyboardType = KeyboardType.Number,
+                        onValueChange = {
+                            viewModel.onPhysicalEvaluationDataEvent(
+                                UserPhysicalEvaluationFormEvent.OnHeightChanged(it)
+                            )
+                        },
+                        trailingIcon = { CmLabel() },
+                        placeholder = R.string.input_height_placeholder,
+                        label = R.string.input_height
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Row(
+                    modifier = Modifier.weight(1f)
+
+                ) {
+                    CustomTextField(
+                        value = viewModel.userPhysicalEvaluationDataState.weight,
+                        errorMessage = viewModel.userPhysicalEvaluationDataState.weightError,
+                        keyboardType = KeyboardType.Number,
+                        onValueChange = {
+                            viewModel.onPhysicalEvaluationDataEvent(
+                                UserPhysicalEvaluationFormEvent.OnWeightChanged(it)
+                            )
+                        },
+                        trailingIcon = { KgLabel() },
+                        placeholder = R.string.input_weight_placeholder,
+                        label = R.string.input_weight
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.age,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.ageError,
@@ -116,46 +225,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnAgeChanged(it)
                     )
                 },
+                trailingIcon = { AgesLabel() },
                 placeholder = R.string.input_age_placeholder,
                 label = R.string.input_age
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Exemplo para circunferência do quadril
-            CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.hipCircumference,
-                errorMessage = viewModel.userPhysicalEvaluationDataState.hipCircumferenceError,
-                keyboardType = KeyboardType.Number,
-                onValueChange = {
-                    viewModel.onPhysicalEvaluationDataEvent(
-                        UserPhysicalEvaluationFormEvent.OnHipCircumferenceChanged(it)
-                    )
-                },
-                trailingIcon = { CmLabel() },
-                placeholder = R.string.input_hip_circumference_placeholder,
-                label = R.string.input_hip_circumference
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Percentual de gordura
-            CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.fatPercentage,
-                errorMessage = viewModel.userPhysicalEvaluationDataState.fatPercentageError,
-                keyboardType = KeyboardType.Number,
-                onValueChange = {
-                    viewModel.onPhysicalEvaluationDataEvent(
-                        UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(it)
-                    )
-                },
-                placeholder = R.string.input_fat_percentage_placeholder,
-                label = R.string.input_fat_percentage
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-// Circunferência do braço
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.armCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.armCircumferenceError,
@@ -172,7 +248,6 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Circunferência da cintura
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.waistCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.waistCircumferenceError,
@@ -189,7 +264,6 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Circunferência do abdômen
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.abdomenCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.abdomenCircumferenceError,
@@ -206,7 +280,6 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Circunferência do quadril
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.hipCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.hipCircumferenceError,
@@ -223,7 +296,6 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Circunferência da coxa
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.thighCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.thighCircumferenceError,
@@ -242,7 +314,22 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Circunferência da perna
+            CustomTextField(
+                value = viewModel.userPhysicalEvaluationDataState.scapularFold,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.scapularFoldError,
+                keyboardType = KeyboardType.Number,
+                onValueChange = {
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnScapularFoldChanged(it)
+                    )
+                },
+                trailingIcon = { MmLabel() },
+                placeholder = R.string.input_scapular_fold_placeholder,
+                label = R.string.input_scapular_fold
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.legCircumference,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.legCircumferenceError,
@@ -252,14 +339,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_leg_circumference_placeholder,
                 label = R.string.input_leg_circumference
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Dobra tríceps
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.tricepsFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.tricepsFoldError,
@@ -269,14 +355,14 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnTricepsFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_triceps_fold_placeholder,
                 label = R.string.input_triceps_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra bíceps
+
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.bicepsFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.bicepsFoldError,
@@ -286,14 +372,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnBicepsFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_biceps_fold_placeholder,
                 label = R.string.input_biceps_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra torácica
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.chestFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.chestFoldError,
@@ -303,14 +388,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnChestFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_chest_fold_placeholder,
                 label = R.string.input_chest_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra axial
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.axialFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.axialFoldError,
@@ -320,14 +404,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnAxialFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_axial_fold_placeholder,
                 label = R.string.input_axial_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra suprailíaca
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.suprailiacFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.suprailiacFoldError,
@@ -337,14 +420,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnSuprailiacFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_suprailiac_fold_placeholder,
                 label = R.string.input_suprailiac_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra abdominal
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.abdominalFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.abdominalFoldError,
@@ -354,14 +436,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnAbdominalFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_abdominal_fold_placeholder,
                 label = R.string.input_abdominal_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra da coxa
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.thighFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.thighFoldError,
@@ -371,14 +452,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnThighFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_thigh_fold_placeholder,
                 label = R.string.input_thigh_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Dobra de perna
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.legFold,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.legFoldError,
@@ -388,14 +468,13 @@ fun AddUserScreen() {
                         UserPhysicalEvaluationFormEvent.OnLegFoldChanged(it)
                     )
                 },
-                trailingIcon = { CmLabel() },
+                trailingIcon = { MmLabel() },
                 placeholder = R.string.input_leg_fold_placeholder,
                 label = R.string.input_leg_fold
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Problema de saúde
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.healthIssue,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.healthIssueError,
@@ -411,27 +490,67 @@ fun AddUserScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-// Experiência na prática de exercícios
             CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.exerciseExperience,
-                errorMessage = viewModel.userPhysicalEvaluationDataState.exerciseExperienceError,
-                keyboardType = KeyboardType.Text,
+                value = viewModel.userPhysicalEvaluationDataState.fatPercentage,
+                errorMessage = viewModel.userPhysicalEvaluationDataState.fatPercentageError,
+                keyboardType = KeyboardType.Number,
                 onValueChange = {
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(it)
+                    )
+                },
+                trailingIcon = { PercentageLabel() },
+                placeholder = R.string.input_fat_percentage_placeholder,
+                label = R.string.input_fat_percentage
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            GroupedLabeledCheckbox(
+                title = R.string.input_smoker,
+                isChecked = viewModel.userPhysicalEvaluationDataState.exerciseExperience,
+                checkedLabel = R.string.yes,
+                unCheckedLabel = R.string.no,
+                onCheckedChange = {
                     viewModel.onPhysicalEvaluationDataEvent(
                         UserPhysicalEvaluationFormEvent.OnExerciseExperienceChanged(it)
                     )
-                },
-                placeholder = R.string.input_exercise_experience_placeholder,
-                label = R.string.input_exercise_experience
+                }
+            )
+
+            GroupedLabeledCheckbox(
+                title = R.string.input_spine_problem,
+                isChecked = viewModel.userPhysicalEvaluationDataState.spineProblem,
+                checkedLabel = R.string.yes,
+                unCheckedLabel = R.string.no,
+                onCheckedChange = {
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnSpineProblemChanged(it)
+                    )
+                }
+            )
+
+            GroupedLabeledCheckbox(
+                title = R.string.input_smoker,
+                isChecked = viewModel.userPhysicalEvaluationDataState.isSmoker,
+                checkedLabel = R.string.yes,
+                unCheckedLabel = R.string.no,
+                onCheckedChange = {
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnSmokerChanged(it)
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
         }
 
         AppButton(
-            text = "buttonText",
+            text = R.string.button_register,
             onClick = {
-
+                viewModel.onPhysicalEvaluationDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnSubmit
+                )
             }
         )
     }

@@ -21,8 +21,9 @@ sealed class UserPhysicalEvaluationFormEvent {
     data class OnThighFoldChanged(val thighFold: String) : UserPhysicalEvaluationFormEvent()
     data class OnLegFoldChanged(val legFold: String) : UserPhysicalEvaluationFormEvent()
     data class OnHealthIssueChanged(val healthIssue: String) : UserPhysicalEvaluationFormEvent()
-    data class OnExerciseExperienceChanged(val exerciseExperience: String) : UserPhysicalEvaluationFormEvent()
+    data class OnExerciseExperienceChanged(val exerciseExperience: Boolean) : UserPhysicalEvaluationFormEvent()
     data class OnSpineProblemChanged(val hasSpineProblem: Boolean) : UserPhysicalEvaluationFormEvent()
     data class OnSmokerChanged(val isSmoker: Boolean) : UserPhysicalEvaluationFormEvent()
+    data class OnScapularFoldChanged(val scapularFold: String) : UserPhysicalEvaluationFormEvent()
     data object OnSubmit : UserPhysicalEvaluationFormEvent()
 }

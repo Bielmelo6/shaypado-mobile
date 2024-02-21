@@ -180,5 +180,10 @@
     <string name="input_validation_state_required">Informe seu estado</string>
     <string name="input_validation_city_required">Informe sua cidade</string>
     <string name="input_validation_plans_document_required">Envie seu documento de planos</string>
+    <string name="input_mm">MM</string>
+    <string name="input_scapular_fold_placeholder">Insira a dobra escapular</string>
+    <string name="input_scapular_fold">Dobra escapular</string>
+    <string name="input_ages">ANOS</string>
+    <string name="button_register">Cadastrar</string>
 
 </resources>

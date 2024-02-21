@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
@@ -45,6 +49,30 @@ fun BackButton(
         )
     }
 }
+
+
+@Preview
+@Composable
+fun NextButton(
+    onClick: () -> Unit = { },
+    enabled: Boolean = true,
+) {
+    FilledIconButton(
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = "Next",
+            tint = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
 
 @Preview
 @Composable

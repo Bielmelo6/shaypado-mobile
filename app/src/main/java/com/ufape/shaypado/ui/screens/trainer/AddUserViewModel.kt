@@ -197,6 +197,11 @@ class AddUserViewModel @Inject constructor(
                     userPhysicalEvaluationDataState.copy(spineProblem = event.hasSpineProblem)
             }
 
+            is UserPhysicalEvaluationFormEvent.OnScapularFoldChanged -> {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(scapularFold = event.scapularFold)
+            }
+
             UserPhysicalEvaluationFormEvent.OnSubmit -> {
                 registerUser()
             }
