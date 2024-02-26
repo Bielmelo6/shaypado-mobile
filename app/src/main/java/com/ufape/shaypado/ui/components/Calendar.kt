@@ -1,22 +1,26 @@
 package com.ufape.shaypado.ui.components
 
-import android.provider.CalendarContract.Colors
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerState
@@ -44,16 +48,22 @@ fun DaysOfWeekChooserItem(
     @StringRes label: Int = R.string.letter
 ) {
     val colors = if (isSelected) {
-        IconButtonDefaults.filledIconButtonColors()
+        IconButtonDefaults.filledIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.inversePrimary,
+        )
     } else {
         IconButtonDefaults.filledIconButtonColors(
-            containerColor = Color.Transparent,
+            containerColor =  MaterialTheme.colorScheme.surface,
         )
     }
 
     FilledIconButton(
+        modifier = Modifier
+            .width(43.dp)
+            .height(56.dp),
         colors = colors,
         onClick = onSelected,
+        shape = RoundedCornerShape(8.dp)
     ) {
         AppText(
             textAlignment = TextAlign.Center,
@@ -86,47 +96,61 @@ fun DaysOfWeekChooser(
         onItemSelected(selectedList)
     }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    )
+    {
 
-        ) {
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[0],
-            onSelected = { handleOnSelected(0) },
-            label = R.string.sunday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[1],
-            onSelected = { handleOnSelected(1) },
-            label = R.string.monday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[2],
-            onSelected = { handleOnSelected(2) },
-            label = R.string.tuesday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[3],
-            onSelected = { handleOnSelected(3) },
-            label = R.string.wednesday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[4],
-            onSelected = { handleOnSelected(4) },
-            label = R.string.thursday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[5],
-            onSelected = { handleOnSelected(5) },
-            label = R.string.friday_short
-        )
-        DaysOfWeekChooserItem(
-            isSelected = selectedList[6],
-            onSelected = { handleOnSelected(6) },
-            label = R.string.saturday_short
+        AppText(
+            textType = TextType.TITLE_MEDIUM,
+            text = "Dias da semana",
+            color = MaterialTheme.colorScheme.onSurface
         )
 
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+
+            ) {
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[0],
+                onSelected = { handleOnSelected(0) },
+                label = R.string.sunday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[1],
+                onSelected = { handleOnSelected(1) },
+                label = R.string.monday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[2],
+                onSelected = { handleOnSelected(2) },
+                label = R.string.tuesday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[3],
+                onSelected = { handleOnSelected(3) },
+                label = R.string.wednesday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[4],
+                onSelected = { handleOnSelected(4) },
+                label = R.string.thursday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[5],
+                onSelected = { handleOnSelected(5) },
+                label = R.string.friday_short
+            )
+            DaysOfWeekChooserItem(
+                isSelected = selectedList[6],
+                onSelected = { handleOnSelected(6) },
+                label = R.string.saturday_short
+            )
+
+        }
     }
 }
 
@@ -134,8 +158,9 @@ fun DaysOfWeekChooser(
 @Preview
 fun TimePicker(
     title: String = "Select Time",
-    selectedHour : Int = 0,
-    selectedMinute : Int = 0,
+    label: Int = R.string.label,
+    selectedHour: Int = 0,
+    selectedMinute: Int = 0,
     onConfirm: (state: TimePickerState) -> Unit = {},
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
@@ -145,16 +170,49 @@ fun TimePicker(
         initialMinute = selectedMinute
     )
 
-    TextButton(onClick = {
-        showPicker = true
-    }) {
-        Text(state.hour.toString() + ":" + state.minute.toString())
+    Column(modifier = Modifier.fillMaxWidth())
+    {
+
+        AppText(
+            textType = TextType.TITLE_MEDIUM,
+            text = label,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable { showPicker = true }
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+            AppText(
+                textType = TextType.HEADLINE_SMALL,
+                text = String.format("%02d", state.hour) + ":" + String.format("%02d", state.minute)
+            )
+            Icon(
+                imageVector = Icons.Default.Timer,
+                contentDescription = "Select Time",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
     }
+
+
 
     if (!showPicker) return
 
     Dialog(
-        onDismissRequest = {showPicker = false},
+        onDismissRequest = { showPicker = false },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         ),
@@ -174,13 +232,12 @@ fun TimePicker(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp),
+                AppText(
+                    fillWidth = true,
                     text = title,
-                    style = MaterialTheme.typography.labelMedium
+                    textType = TextType.TITLE_MEDIUM
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 TimeInput(state = state)
                 Row(
                     modifier = Modifier
@@ -188,15 +245,26 @@ fun TimePicker(
                         .fillMaxWidth()
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
+
                     TextButton(
-                        onClick = {showPicker = false}
-                    ) { Text("Cancel") }
+                        onClick = { showPicker = false }
+                    ) {
+                        AppText(
+                            text = R.string.cancel,
+                            textType = TextType.TITLE_MEDIUM
+                        )
+                    }
                     TextButton(
                         onClick = {
                             onConfirm(state)
                             showPicker = false
                         }
-                    ) { Text("OK") }
+                    ) {
+                        AppText(
+                            text = R.string.confirm,
+                            textType = TextType.TITLE_MEDIUM
+                        )
+                    }
                 }
             }
         }

@@ -185,5 +185,18 @@
     <string name="input_scapular_fold">Dobra escapular</string>
     <string name="input_ages">ANOS</string>
     <string name="button_register">Cadastrar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="stundets">Alunos</string>
+    <string name="trainings">Treinos</string>
+    <string name="delete_class">Deletar turma</string>
+    <string name="save">Salvar</string>
+    <string name="class_name">Nome da turma</string>
+    <string name="class_name_placeholder">Insira o nome da turma</string>
+    <string name="edit_class">Editar turma</string>
+    <string name="start_time">Horário de início</string>
+    <string name="end_time">Horário do fim</string>
+    <string name="class_details">Turma</string>
+    <string name="student_details">Detalhes do estudante</string>
 
 </resources>

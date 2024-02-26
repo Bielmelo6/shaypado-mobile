@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
@@ -31,8 +33,8 @@ import com.ufape.shaypado.R
 @Preview
 @Composable
 fun BackButton(
-    onClick: () -> Unit = { },
     enabled: Boolean = true,
+    onClick: () -> Unit = { }
 ) {
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
@@ -73,6 +75,51 @@ fun NextButton(
     }
 }
 
+@Preview
+@Composable
+fun AddButton(
+    onClick: () -> Unit = { },
+    enabled: Boolean = true,
+) {
+    FilledIconButton(
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+
+@Preview
+@Composable
+fun EditButton(
+    enabled: Boolean = true,
+    onClick: () -> Unit = { }
+) {
+    FilledIconButton(
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.ModeEdit,
+            contentDescription = "Add",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
 
 @Preview
 @Composable
@@ -103,7 +150,8 @@ enum class ButtonVariant {
     PRIMARY,
     SECONDARY,
     SECONDARY_CONTAINER,
-    TERTIARY
+    TERTIARY,
+    ERROR_CONTAINER
 }
 
 @Composable
@@ -113,7 +161,7 @@ fun AppButton(
     onClick: () -> Unit = { },
     @StringRes errorMessage: Int? = null,
     backgroundColor: Color? = null,
-    variant : ButtonVariant = ButtonVariant.PRIMARY,
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
     leftIcon: @Composable (() -> Unit)? = null
 ) {
 
@@ -122,10 +170,12 @@ fun AppButton(
         ButtonVariant.SECONDARY -> MaterialTheme.colorScheme.secondary
         ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.secondaryContainer
         ButtonVariant.TERTIARY -> MaterialTheme.colorScheme.tertiaryContainer
+        ButtonVariant.ERROR_CONTAINER -> MaterialTheme.colorScheme.errorContainer
     }
 
     val textColor = when (variant) {
         ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.onSecondaryContainer
+        ButtonVariant.ERROR_CONTAINER -> MaterialTheme.colorScheme.onErrorContainer
         else -> MaterialTheme.colorScheme.onPrimaryContainer
     }
 
@@ -139,7 +189,7 @@ fun AppButton(
             .height(60.dp)
             .fillMaxWidth()
     ) {
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -172,7 +222,7 @@ fun AppButton(
     onClick: () -> Unit = { },
     @StringRes errorMessage: Int? = null,
     backgroundColor: Color? = null,
-    variant : ButtonVariant = ButtonVariant.PRIMARY,
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
     leftIcon: @Composable (() -> Unit)? = null
 ) {
 
@@ -181,10 +231,12 @@ fun AppButton(
         ButtonVariant.SECONDARY -> MaterialTheme.colorScheme.secondary
         ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.secondaryContainer
         ButtonVariant.TERTIARY -> MaterialTheme.colorScheme.tertiaryContainer
+        ButtonVariant.ERROR_CONTAINER -> MaterialTheme.colorScheme.errorContainer
     }
 
     val textColor = when (variant) {
         ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.onSecondaryContainer
+        ButtonVariant.ERROR_CONTAINER -> MaterialTheme.colorScheme.onErrorContainer
         else -> MaterialTheme.colorScheme.onPrimaryContainer
     }
 
@@ -198,7 +250,7 @@ fun AppButton(
             .height(60.dp)
             .fillMaxWidth()
     ) {
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center

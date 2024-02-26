@@ -144,3 +144,21 @@ fun InfoIcon(){
         contentDescription = "Info"
     )
 }
+
+@Composable
+@Preview
+fun TrainingImage() {
+    Image(
+        painter = painterResource(id = R.drawable.ic_training),
+        contentDescription = "Training",
+    )
+}
+
+@Composable
+@Preview
+fun StudentImage() {
+    Image(
+        painter = painterResource(id = R.drawable.ic_student),
+        contentDescription = "Student",
+    )
+}

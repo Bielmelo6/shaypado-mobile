@@ -94,7 +94,7 @@ class AuthViewModel @Inject constructor(
         _sessionExpired.value = false
         _loggedInState.value = LoggedState(
             token = "token",
-            userType = UserType.USER,
+            userType = UserType.TRAINER,
         )
     }
 

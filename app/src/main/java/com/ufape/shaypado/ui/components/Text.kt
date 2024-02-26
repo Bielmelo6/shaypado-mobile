@@ -25,7 +25,8 @@ enum class TextType {
     BODY_LARGE,
     BODY_MEDIUM,
     HEADLINE_LARGE,
-    HEADLINE_MEDIUM
+    HEADLINE_MEDIUM,
+    HEADLINE_SMALL,
 }
 
 @Composable
@@ -50,6 +51,7 @@ fun AppText(
         TextType.BODY_MEDIUM -> MaterialTheme.typography.bodyMedium
         TextType.HEADLINE_LARGE -> MaterialTheme.typography.headlineLarge
         TextType.HEADLINE_MEDIUM -> MaterialTheme.typography.headlineMedium
+        TextType.HEADLINE_SMALL -> MaterialTheme.typography.headlineSmall
     }
 
     style = style.copy(
@@ -89,6 +91,7 @@ fun AppText(
         TextType.BODY_MEDIUM -> MaterialTheme.typography.bodyMedium
         TextType.HEADLINE_LARGE -> MaterialTheme.typography.headlineLarge
         TextType.HEADLINE_MEDIUM -> MaterialTheme.typography.headlineMedium
+        TextType.HEADLINE_SMALL -> MaterialTheme.typography.headlineSmall
     }
 
     style = style.copy(
