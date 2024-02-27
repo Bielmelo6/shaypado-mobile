@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity(), GlobalNavigationHandler {
         super.onCreate(savedInstanceState)
         setContent {
             ShaypadoTheme {
-                authViewModel.mockedLogin()
 
                 // A surface container using the 'background' color from the theme
                 Routes(authViewModel)

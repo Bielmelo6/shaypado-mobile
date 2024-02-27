@@ -66,23 +66,7 @@ class SignUpViewModel @Inject constructor(
     private fun registerPersonal() {
         if (_hasValidationErrors.value !is Result.Success) return
         viewModelScope.launch {
-            val data = TrainerRequest(
-                name = userAccountDataState.name,
-                email = userAccountDataState.email,
-                password = userAccountDataState.password,
-                userType = userAccountDataState.userType,
-
-                fullName = personalFormDataState.name,
-                contactPhone = personalFormDataState.phone,
-                contactEmail = personalFormDataState.email,
-                specialties = personalFormDataState.specialties,
-                age = personalFormDataState.age,
-                state = personalFormDataState.state,
-                city = personalFormDataState.city,
-                workLocation = personalFormDataState.workLocation,
-                plansDocument = personalFormDataState.plansDocument!!,
-                profilePicture = personalFormDataState.profilePicture
-            )
+            val data = personalFormDataState.toRequest(userAccountDataState)
             val result = handler.makeSafeApiCall { authRepository.registerTrainer(data) }
             _trainerRegistrationEventChannel.send(result)
             resetValidationStatus()

@@ -34,20 +34,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppText
+import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.screens.trainer.counter.CounterBasePreview
 
 @Composable
 fun TrainerHomeScreen(
     navController: NavController
 ) {
-    ClassDetailsRenderItem{
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+
+        AppText(
+            textType = TextType.HEADLINE_MEDIUM,
+            textAlignment = TextAlign.Center,
+            text = R.string.edit_class,
+        )
+
+        AddButton(onClick = {
+            navController.popBackStack()
+        })
+    }
+    ClassDetailsRenderItem {
         navController.navigate(
             TrainerNavigationScreen.ClassDetails.route
         )
@@ -59,7 +80,7 @@ fun TrainerHomeScreen(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items (10) {
+        items(10) {
             UserDetailsRenderItem(
                 leadingIcon = {
                     Image(
@@ -213,7 +234,7 @@ fun UserDetailsRenderItem(
     trailingIcon: @Composable () -> Unit = { },
     name: String = "Nome",
     description: String = "Descrição",
-    onPress : () -> Unit = { }
+    onPress: () -> Unit = { }
 ) {
     Row(
         modifier = Modifier

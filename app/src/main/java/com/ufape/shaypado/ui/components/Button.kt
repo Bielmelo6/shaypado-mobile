@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ModeEdit
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
@@ -97,6 +98,27 @@ fun AddButton(
     }
 }
 
+@Preview
+@Composable
+fun RemoveButton(
+    onClick: () -> Unit = { },
+    enabled: Boolean = true,
+) {
+    FilledIconButton(
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Remove,
+            contentDescription = "Add",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
 
 @Preview
 @Composable
