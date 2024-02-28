@@ -53,7 +53,7 @@ fun DaysOfWeekChooserItem(
         )
     } else {
         IconButtonDefaults.filledIconButtonColors(
-            containerColor =  MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surface,
         )
     }
 
@@ -87,13 +87,11 @@ fun DaysOfWeekChooser(
         false
     )
 ) {
-    var selectedList by rememberSaveable { mutableStateOf(itemsSelected) }
 
     fun handleOnSelected(index: Int) {
-        val newList = selectedList.toMutableList()
+        val newList = itemsSelected.toMutableList()
         newList[index] = !newList[index]
-        selectedList = newList
-        onItemSelected(selectedList)
+        onItemSelected(newList)
     }
 
     Column(
@@ -115,37 +113,37 @@ fun DaysOfWeekChooser(
 
             ) {
             DaysOfWeekChooserItem(
-                isSelected = selectedList[0],
+                isSelected = itemsSelected[0],
                 onSelected = { handleOnSelected(0) },
                 label = R.string.sunday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[1],
+                isSelected = itemsSelected[1],
                 onSelected = { handleOnSelected(1) },
                 label = R.string.monday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[2],
+                isSelected = itemsSelected[2],
                 onSelected = { handleOnSelected(2) },
                 label = R.string.tuesday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[3],
+                isSelected = itemsSelected[3],
                 onSelected = { handleOnSelected(3) },
                 label = R.string.wednesday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[4],
+                isSelected = itemsSelected[4],
                 onSelected = { handleOnSelected(4) },
                 label = R.string.thursday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[5],
+                isSelected = itemsSelected[5],
                 onSelected = { handleOnSelected(5) },
                 label = R.string.friday_short
             )
             DaysOfWeekChooserItem(
-                isSelected = selectedList[6],
+                isSelected = itemsSelected[6],
                 onSelected = { handleOnSelected(6) },
                 label = R.string.saturday_short
             )
@@ -159,10 +157,19 @@ fun DaysOfWeekChooser(
 fun TimePicker(
     title: String = "Select Time",
     label: Int = R.string.label,
-    selectedHour: Int = 0,
-    selectedMinute: Int = 0,
-    onConfirm: (state: TimePickerState) -> Unit = {},
+    time : String = "00:00",
+    onConfirm: (state: String) -> Unit = {},
 ) {
+    var selectedHour = 0
+    var selectedMinute = 0
+
+    try {
+        selectedHour = time.substringBefore(":").toInt()
+        selectedMinute = time.substringAfter(":").toInt()
+    } catch (e: Exception){
+        e.printStackTrace()
+    }
+
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val state = rememberTimePickerState(
         is24Hour = true,
@@ -196,7 +203,7 @@ fun TimePicker(
         ) {
             AppText(
                 textType = TextType.HEADLINE_SMALL,
-                text = String.format("%02d", state.hour) + ":" + String.format("%02d", state.minute)
+                text = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute)
             )
             Icon(
                 imageVector = Icons.Default.Timer,
@@ -256,7 +263,9 @@ fun TimePicker(
                     }
                     TextButton(
                         onClick = {
-                            onConfirm(state)
+                            onConfirm(
+                                "${state.hour}:${state.minute}"
+                            )
                             showPicker = false
                         }
                     ) {

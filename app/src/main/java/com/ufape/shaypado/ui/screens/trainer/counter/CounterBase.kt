@@ -39,9 +39,12 @@ import com.ufape.shaypado.ui.theme.Nunito
 @Composable
 fun CounterBase(
     navController: NavController,
-    title: String
+    title: String,
+    value: Int = 1,
+    decrease: () -> Unit,
+    increase: () -> Unit,
+    onNextPressed : () -> Unit
 ) {
-    var counter by remember { mutableIntStateOf(0) }
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -84,7 +87,7 @@ fun CounterBase(
         ) {
             Row {
                 Text(
-                    text = counter.toString(),
+                    text = value.toString(),
                     fontFamily = Nunito,
                     fontWeight = FontWeight.Black,
                     fontSize = 100.sp,
@@ -99,33 +102,21 @@ fun CounterBase(
 
             ) {
                 RemoveButton(
-                    enabled = counter > 0,
-                    onClick = { counter-- }
+                    enabled = value > 1,
+                    onClick = { decrease() }
                 )
                 AddButton(
-                    onClick = { counter++ },
-                    enabled = counter < 10
+                    onClick = { increase() },
+                    enabled = value < 10
                 )
             }
         }
     }
 
     AppButton(
-        text = R.string.save,
-        onClick = { },
+        text = R.string.button_next,
+        onClick = {
+            onNextPressed()
+        },
     )
-}
-
-@Preview
-@Composable
-fun CounterBasePreview() {
-   Column (
-         modifier = Modifier.fillMaxHeight()
-
-   ) {
-       CounterBase(
-           navController = rememberNavController(),
-           title = "Quantas turmas diferentes você deseja cadastrar?"
-       )
-   }
 }

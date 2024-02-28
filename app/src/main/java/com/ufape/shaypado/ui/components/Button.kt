@@ -35,20 +35,30 @@ import com.ufape.shaypado.R
 @Composable
 fun BackButton(
     enabled: Boolean = true,
+    variant: ButtonVariant = ButtonVariant.SECONDARY_CONTAINER,
     onClick: () -> Unit = { }
 ) {
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val iconColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onSecondaryContainer
+    }
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = containerColor
         )
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_back_arrow),
             contentDescription = "Back",
-            tint = MaterialTheme.colorScheme.onSecondaryContainer
+            tint = iconColor
         )
     }
 }
@@ -57,21 +67,32 @@ fun BackButton(
 @Preview
 @Composable
 fun NextButton(
-    onClick: () -> Unit = { },
+    variant: ButtonVariant = ButtonVariant.SECONDARY_CONTAINER,
     enabled: Boolean = true,
+    onClick: () -> Unit = { }
 ) {
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val iconColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onSecondaryContainer
+    }
+
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = containerColor
         )
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = "Next",
-            tint = MaterialTheme.colorScheme.onSecondaryContainer
+            tint = iconColor
         )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.screens.trainer.classDetails.ClassDetailsScreen
+import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
+import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
+import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
@@ -35,9 +39,14 @@ sealed class TrainerNavigationScreen(
         BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
     )
 
-    data object Home : TrainerNavigationScreen(
-        "trainer_home",
+    data object Classes : TrainerNavigationScreen(
+        "trainer_classes",
         BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
+    )
+
+    data object Networking : TrainerNavigationScreen(
+        "trainer_networking",
+        BottomBarItemStyle(R.string.home, R.drawable.ic_nav_home, R.drawable.ic_nav_home)
     )
 
     data object Progress : TrainerNavigationScreen(
@@ -45,14 +54,22 @@ sealed class TrainerNavigationScreen(
         BottomBarItemStyle(R.string.progress, R.drawable.ic_nav_chart, R.drawable.ic_nav_chart)
     )
 
-    data object Profile : TrainerNavigationScreen(
-        "trainer_profile",
-        BottomBarItemStyle(R.string.profile, R.drawable.ic_nav_user, R.drawable.ic_nav_user)
+    data object Notifications : TrainerNavigationScreen(
+        "trainer_notifications",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_notifications,
+            R.drawable.ic_notifications
+        )
     )
 
     data object Settings : TrainerNavigationScreen(
         "trainer_settings",
-        BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_nut, R.drawable.ic_nav_nut)
+        BottomBarItemStyle(
+            R.string.settings,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
     )
 
     data object ClassDetails : TrainerNavigationScreen(
@@ -66,14 +83,19 @@ sealed class TrainerNavigationScreen(
     data object StudentDetails : TrainerNavigationScreen(
         "student_details",
     )
+
+    data object CreateClasses : TrainerNavigationScreen(
+        "create_classes",
+    )
 }
 
 @Composable
 fun TrainerBottomBar(navController: NavHostController) {
     val bottomTabItems = listOf(
+        TrainerNavigationScreen.Networking,
         TrainerNavigationScreen.Progress,
-        TrainerNavigationScreen.Home,
-        TrainerNavigationScreen.Profile,
+        TrainerNavigationScreen.Classes,
+        TrainerNavigationScreen.Notifications,
         TrainerNavigationScreen.Settings,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -105,8 +127,8 @@ fun TrainerBottomBar(navController: NavHostController) {
 
 @Composable
 fun Container(
-    content : @Composable () -> Unit
-){
+    content: @Composable () -> Unit
+) {
     Column(modifier = Modifier.padding(16.dp)) {
         content()
     }
@@ -117,15 +139,16 @@ fun TrainerRoutes(
     logOutAction: () -> Unit
 ) {
     val navController: NavHostController = rememberNavController()
+    val createClassViewModel = hiltViewModel<CreateClassViewModel>()
     Scaffold(
         bottomBar = { TrainerBottomBar(navController = navController) }
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = TrainerNavigationScreen.Home.route,
+            startDestination = TrainerNavigationScreen.Classes.route,
             Modifier.padding(innerPadding)
         ) {
-            composable(TrainerNavigationScreen.Home.route) {
+            composable(TrainerNavigationScreen.Classes.route) {
                 Container {
                     TrainerHomeScreen(
                         navController
@@ -133,32 +156,44 @@ fun TrainerRoutes(
                 }
             }
 
-            composable (TrainerNavigationScreen.ClassDetails.route) {
+            composable(TrainerNavigationScreen.ClassDetails.route) {
                 Container {
                     ClassDetailsScreen(navController)
                 }
             }
 
-            composable (TrainerNavigationScreen.EditClass.route) {
+            composable(TrainerNavigationScreen.EditClass.route) {
                 Container {
                     EditClassScreen(navController)
                 }
             }
 
-            composable (TrainerNavigationScreen.StudentDetails.route) {
+            composable(TrainerNavigationScreen.StudentDetails.route) {
                 Container {
                     StudentDetailsScreen(navController)
                 }
             }
 
+            composable(TrainerNavigationScreen.Networking.route) {
+                Progress(navController)
+            }
+
             composable(TrainerNavigationScreen.Progress.route) {
                 Progress(navController)
             }
-            composable(TrainerNavigationScreen.Profile.route) {
+
+            composable(TrainerNavigationScreen.Notifications.route) {
                 Profile(navController)
             }
+
             composable(TrainerNavigationScreen.Settings.route) {
                 Settings(navController)
+            }
+
+            composable(TrainerNavigationScreen.CreateClasses.route) {
+                Container {
+                    CreateClassesScreen(navController = navController, createClassViewModel = createClassViewModel)
+                }
             }
         }
     }

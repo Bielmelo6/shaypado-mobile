@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,19 +39,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
+import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppText
-import com.ufape.shaypado.ui.components.BackButton
+import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
-import com.ufape.shaypado.ui.screens.trainer.counter.CounterBasePreview
 
 @Composable
 fun TrainerHomeScreen(
     navController: NavController
 ) {
+    val viewModel = hiltViewModel<TrainerHomeViewModel>()
+
+    if (viewModel.classesState.classes.isEmpty()) {
+        TrainerHomeScreenEmptyList(navController)
+        return
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -95,6 +106,56 @@ fun TrainerHomeScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun TrainerHomeScreenEmptyList(
+    navController: NavController
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight(0.9f),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.shaypado_home),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        AppText(
+            text = R.string.no_classes,
+            textType = TextType.TITLE_MEDIUM,
+            fillWidth = true,
+            textAlignment = TextAlign.Center
+        )
+    }
+
+    AppButton(
+        variant = ButtonVariant.TERTIARY,
+        text = R.string.register_first_class,
+        onClick = {
+            navController.navigate(
+                TrainerNavigationScreen.CreateClasses.route
+            )
+        },
+    )
+}
+
+@Preview
+@Composable
+fun TrainerHomeScreenEmptyPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+    ) {
+        TrainerHomeScreenEmptyList(
+            rememberNavController()
+        )
     }
 }
 

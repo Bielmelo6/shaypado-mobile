@@ -201,5 +201,13 @@
     <string name="user_created_title">Um e-mail de confirmação foi enviado para o seu e-mail de cadastro. Acesse ele para ter acesso ao Shaypado com segurança!!</string>
     <string name="goback">Voltar</string>
     <string name="go_to_email">Ir para o email</string>
+    <string name="no_classes">Voce ainda não possui nenhuma turma cadastrada. Deseja cadastrar sua primeira turma?</string>
+    <string name="register_first_class">Vou cadastrar minhra primeira turma</string>
+    <string name="training_name">Nome do treino</string>
+    <string name="training_name_placeholder">Insira o nome do seu treino</string>
+    <string name="training_category">Categoria</string>
+    <string name="training_category_placeholder">Insira a categoria do seu treino</string>
+    <string name="delete_training">Deletar treino</string>
+    <string name="end">Finalizar</string>
 
 </resources>
