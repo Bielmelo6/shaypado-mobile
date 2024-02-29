@@ -1,4 +1,4 @@
-package com.ufape.shaypado.ui.screens.trainer.addUserScreen
+package com.ufape.shaypado.ui.screens.trainer.createUser
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -6,13 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
-import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormState
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AddUserViewModel @Inject constructor(
+class CreateUserViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
     private val handler: ISafeNetworkHandler
 ) : ViewModel() {

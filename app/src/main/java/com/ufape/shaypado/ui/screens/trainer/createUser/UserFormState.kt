@@ -1,4 +1,4 @@
-package com.ufape.shaypado.ui.screens.trainer.addUserScreen
+package com.ufape.shaypado.ui.screens.trainer.createUser
 
 import androidx.annotation.StringRes
 

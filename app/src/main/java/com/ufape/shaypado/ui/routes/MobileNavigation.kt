@@ -35,7 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
-import com.ufape.shaypado.ui.screens.trainer.addUserScreen.AddUserScreen
+import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 
 data class BottomBarItemStyle(
     @StringRes val title: Int,

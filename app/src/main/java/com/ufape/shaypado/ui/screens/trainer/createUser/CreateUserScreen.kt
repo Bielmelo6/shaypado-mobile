@@ -1,4 +1,4 @@
-package com.ufape.shaypado.ui.screens.trainer.addUserScreen
+package com.ufape.shaypado.ui.screens.trainer.createUser
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -88,21 +88,21 @@ fun AddUserScreen(
 ) {
     var shouldShowForm by remember { mutableStateOf(false) }
 
-    val addUserViewModel: AddUserViewModel = hiltViewModel()
+    val createUserViewModel: CreateUserViewModel = hiltViewModel()
 
     if (!shouldShowForm) {
         CounterBase(
             navController = navController,
             title = "Quantos alunos você deseja cadastrar?",
-            value = addUserViewModel.numberOfStudents + 1,
+            value = createUserViewModel.numberOfStudents + 1,
             decrease = {
-                addUserViewModel.decreaseStudents()
+                createUserViewModel.decreaseStudents()
             },
             increase = {
-                addUserViewModel.increaseStudents()
+                createUserViewModel.increaseStudents()
             },
             onNextPressed = {
-                addUserViewModel.allocateStudents()
+                createUserViewModel.allocateStudents()
                 shouldShowForm = true
             }
         )
@@ -119,22 +119,22 @@ fun AddUserScreen(
     ) {
         BackButton(
             variant = ButtonVariant.PRIMARY,
-            enabled = addUserViewModel.selectedStudent != 0
+            enabled = createUserViewModel.selectedStudent != 0
         ) {
-            addUserViewModel.decreaseSelectedStudent()
+            createUserViewModel.decreaseSelectedStudent()
         }
 
         AppText(
-            text = String.format("%02d", addUserViewModel.selectedStudent + 1),
+            text = String.format("%02d", createUserViewModel.selectedStudent + 1),
             textAlignment = TextAlign.Center,
             textType = TextType.DISPLAY_SMALL
         )
 
         NextButton(
             variant = ButtonVariant.PRIMARY,
-            enabled = addUserViewModel.selectedStudent != addUserViewModel.numberOfStudents - 1
+            enabled = createUserViewModel.selectedStudent != createUserViewModel.numberOfStudents - 1
         ) {
-            addUserViewModel.increaseSelectedStudent()
+            createUserViewModel.increaseSelectedStudent()
         }
     }
 
@@ -148,10 +148,10 @@ fun AddUserScreen(
     )
     {
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].name,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].nameError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].name,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].nameError,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnNameChanged(it)
                 )
             },
@@ -162,10 +162,10 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].email,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].emailError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].email,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].emailError,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnEmailChanged(it)
                 )
             },
@@ -176,10 +176,10 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].password,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].passwordError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].password,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].passwordError,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnPasswordChanged(it)
                 )
             },
@@ -196,11 +196,11 @@ fun AddUserScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 CustomTextField(
-                    value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].height,
-                    errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].heightError,
+                    value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].height,
+                    errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].heightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
-                        addUserViewModel.onUserDataEvent(
+                        createUserViewModel.onUserDataEvent(
                             UserFormEvent.OnHeightChanged(it)
                         )
                     },
@@ -216,11 +216,11 @@ fun AddUserScreen(
 
             ) {
                 CustomTextField(
-                    value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].weight,
-                    errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].weightError,
+                    value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].weight,
+                    errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].weightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
-                        addUserViewModel.onUserDataEvent(
+                        createUserViewModel.onUserDataEvent(
                             UserFormEvent.OnWeightChanged(it)
                         )
                     },
@@ -234,11 +234,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].age,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].ageError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].age,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].ageError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnAgeChanged(it)
                 )
             },
@@ -250,11 +250,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].armCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].armCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].armCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].armCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnArmCircumferenceChanged(it)
                 )
             },
@@ -266,11 +266,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].waistCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].waistCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].waistCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].waistCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnWaistCircumferenceChanged(it)
                 )
             },
@@ -282,11 +282,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].abdomenCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].abdomenCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdomenCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdomenCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnAbdomenCircumferenceChanged(it)
                 )
             },
@@ -298,11 +298,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].hipCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].hipCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].hipCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].hipCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnHipCircumferenceChanged(it)
                 )
             },
@@ -314,11 +314,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].thighCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].thighCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnThighCircumferenceChanged(it)
                 )
             },
@@ -332,11 +332,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].scapularFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].scapularFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].scapularFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].scapularFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnScapularFoldChanged(it)
                 )
             },
@@ -348,11 +348,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].legCircumference,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].legCircumferenceError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legCircumference,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnLegCircumferenceChanged(it)
                 )
             },
@@ -364,11 +364,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].tricepsFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].tricepsFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].tricepsFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].tricepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnTricepsFoldChanged(it)
                 )
             },
@@ -381,11 +381,11 @@ fun AddUserScreen(
 
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].bicepsFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].bicepsFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].bicepsFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].bicepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnBicepsFoldChanged(it)
                 )
             },
@@ -397,11 +397,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].chestFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].chestFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].chestFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].chestFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnChestFoldChanged(it)
                 )
             },
@@ -413,11 +413,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].axialFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].axialFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].axialFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].axialFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnAxialFoldChanged(it)
                 )
             },
@@ -429,11 +429,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].suprailiacFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].suprailiacFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].suprailiacFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].suprailiacFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnSuprailiacFoldChanged(it)
                 )
             },
@@ -445,11 +445,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].abdominalFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].abdominalFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdominalFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdominalFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnAbdominalFoldChanged(it)
                 )
             },
@@ -461,11 +461,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].thighFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].thighFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnThighFoldChanged(it)
                 )
             },
@@ -477,11 +477,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].legFold,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].legFoldError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legFold,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnLegFoldChanged(it)
                 )
             },
@@ -493,11 +493,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].healthIssue,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].healthIssueError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].healthIssue,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].healthIssueError,
             keyboardType = KeyboardType.Text,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnHealthIssueChanged(it)
                 )
             },
@@ -508,11 +508,11 @@ fun AddUserScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = addUserViewModel.studentsData[addUserViewModel.selectedStudent].fatPercentage,
-            errorMessage = addUserViewModel.studentsData[addUserViewModel.selectedStudent].fatPercentageError,
+            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].fatPercentage,
+            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].fatPercentageError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnFatPercentageChanged(it)
                 )
             },
@@ -525,11 +525,11 @@ fun AddUserScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = addUserViewModel.studentsData[addUserViewModel.selectedStudent].exerciseExperience,
+            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].exerciseExperience,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnExerciseExperienceChanged(it)
                 )
             }
@@ -537,11 +537,11 @@ fun AddUserScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_spine_problem,
-            isChecked = addUserViewModel.studentsData[addUserViewModel.selectedStudent].spineProblem,
+            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].spineProblem,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnSpineProblemChanged(it)
                 )
             }
@@ -549,11 +549,11 @@ fun AddUserScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = addUserViewModel.studentsData[addUserViewModel.selectedStudent].isSmoker,
+            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].isSmoker,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                addUserViewModel.onUserDataEvent(
+                createUserViewModel.onUserDataEvent(
                     UserFormEvent.OnSmokerChanged(it)
                 )
             }
@@ -565,7 +565,7 @@ fun AddUserScreen(
     AppButton(
         text = R.string.button_register,
         onClick = {
-            addUserViewModel.onUserDataEvent(
+            createUserViewModel.onUserDataEvent(
                 UserFormEvent.OnSubmit
             )
         }
