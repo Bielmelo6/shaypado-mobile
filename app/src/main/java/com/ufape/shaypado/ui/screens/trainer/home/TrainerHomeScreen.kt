@@ -49,6 +49,7 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.screens.trainer.addUserScreen.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.CreateTrainingsScreen
 
 @Composable
@@ -58,7 +59,7 @@ fun TrainerHomeScreen(
     val viewModel = hiltViewModel<TrainerHomeViewModel>()
 
     if (viewModel.classesState.classes.isEmpty()) {
-        CreateTrainingsScreen(navController)
+        AddUserScreen(navController)
         return
     }
 

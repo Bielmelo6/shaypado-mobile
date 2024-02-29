@@ -1,6 +1,5 @@
 package com.ufape.shaypado.ui.screens.trainer.createTrainings
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
