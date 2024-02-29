@@ -19,11 +19,11 @@ data class ExerciseFormState(
     @StringRes val categoryError: Int? = null,
     val videoUrl : String = "",
     @StringRes val videoUrlError: Int? = null,
-    val series : Int = 0,
+    val series : String = "0",
     @StringRes val seriesError: Int? = null,
-    val repetitions : Int = 0,
+    val repetitions : String = "0",
     @StringRes val repetitionsError: Int? = null,
-    val time : String = "",
+    val time : String = "00:00",
     @StringRes val timeError: Int? = null,
 )
 
@@ -40,8 +40,9 @@ sealed class ExerciseFormEvent {
     data class OnDescriptionChanged(val description: String) : ExerciseFormEvent()
     data class OnCategoryChanged(val category: String) : ExerciseFormEvent()
     data class OnVideoUrlChanged(val videoUrl: String) : ExerciseFormEvent()
-    data class OnSeriesChanged(val series: Int) : ExerciseFormEvent()
-    data class OnRepetitionsChanged(val repetitions: Int) : ExerciseFormEvent()
+    data class OnSeriesChanged(val series: String) : ExerciseFormEvent()
+    data class OnRepetitionsChanged(val repetitions: String) : ExerciseFormEvent()
     data class OnTimeChanged(val time: String) : ExerciseFormEvent()
+    data class RemoveCurrentExercise(val index: Int) : ExerciseFormEvent()
     data object OnSubmit : ExerciseFormEvent()
 }

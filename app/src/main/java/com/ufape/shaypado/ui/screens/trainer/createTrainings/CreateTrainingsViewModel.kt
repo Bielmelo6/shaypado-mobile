@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.screens.trainer.createTrainings
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -86,12 +87,28 @@ class CreateTrainingsViewModel @Inject constructor(
             is ExerciseFormEvent.OnVideoUrlChanged ->  {
                 exerciseData = exerciseData.copy(videoUrl = event.videoUrl)
             }
-            ExerciseFormEvent.OnSubmit -> {
-                val newTrainingsData = trainingsData.toMutableList()
-                val exerciseList = newTrainingsData[selectedTraining].exercises
-                exerciseList.plus(exerciseData)
-                newTrainingsData[selectedTraining].exercises = exerciseList
+            is ExerciseFormEvent.RemoveCurrentExercise ->  {
+                val newTrainingsData = trainingsData.mapIndexed { index, training ->
+                    if (index == selectedTraining) {
+                        training.copy(exercises = training.exercises.toMutableList().apply {
+                            removeAt(event.index)
+                        })
+                    } else {
+                        training
+                    }
+                }
                 trainingsData = newTrainingsData
+            }
+
+            ExerciseFormEvent.OnSubmit -> {
+                val updatedTrainingData = trainingsData.mapIndexed { index, training ->
+                    if (index == selectedTraining) {
+                        training.copy(exercises = training.exercises + exerciseData)
+                    } else {
+                        training
+                    }
+                }
+                trainingsData = updatedTrainingData
             }
         }
     }

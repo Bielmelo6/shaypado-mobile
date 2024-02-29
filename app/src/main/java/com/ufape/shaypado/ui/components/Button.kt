@@ -123,14 +123,21 @@ fun AddButton(
 @Composable
 fun RemoveButton(
     onClick: () -> Unit = { },
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
     enabled: Boolean = true,
 ) {
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        ButtonVariant.ERROR_CONTAINER -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.primary
+    }
+
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = containerColor
         )
     ) {
         Icon(
