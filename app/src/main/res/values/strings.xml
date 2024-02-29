@@ -209,5 +209,18 @@
     <string name="training_category_placeholder">Insira a categoria do seu treino</string>
     <string name="delete_training">Deletar treino</string>
     <string name="end">Finalizar</string>
+    <string name="exercise_title">"Título "</string>
+    <string name="exercise_title_placeholder">Informe o título do exercício</string>
+    <string name="exercise_category">Categoria</string>
+    <string name="exercise_category_placeholder">Informe a categoaria do exercício</string>
+    <string name="exercise_description">Descrição</string>
+    <string name="exercise_description_placeholder">Informe a descrição do exercício</string>
+    <string name="exercise_video_url">Vídeo demonstrativo</string>
+    <string name="exercise_video_url_placeholder">Link do vídeo de demonstração (opcional)</string>
+    <string name="series">Series</string>
+    <string name="series_placeholder">0</string>
+    <string name="repetitions">Repetições</string>
+    <string name="repetitions_placeholder">0</string>
+    <string name="time">Tempo</string>
 
 </resources>

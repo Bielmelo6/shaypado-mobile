@@ -18,6 +18,7 @@ class CreateTrainingsViewModel @Inject constructor(
     var selectedTraining by mutableIntStateOf(0)
 
     var trainingsData by mutableStateOf<List<TrainingsFormState>>(listOf())
+    var exerciseData by mutableStateOf(ExerciseFormState())
 
 
     fun onTrainingDataEvent(event: TrainingsFormEvent) {
@@ -59,6 +60,39 @@ class CreateTrainingsViewModel @Inject constructor(
 
             TrainingsFormEvent.OnSubmit -> TODO()
 
+        }
+    }
+
+    fun onExerciseEvent(event: ExerciseFormEvent){
+        when (event){
+            is ExerciseFormEvent.OnCategoryChanged ->  {
+                exerciseData = exerciseData.copy(category = event.category)
+            }
+            is ExerciseFormEvent.OnDescriptionChanged ->  {
+                exerciseData = exerciseData.copy(description = event.description)
+            }
+            is ExerciseFormEvent.OnRepetitionsChanged ->  {
+                exerciseData = exerciseData.copy(repetitions = event.repetitions)
+            }
+            is ExerciseFormEvent.OnSeriesChanged ->  {
+                exerciseData = exerciseData.copy(series = event.series)
+            }
+            is ExerciseFormEvent.OnTimeChanged ->  {
+                exerciseData = exerciseData.copy(time = event.time)
+            }
+            is ExerciseFormEvent.OnTitleChanged ->  {
+                exerciseData = exerciseData.copy(title = event.title)
+            }
+            is ExerciseFormEvent.OnVideoUrlChanged ->  {
+                exerciseData = exerciseData.copy(videoUrl = event.videoUrl)
+            }
+            ExerciseFormEvent.OnSubmit -> {
+                val newTrainingsData = trainingsData.toMutableList()
+                val exerciseList = newTrainingsData[selectedTraining].exercises
+                exerciseList.plus(exerciseData)
+                newTrainingsData[selectedTraining].exercises = exerciseList
+                trainingsData = newTrainingsData
+            }
         }
     }
 
