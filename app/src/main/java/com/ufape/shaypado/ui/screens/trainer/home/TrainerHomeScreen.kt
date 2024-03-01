@@ -50,6 +50,7 @@ import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
+import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 
 @Composable
 fun TrainerHomeScreen(
@@ -58,7 +59,12 @@ fun TrainerHomeScreen(
     val viewModel = hiltViewModel<TrainerHomeViewModel>()
 
     if (viewModel.classesState.classes.isEmpty()) {
-        AddUserScreen(navController)
+        ImportFriendsScreen(
+            navController = navController,
+            onImport = {
+
+            }
+        )
         return
     }
 
