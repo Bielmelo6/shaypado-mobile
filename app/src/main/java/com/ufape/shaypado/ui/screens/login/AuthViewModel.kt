@@ -77,16 +77,13 @@ class AuthViewModel @Inject constructor(
 
     private fun validate(): Boolean {
         val emailValidation = validateEmail(loginDataState.email)
-        val passwordValidation = validatePassword(loginDataState.password)
 
         loginDataState = loginDataState.copy(
             emailError = emailValidation.error,
-            passwordError = passwordValidation.error,
         )
 
         return hasError(
             emailValidation,
-            passwordValidation
         )
     }
 

@@ -27,6 +27,7 @@ import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
+import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 
 
@@ -187,7 +188,12 @@ fun TrainerRoutes(
             }
 
             composable(TrainerNavigationScreen.Settings.route) {
-                Settings(navController)
+                Container {
+                    SettingsScreen(
+                        navController = navController,
+                        onLogout = logOutAction
+                    )
+                }
             }
 
             composable(TrainerNavigationScreen.CreateClasses.route) {

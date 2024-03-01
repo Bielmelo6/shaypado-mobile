@@ -16,7 +16,7 @@ import retrofit2.http.Part
 
 interface AuthApi {
     @Headers("Content-Type: application/json")
-    @POST("/users/login")
+    @POST("/login")
     suspend fun login(@Body data: LoginRequest): Response<LoginResponse>
 
     @Headers("Content-Type: application/json")

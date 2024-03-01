@@ -14,15 +14,15 @@ data class LoginRequest(
 data class LoginResponse(
     @SerializedName("token")
     val token: String,
-    @SerializedName("user")
-    val user: UserResponse,
+    @SerializedName("userType")
+    val userType: String,
 )
 
 fun LoginResponse.toUiModel(): LoginData {
-    val userType = when (user.userType) {
+    val userType = when (this.userType) {
         "student" -> UserType.USER
         "trainer" -> UserType.TRAINER
-        else -> throw IllegalArgumentException("Unknown user type")
+        else -> throw IllegalArgumentException("Unknown user type ${this.userType}" )
     }
 
     return LoginData(

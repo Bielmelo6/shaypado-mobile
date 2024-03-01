@@ -44,6 +44,7 @@ private val LightColorScheme = lightColorScheme(
     ),
     onTertiaryContainer = Color(0xFFFFFFFF),
     inversePrimary = Color(0xFF65DBAD),
+    outline = Color(0xFF6D7A72),
 )
 
 val textPrimary: Color

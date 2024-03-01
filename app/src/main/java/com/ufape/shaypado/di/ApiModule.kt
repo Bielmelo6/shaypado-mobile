@@ -3,6 +3,7 @@ package com.ufape.shaypado.di
 import com.ufape.shaypado.data.AuthInterceptor
 import com.ufape.shaypado.data.TokenAuthenticator
 import com.ufape.shaypado.data.api.AuthApi
+import com.ufape.shaypado.data.api.TrainerApi
 import com.ufape.shaypado.data.local.ISessionManager
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    val BASE_URL = "http://192.168.1.110:3001"
+    val BASE_URL = "http://192.168.1.111:3001"
 
     @Singleton
     @Provides
@@ -69,4 +70,8 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideAuthApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideTrainerApi(retrofit: Retrofit): TrainerApi = retrofit.create(TrainerApi::class.java)
 }

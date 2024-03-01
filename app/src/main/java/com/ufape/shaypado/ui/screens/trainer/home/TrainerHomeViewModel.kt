@@ -14,7 +14,15 @@ class TrainerHomeViewModel @Inject constructor(
 ) : ViewModel() {
     var classesState by mutableStateOf(ClassesState())
 
+    init {
+        fetchClasses()
+    }
 
+
+
+    fun fetchClasses () {
+
+    }
 
 
 
