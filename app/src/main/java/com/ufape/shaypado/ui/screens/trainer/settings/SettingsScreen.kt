@@ -32,6 +32,7 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.theme.BarbellIcon
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.copyToClipboard
 
@@ -134,6 +135,27 @@ fun SettingsScreen(
 
         AppText(
             text = "Amizades",
+            textType = TextType.TITLE_MEDIUM,
+        )
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    HorizontalDivider()
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Row(
+        modifier = Modifier.clickable {
+            navController.navigate(TrainerNavigationScreen.Workouts.route)
+        },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BarbellIcon()
+        Spacer(modifier = Modifier.width(8.dp))
+
+        AppText(
+            text = "Treinos",
             textType = TextType.TITLE_MEDIUM,
         )
     }

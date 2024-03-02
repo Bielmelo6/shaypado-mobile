@@ -29,12 +29,14 @@ import com.ufape.shaypado.ui.screens.trainer.classDetails.ClassDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
+import com.ufape.shaypado.ui.screens.trainer.createTrainings.CreateTrainingsScreen
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
 import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
+import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
 sealed class TrainerNavigationScreen(
@@ -101,6 +103,14 @@ sealed class TrainerNavigationScreen(
 
     data object CreateUsers : TrainerNavigationScreen(
         "create_users",
+    )
+
+    data object Workouts : TrainerNavigationScreen(
+        "workouts",
+    )
+
+    data object CreateWorkout : TrainerNavigationScreen(
+        "workouts_create",
     )
 }
 
@@ -254,6 +264,30 @@ fun TrainerRoutes(
                     resetSnackBarMessage = { resetSnackBarMessage() }
                 ) {
                     AddUserScreen(
+                        navController = navController,
+                        showSnackBar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.Workouts.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    WorkoutsScreen(
+                        navController = navController,
+                        showSnackBar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.CreateWorkout.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    CreateTrainingsScreen(
                         navController = navController,
                         showSnackBar = { message -> showSnackBar(message) }
                     )

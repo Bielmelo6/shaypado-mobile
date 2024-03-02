@@ -3,6 +3,7 @@ package com.ufape.shaypado.data.repositories.implementations
 import com.ufape.shaypado.data.api.TrainerApi
 import com.ufape.shaypado.data.model.FriendshipCodeRequest
 import com.ufape.shaypado.data.model.UserRequest
+import com.ufape.shaypado.data.model.WorkoutRequest
 import com.ufape.shaypado.data.model.toUiModel
 import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.ui.model.FriendsData
@@ -51,6 +52,15 @@ class TrainerRepository(
 
     override suspend fun registerUsers(users: List<UserRequest>): Result<Unit> {
         val result = api.registerUsers(users)
+        return if (result.isSuccessful) {
+            Result.Success(Unit)
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
+    override suspend fun createTraining(profile: List<WorkoutRequest>): Result<Unit> {
+        val result = api.createTraining(profile)
         return if (result.isSuccessful) {
             Result.Success(Unit)
         } else {
