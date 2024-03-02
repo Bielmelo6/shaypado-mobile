@@ -224,5 +224,12 @@
     <string name="time">Tempo</string>
     <string name="import_friends">Importar amigos</string>
     <string name="button_import">Importar</string>
+    <string name="friends_title">Amigos</string>
+    <string name="add">Adicionar</string>
+    <string name="friendship_code">Código de amizade</string>
+    <string name="friendship_code_placehold">Informe o código de amizade</string>
+    <string name="use_friendship_code">Usar código de amizade</string>
+    <string name="create_users">Cadastrar usuários</string>
+    <string name="remove">Remover</string>
 
 </resources>

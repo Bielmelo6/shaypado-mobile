@@ -26,6 +26,7 @@ import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
+import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
@@ -87,6 +88,10 @@ sealed class TrainerNavigationScreen(
 
     data object CreateClasses : TrainerNavigationScreen(
         "create_classes",
+    )
+
+    data object Friends : TrainerNavigationScreen(
+        "friends",
     )
 }
 
@@ -198,7 +203,18 @@ fun TrainerRoutes(
 
             composable(TrainerNavigationScreen.CreateClasses.route) {
                 Container {
-                    CreateClassesScreen(navController = navController, createClassViewModel = createClassViewModel)
+                    CreateClassesScreen(
+                        navController = navController,
+                        createClassViewModel = createClassViewModel
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.Friends.route) {
+                Container {
+                    FriendsScreen(
+                        navController = navController
+                    )
                 }
             }
         }

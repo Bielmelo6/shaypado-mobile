@@ -36,3 +36,9 @@ fun Exception.getErrorMessage(context: Context): String {
         else -> context.getString(R.string.unknown_error) + " ${this.message}"
     }
 }
+
+fun Context.copyToClipboard(label: String, text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+    val clip = android.content.ClipData.newPlainText(label, text)
+    clipboard.setPrimaryClip(clip)
+}

@@ -29,7 +29,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = Pink,
     tertiaryContainer = Purple,
     background = White,
-    tertiary = DarkTeal,
+    tertiary =
+     Color(0xFF47459C),
     surface =  Color(0xFFEEEEEE),
     onSurface = DarkGrey,
     onPrimaryContainer = White,

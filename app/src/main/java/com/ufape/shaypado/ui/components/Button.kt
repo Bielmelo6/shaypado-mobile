@@ -101,20 +101,30 @@ fun NextButton(
 @Composable
 fun AddButton(
     onClick: () -> Unit = { },
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
     enabled: Boolean = true,
 ) {
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val iconColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onSecondaryContainer
+    }
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor =  containerColor
         )
     ) {
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "Add",
-            tint = MaterialTheme.colorScheme.onPrimary
+            tint = iconColor
         )
     }
 }

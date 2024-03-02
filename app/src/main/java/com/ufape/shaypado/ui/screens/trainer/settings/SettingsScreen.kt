@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,7 +31,9 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.copyToClipboard
 
 @Composable
 fun SettingsScreen(
@@ -63,6 +66,7 @@ fun SettingsScreen(
     }
 
     val user = (userProfileData as Result.Success).data
+    val context = LocalContext.current
 
     Row {
         Image(
@@ -97,7 +101,6 @@ fun SettingsScreen(
 
     Row(
         verticalAlignment = Alignment.CenterVertically
-
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_moonstars),
@@ -118,8 +121,10 @@ fun SettingsScreen(
     Spacer(modifier = Modifier.height(8.dp))
 
     Row(
+        modifier = Modifier.clickable {
+            navController.navigate(TrainerNavigationScreen.Friends.route)
+        },
         verticalAlignment = Alignment.CenterVertically
-
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_heart),
@@ -175,7 +180,13 @@ fun SettingsScreen(
                     width = 3.dp,
                     color = MaterialTheme.colorScheme.secondaryContainer,
                     shape = RoundedCornerShape(size = 8.dp)
-                ),
+                )
+                .clickable {
+                    context.copyToClipboard(
+                        label = "Código de amizade",
+                        text = user.friendshipCode
+                    )
+                },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
