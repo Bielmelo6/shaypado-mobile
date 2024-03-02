@@ -1,6 +1,7 @@
 package com.ufape.shaypado.ui.screens.trainer.createUser
 
 import androidx.annotation.StringRes
+import com.ufape.shaypado.data.model.UserRequest
 
 data class UserFormState(
     val userType : String = "",
@@ -72,6 +73,38 @@ data class UserFormState(
     val isSmoker: Boolean = false
 )
 
+fun UserFormState.toRequest () = UserRequest(
+    userType = userType,
+    name = name,
+    email = email,
+    password = password,
+    fatPercentage = fatPercentage,
+    armCircumference = armCircumference,
+    waistCircumference = waistCircumference,
+    abdomenCircumference = abdomenCircumference,
+    hipCircumference = hipCircumference,
+    thighCircumference = thighCircumference,
+    legCircumference = legCircumference,
+    height = height,
+    weight = weight,
+    age = age,
+    shoulderCircumference = shoulderCircumference,
+    tricepsFold = tricepsFold,
+    bicepsFold = bicepsFold,
+    chestFold = chestFold,
+    axialFold = axialFold,
+    suprailiacFold = suprailiacFold,
+    abdominalFold = abdominalFold,
+    thighFold = thighFold,
+    legFold = legFold,
+    healthIssue = healthIssue,
+    scapularFold = scapularFold,
+    objective = objective,
+    exerciseExperience = exerciseExperience,
+    spineProblem = spineProblem,
+    isSmoker = isSmoker,
+)
+
 sealed class UserFormEvent {
     data class OnNameChanged(val name: String) : UserFormEvent()
     data class OnEmailChanged(val email: String) : UserFormEvent()
@@ -110,3 +143,5 @@ sealed class UserFormEvent {
 
     data object OnSubmit : UserFormEvent()
 }
+
+

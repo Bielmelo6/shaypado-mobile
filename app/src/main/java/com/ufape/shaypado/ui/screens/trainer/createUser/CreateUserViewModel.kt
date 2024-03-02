@@ -5,14 +5,21 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.repositories.implementations.TrainerRepository
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
+import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.util.ISafeNetworkHandler
+import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateUserViewModel @Inject constructor(
-    private val authRepository: IAuthRepository,
+    private val trainerRepository: ITrainerRepository,
     private val handler: ISafeNetworkHandler
 ) : ViewModel() {
     var numberOfStudents by mutableIntStateOf(0)
@@ -20,6 +27,9 @@ class CreateUserViewModel @Inject constructor(
     var selectedStudent by mutableIntStateOf(0)
 
     var studentsData by mutableStateOf<List<UserFormState>>(listOf())
+
+    private val _createUserEvent = Channel<Result<Unit>>()
+    val createUserEvent = _createUserEvent.receiveAsFlow()
 
     fun onUserDataEvent(event : UserFormEvent){
         when (event) {
@@ -387,7 +397,7 @@ class CreateUserViewModel @Inject constructor(
             }
 
             is UserFormEvent.OnSubmit -> {
-                registerUser()
+                registerUsers()
             }
         }
     }
@@ -413,7 +423,11 @@ class CreateUserViewModel @Inject constructor(
         selectedStudent--
     }
 
-    private fun registerUser() {
-
+    private fun registerUsers() {
+        viewModelScope.launch {
+            val users = studentsData.map { it.toRequest() }
+            trainerRepository.registerUsers(users)
+            _createUserEvent.send(Result.Success(Unit))
+        }
     }
 }

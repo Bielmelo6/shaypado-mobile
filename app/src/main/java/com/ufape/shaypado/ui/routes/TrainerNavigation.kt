@@ -10,6 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,10 +24,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.screens.trainer.classDetails.ClassDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
+import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
 import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
@@ -93,6 +98,10 @@ sealed class TrainerNavigationScreen(
     data object Friends : TrainerNavigationScreen(
         "friends",
     )
+
+    data object CreateUsers : TrainerNavigationScreen(
+        "create_users",
+    )
 }
 
 @Composable
@@ -133,10 +142,17 @@ fun TrainerBottomBar(navController: NavHostController) {
 
 @Composable
 fun Container(
+    snackBarMessage: String? = null,
+    resetSnackBarMessage: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        content()
+    AppSnackBar(
+        snackBarMessage,
+        { resetSnackBarMessage?.invoke() }
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            content()
+        }
     }
 }
 
@@ -146,6 +162,16 @@ fun TrainerRoutes(
 ) {
     val navController: NavHostController = rememberNavController()
     val createClassViewModel = hiltViewModel<CreateClassViewModel>()
+    var snackbarMessage: String? by remember { mutableStateOf(null) }
+
+    fun showSnackBar(message: String) {
+        snackbarMessage = message
+    }
+
+    fun resetSnackBarMessage() {
+        snackbarMessage = null
+    }
+
     Scaffold(
         bottomBar = { TrainerBottomBar(navController = navController) }
     ) { innerPadding ->
@@ -211,9 +237,25 @@ fun TrainerRoutes(
             }
 
             composable(TrainerNavigationScreen.Friends.route) {
-                Container {
+                Container (
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
                     FriendsScreen(
-                        navController = navController
+                        navController = navController,
+                        showSnackbar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.CreateUsers.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    AddUserScreen(
+                        navController = navController,
+                        showSnackBar = { message -> showSnackBar(message) }
                     )
                 }
             }

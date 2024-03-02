@@ -13,11 +13,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,8 @@ import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
 import com.ufape.shaypado.ui.components.NextButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
+import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun CmLabel() {
@@ -84,9 +88,11 @@ fun PercentageLabel() {
 
 @Composable
 fun AddUserScreen(
-    navController: NavController
+    navController: NavController,
+    showSnackBar: (String) -> Unit
 ) {
     var shouldShowForm by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     val createUserViewModel: CreateUserViewModel = hiltViewModel()
 
@@ -111,6 +117,17 @@ fun AddUserScreen(
 
     BackHandler {
         shouldShowForm = false
+    }
+
+    LaunchedEffect(key1 = createUserViewModel.createUserEvent){
+        createUserViewModel.createUserEvent.collect{
+            if (it is Result.Success) {
+                showSnackBar("Usuários cadastrados com sucesso")
+                navController.popBackStack()
+            } else if (it is Result.Error){
+                showSnackBar(it.exception.getErrorMessage(context))
+            }
+        }
     }
 
     Row(

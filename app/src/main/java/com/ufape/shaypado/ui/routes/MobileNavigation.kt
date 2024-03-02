@@ -226,7 +226,7 @@ fun MobileRoutes(
 @Composable
 fun Home(navController: NavController, logOutAction: () -> Unit) {
     AddUserScreen(
-        navController
+        navController, {}
     )
 }
 
