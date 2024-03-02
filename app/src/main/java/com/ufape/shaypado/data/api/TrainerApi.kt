@@ -3,6 +3,8 @@ package com.ufape.shaypado.data.api
 import com.ufape.shaypado.data.model.FriendsResponse
 import com.ufape.shaypado.data.model.FriendshipCodeRequest
 import com.ufape.shaypado.data.model.TrainerResponse
+import com.ufape.shaypado.data.model.UserRequest
+import com.ufape.shaypado.data.model.WorkoutRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -25,5 +27,13 @@ interface TrainerApi {
     @Headers("Content-Type: application/json")
     @POST("/add_friend")
     suspend fun addFriend(@Body data: FriendshipCodeRequest): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @POST("/register_users")
+    suspend fun registerUsers(@Body data: List<UserRequest>): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @POST("/create_training")
+    suspend fun createTraining(@Body data: List<WorkoutRequest>): Response<Unit>
 
 }

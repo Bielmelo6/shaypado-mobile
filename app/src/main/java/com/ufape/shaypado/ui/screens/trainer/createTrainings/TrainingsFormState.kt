@@ -1,6 +1,8 @@
 package com.ufape.shaypado.ui.screens.trainer.createTrainings
 
 import androidx.annotation.StringRes
+import com.ufape.shaypado.data.model.ExerciseRequest
+import com.ufape.shaypado.data.model.WorkoutRequest
 
 data class TrainingsFormState(
     val name: String = "",
@@ -25,6 +27,22 @@ data class ExerciseFormState(
     @StringRes val repetitionsError: Int? = null,
     val time : String = "00:00",
     @StringRes val timeError: Int? = null,
+)
+
+fun TrainingsFormState.toRequest() = WorkoutRequest(
+    name = name,
+    category = category,
+    exercises = exercises.map { it.toRequest() }
+)
+
+fun ExerciseFormState.toRequest() = ExerciseRequest(
+    title = title,
+    category = category,
+    description = description,
+    videoUrl = videoUrl,
+    series = series.toInt(),
+    repetitions = repetitions.toInt(),
+    time = time
 )
 
 sealed class TrainingsFormEvent {

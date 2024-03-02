@@ -105,12 +105,12 @@ fun CreateClassesScreen(
     )
     {
         CustomTextField(
-            label = R.string.training_name,
+            label = R.string.class_name,
             value = createClassViewModel.classData[createClassViewModel.selectedClass].name,
             onValueChange = {
                 createClassViewModel.onClassDataEvent(ClassFormEvent.OnNameChanged(it))
             },
-            placeholder = R.string.training_name_placeholder,
+            placeholder = R.string.class_name_placeholder,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -192,7 +192,7 @@ fun CreateClassesScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         AppButton(
-            text = R.string.delete_training,
+            text = R.string.delete_class,
             onClick = {
                 createClassViewModel.onClassDataEvent(ClassFormEvent.RemoveCurrentClass)
             },
