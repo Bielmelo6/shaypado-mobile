@@ -1,8 +1,10 @@
 package com.ufape.shaypado.ui.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -43,6 +45,10 @@ fun AppSnackBar(message: String? = null, reset: () -> Unit, content: @Composable
             )
         }
     ) {
-        content()
+        Column (
+            modifier = Modifier.fillMaxSize()
+        ) {
+            content()
+        }
     }
 }

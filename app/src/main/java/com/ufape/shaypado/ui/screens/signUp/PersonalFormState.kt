@@ -1,6 +1,7 @@
 package com.ufape.shaypado.ui.screens.signUp
 
 import androidx.annotation.StringRes
+import com.ufape.shaypado.data.model.TrainerRequest
 
 data class PersonalFormState(
     val profilePicture: String? = null,
@@ -24,3 +25,25 @@ data class PersonalFormState(
     val plansDocument: String? = null,
     @StringRes val plansDocumentError: Int? = null,
 )
+
+fun PersonalFormState.toRequest(
+    userAccountFormState: UserAccountFormState
+) : TrainerRequest {
+    return TrainerRequest(
+        name = userAccountFormState.name,
+        email = userAccountFormState.email,
+        password = userAccountFormState.password,
+        userType = userAccountFormState.userType,
+        profilePicture = profilePicture,
+        plansDocument = plansDocument!!,
+        fullName = name,
+        contactEmail = email,
+        contactPhone = phone,
+        specialties = specialties,
+        age = age,
+        state = state,
+        city = city,
+        workLocation = workLocation
+    )
+}
+

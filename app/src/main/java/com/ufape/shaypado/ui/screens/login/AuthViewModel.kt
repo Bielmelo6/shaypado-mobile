@@ -77,16 +77,13 @@ class AuthViewModel @Inject constructor(
 
     private fun validate(): Boolean {
         val emailValidation = validateEmail(loginDataState.email)
-        val passwordValidation = validatePassword(loginDataState.password)
 
         loginDataState = loginDataState.copy(
             emailError = emailValidation.error,
-            passwordError = passwordValidation.error,
         )
 
         return hasError(
             emailValidation,
-            passwordValidation
         )
     }
 
@@ -94,7 +91,7 @@ class AuthViewModel @Inject constructor(
         _sessionExpired.value = false
         _loggedInState.value = LoggedState(
             token = "token",
-            userType = UserType.USER,
+            userType = UserType.TRAINER,
         )
     }
 

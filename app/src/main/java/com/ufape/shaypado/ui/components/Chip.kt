@@ -85,10 +85,6 @@ fun ChipSelectionGroup(
                 }
 
                 Image(painter = painterResource(id = icon), contentDescription = "Icon", modifier = Modifier.size(100.dp))
-
-                if (chip.informationTitle != null && chip.informationText != null) {
-                    Tooltip(text = chip.informationTitle, title = chip.informationText)
-                }
             }
 
             Spacer(modifier = Modifier.weight(1.0f))

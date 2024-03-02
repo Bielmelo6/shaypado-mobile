@@ -40,7 +40,7 @@ fun PhysicalFormScreen(
         title = R.string.sign_up_person_data_title,
         buttonText = if (viewModel.userAccountDataState.saveCorporalData) R.string.button_next else R.string.sign_up_finish,
         onButtonClicked = {
-            viewModel.onUserDataEvent(UserAccountFormEvent.ValidateProfileData)
+            viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
         },
         navController = navController,
         topTitleSpacing = 24
@@ -126,7 +126,7 @@ fun PhysicalFormScreen(
                 )
             },
             placeholder = R.string.input_waist_circumference_placeholder,
-            label = R.string.input_arm_circumference
+            label = R.string.input_waist_circumference
         )
 
         Spacer(modifier = Modifier.height(16.dp))

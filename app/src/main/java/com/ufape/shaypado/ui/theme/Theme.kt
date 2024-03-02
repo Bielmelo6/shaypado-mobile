@@ -29,8 +29,9 @@ private val LightColorScheme = lightColorScheme(
     secondary = Pink,
     tertiaryContainer = Purple,
     background = White,
-    tertiary = DarkTeal,
-    surface = Grey,
+    tertiary =
+     Color(0xFF47459C),
+    surface =  Color(0xFFEEEEEE),
     onSurface = DarkGrey,
     onPrimaryContainer = White,
     primaryContainer = Teal,
@@ -42,6 +43,9 @@ private val LightColorScheme = lightColorScheme(
     onSecondaryContainer = Color(
         0xFF295241
     ),
+    onTertiaryContainer = Color(0xFFFFFFFF),
+    inversePrimary = Color(0xFF65DBAD),
+    outline = Color(0xFF6D7A72),
 )
 
 val textPrimary: Color
