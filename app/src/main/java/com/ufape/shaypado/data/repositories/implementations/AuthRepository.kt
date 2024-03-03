@@ -9,6 +9,7 @@ import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.model.toUiModel
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.model.LoginData
+import com.ufape.shaypado.ui.model.UploadData
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getApiError
 import com.ufape.shaypado.util.toImageMultiPartBodyPart
@@ -62,6 +63,30 @@ class AuthRepository(
         val res = api.updateUser(data)
         return if (res.isSuccessful) {
             Result.Success(Unit)
+        } else {
+            Result.Error(res.getApiError())
+        }
+    }
+
+    override suspend fun uploadProfilePicture(file: String): Result<UploadData> {
+        val imageFile = File(file)
+        val imageRequestFile = imageFile.toImageMultiPartBodyPart("profilePicture")
+
+        val res = api.uploadProfilePicture(imageRequestFile)
+        return if (res.isSuccessful) {
+            Result.Success(res.body()!!.toUiModel())
+        } else {
+            Result.Error(res.getApiError())
+        }
+    }
+
+    override suspend fun uploadPlansDocument(file: String): Result<UploadData> {
+        val plansFile = File(file)
+        val plansRequestFile = plansFile.toPdfMultiPartBodyPart("plansDocument")
+
+        val res = api.uploadPlansDocument(plansRequestFile)
+        return if (res.isSuccessful) {
+            Result.Success(res.body()!!.toUiModel())
         } else {
             Result.Error(res.getApiError())
         }

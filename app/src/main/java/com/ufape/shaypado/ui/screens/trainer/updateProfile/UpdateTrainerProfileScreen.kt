@@ -32,6 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,23 +47,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
+import com.ufape.shaypado.ui.components.Camera
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.screens.signUp.PersonalFormEvent
-import com.ufape.shaypado.ui.screens.signUp.SignUpScreenBase
 import com.ufape.shaypado.ui.screens.signUp.SignUpViewModel
 import com.ufape.shaypado.ui.screens.signUp.UserAccountFormEvent
 import com.ufape.shaypado.ui.theme.EmailIcon
 import com.ufape.shaypado.ui.theme.KeyIcon
 import com.ufape.shaypado.ui.theme.PersonIcon
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.compressImage
 import com.ufape.shaypado.util.createTempPdfFileFromUri
 import com.ufape.shaypado.util.getErrorMessage
 import java.io.File
@@ -67,12 +74,13 @@ import java.io.File
 @Composable
 fun UpdateTrainerProfileScreen(
     navController: NavController,
-    showSnackBar : (String) -> Unit
+    showSnackBar: (String) -> Unit
 ) {
     val context = LocalContext.current
+    var showCamera by remember { mutableStateOf(false) }
     val viewModel = hiltViewModel<SignUpViewModel>()
 
-    fun onFile ( file : File) {
+    fun onFile(file: File) {
         viewModel.onPersonalDataEvent(
             PersonalFormEvent.OnPlansDocumentChanged(
                 file.path
@@ -105,6 +113,10 @@ fun UpdateTrainerProfileScreen(
         pickMedia.launch(intent)
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserProfileData()
+    }
+
     LaunchedEffect(key1 = viewModel.trainerRegisterEvent) {
         viewModel.trainerRegisterEvent.collect {
             if (it is Result.Success) {
@@ -115,12 +127,27 @@ fun UpdateTrainerProfileScreen(
         }
     }
 
-    AppHeader (
+    if (showCamera) {
+        Camera(
+            onBackButton = {
+                showCamera = false
+            },
+            context = context,
+            onPicture = {
+                val file = it.compressImage(context)
+                viewModel.onPersonalDataEvent(PersonalFormEvent.OnProfilePictureChanged(file?.absolutePath))
+                showCamera = false
+            }
+        )
+        return
+    }
+
+    AppHeader(
         navController = navController,
         title = R.string.update_profile,
     )
 
-    Column (
+    Column(
         Modifier
             .fillMaxHeight(0.9f)
             .verticalScroll(
@@ -139,7 +166,7 @@ fun UpdateTrainerProfileScreen(
                     .width(100.dp)
                     .height(100.dp)
                     .clickable {
-                        navController.navigate(AuthNavigationScreen.SignUpCamera.route)
+                        showCamera = true
                     },
                 shape = RoundedCornerShape(50.dp),
                 border = BorderStroke(4.dp, MaterialTheme.colorScheme.primary),
@@ -153,12 +180,17 @@ fun UpdateTrainerProfileScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    if (viewModel.personalFormDataState.profilePicture != null) {
+                    if (viewModel.personalFormDataState.profilePictureUrl != null) {
+                        AsyncImage(
+                            model = viewModel.personalFormDataState.profilePictureUrl,
+                            contentDescription = null,
+                        )
+                    }else  if (viewModel.personalFormDataState.profilePicture != null) {
                         val file = viewModel.personalFormDataState.profilePicture?.let { File(it) }
 
                         if (file != null) {
                             Image(
-                                rememberImagePainter(file),
+                                rememberAsyncImagePainter(file),
                                 contentScale = ContentScale.FillWidth,
                                 contentDescription = "...",
                             )
@@ -174,7 +206,6 @@ fun UpdateTrainerProfileScreen(
                         )
                     }
                 }
-
             }
 
             AppText(
@@ -213,8 +244,8 @@ fun UpdateTrainerProfileScreen(
             keyboardType = KeyboardType.Password,
             onValueChange = { viewModel.onUserDataEvent(UserAccountFormEvent.OnPasswordChanged(it)) },
             leadingIcon = { KeyIcon() },
-            placeholder = R.string.input_password_placeholder,
-            label = R.string.input_password
+            placeholder = R.string.input_new_password_placeholder,
+            label = R.string.input_new_password
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -385,7 +416,9 @@ fun UpdateTrainerProfileScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         val plansDocumentNameA = viewModel.personalFormDataState.plansDocument?.split("/")
-        val plansDocument = plansDocumentNameA?.get(plansDocumentNameA.size - 1) ?: stringResource(id = R.string.input_plans_document_placeholder)
+        val plansDocument = plansDocumentNameA?.get(plansDocumentNameA.size - 1) ?: stringResource(
+            id = R.string.input_plans_document_placeholder
+        )
         AppButton(
             variant = ButtonVariant.SECONDARY_CONTAINER,
             text = plansDocument,
@@ -407,7 +440,7 @@ fun UpdateTrainerProfileScreen(
         Spacer(modifier = Modifier.height(16.dp))
     }
 
-    AppButton  (
+    AppButton(
         text = R.string.update,
         onClick = {
             viewModel.onPersonalDataEvent(PersonalFormEvent.OnUpdate)

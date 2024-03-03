@@ -3,6 +3,7 @@ package com.ufape.shaypado.data.api
 import com.ufape.shaypado.data.model.LoginRequest
 import com.ufape.shaypado.data.model.LoginResponse
 import com.ufape.shaypado.data.model.TrainerRequest
+import com.ufape.shaypado.data.model.UploadResponse
 import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.model.UserResponse
 import okhttp3.MultipartBody
@@ -25,7 +26,7 @@ interface AuthApi {
     suspend fun registerUser(@Body data: UserRequest): Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @POST("/users/registerTrainer")
+    @POST("/trainer_profile")
     suspend fun registerTrainer(@Body data: TrainerRequest): Response<Unit>
 
     @Headers("Content-Type: application/json")
@@ -35,4 +36,16 @@ interface AuthApi {
     @Headers("Content-Type: application/json")
     @PUT("/update_user")
     suspend fun updateUser(@Body data: UserRequest): Response<Unit>
+
+    @Multipart
+    @POST("/trainer_profile/upload_picture")
+    suspend fun uploadProfilePicture(
+        @Part profilePicture: MultipartBody.Part,
+    ): Response<UploadResponse>
+
+    @Multipart
+    @POST("/trainer_profile/upload_document")
+    suspend fun uploadPlansDocument(
+        @Part plansDocument: MultipartBody.Part,
+    ): Response<UploadResponse>
 }

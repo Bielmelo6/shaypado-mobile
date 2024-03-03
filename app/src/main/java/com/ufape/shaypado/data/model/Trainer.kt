@@ -3,7 +3,6 @@ package com.ufape.shaypado.data.model
 import com.google.gson.annotations.SerializedName
 import com.ufape.shaypado.ui.model.TrainerProfileData
 
-
 data class TrainerRequest(
     @SerializedName("name")
     val name: String,
@@ -64,6 +63,10 @@ data class TrainerResponse(
     val workLocation: String?,
     @SerializedName("friendship_code")
     val friendshipCode: String,
+    @SerializedName("profile_picture_id")
+    val profilePictureId: String?,
+    @SerializedName("plans_document_id")
+    val plansDocumentId: String?,
 )
 
 fun TrainerResponse.toUiModel(): TrainerProfileData {
@@ -81,6 +84,8 @@ fun TrainerResponse.toUiModel(): TrainerProfileData {
         city = this.city,
         workLocation = this.workLocation,
         friendshipCode = this.friendshipCode,
+        plansDocumentId = this.plansDocumentId,
+        profilePictureId = this.profilePictureId
     )
 }
 

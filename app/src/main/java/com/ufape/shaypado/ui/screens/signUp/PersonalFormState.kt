@@ -6,6 +6,8 @@ import com.ufape.shaypado.data.model.TrainerRequest
 data class PersonalFormState(
     val profilePicture: String? = null,
     @StringRes val profilePictureError: Int? = null,
+    val profilePictureId: String? = null,
+    val profilePictureUrl : String? = null,
     val name: String = "",
     @StringRes val nameError: Int? = null,
     val email: String = "",
@@ -24,6 +26,8 @@ data class PersonalFormState(
     @StringRes val workLocationError: Int? = null,
     val plansDocument: String? = null,
     @StringRes val plansDocumentError: Int? = null,
+    val plansDocumentId : String? = null,
+    val plansDocumentUrl : String? = null
 )
 
 fun PersonalFormState.toRequest(
@@ -33,8 +37,8 @@ fun PersonalFormState.toRequest(
         name = userAccountFormState.name,
         email = userAccountFormState.email,
         password = userAccountFormState.password,
-        profilePicture = profilePicture,
-        plansDocument = plansDocument!!,
+        profilePicture = profilePictureId,
+        plansDocument = plansDocumentId!!,
         fullName = name,
         contactEmail = email,
         contactPhone = phone,
