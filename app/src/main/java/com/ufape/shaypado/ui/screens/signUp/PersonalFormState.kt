@@ -33,7 +33,6 @@ fun PersonalFormState.toRequest(
         name = userAccountFormState.name,
         email = userAccountFormState.email,
         password = userAccountFormState.password,
-        userType = userAccountFormState.userType,
         profilePicture = profilePicture,
         plansDocument = plansDocument!!,
         fullName = name,

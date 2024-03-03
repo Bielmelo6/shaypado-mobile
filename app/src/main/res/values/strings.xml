@@ -232,5 +232,7 @@
     <string name="create_users">Cadastrar usuários</string>
     <string name="remove">Remover</string>
     <string name="exercises">Exercícios</string>
+    <string name="update_profile">Atualizar perfil</string>
+    <string name="update">Atualizar informações</string>
 
 </resources>

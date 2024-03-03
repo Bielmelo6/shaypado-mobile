@@ -73,6 +73,26 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    private fun updateTrainer() {
+        if (_hasValidationErrors.value !is Result.Success) return
+        viewModelScope.launch {
+            val data = personalFormDataState.toRequest(userAccountDataState)
+            val result = handler.makeSafeApiCall { authRepository.updateTrainer(data) }
+            _trainerRegistrationEventChannel.send(result)
+            resetValidationStatus()
+        }
+    }
+
+    private fun updateUserData() {
+        if (_hasValidationErrors.value !is Result.Success) return
+        viewModelScope.launch {
+            val userRequest = userAccountDataState.toRequest(userPhysicalEvaluationDataState)
+            val result = handler.makeSafeApiCall { authRepository.updateUser(userRequest) }
+            userRegistrationEventChannel.send(result)
+            resetValidationStatus()
+        }
+    }
+
     fun onUserDataEvent(event: UserAccountFormEvent) {
         when (event) {
             is UserAccountFormEvent.OnNameChanged -> {
@@ -242,8 +262,14 @@ class SignUpViewModel @Inject constructor(
                 validateTrainerData()
                 registerPersonal()
             }
+
+            is PersonalFormEvent.OnUpdate -> {
+                updateTrainer()
+            }
         }
     }
+
+
 
     private fun validateUserData(): Boolean {
         val nameValidation = validateName(userAccountDataState.name)

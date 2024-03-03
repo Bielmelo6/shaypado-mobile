@@ -11,6 +11,9 @@ interface IAuthRepository {
     suspend fun login(data: LoginRequest): Result<LoginData>
     suspend fun registerUser(data: UserRequest): Result<Unit>
     suspend fun registerTrainer(data: TrainerRequest): Result<Unit>
+    suspend fun updateTrainer(data: TrainerRequest): Result<Unit>
+    suspend fun updateUser(data: UserRequest): Result<Unit>
+
     fun logout()
     fun saveUser(user: LoginResponse)
     fun fetchUser(): LoginData?

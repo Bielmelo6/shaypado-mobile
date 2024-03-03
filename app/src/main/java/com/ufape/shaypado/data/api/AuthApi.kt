@@ -12,6 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 
 interface AuthApi {
@@ -23,22 +24,15 @@ interface AuthApi {
     @POST("/users/register")
     suspend fun registerUser(@Body data: UserRequest): Response<Unit>
 
-    @Multipart
+    @Headers("Content-Type: application/json")
     @POST("/users/registerTrainer")
-    suspend fun registerTrainer(
-        @Part("name") name: RequestBody,
-        @Part("email") email: RequestBody,
-        @Part("password") password: RequestBody,
-        @Part("userType") userType: RequestBody,
-        @Part("full_name") fullName: RequestBody,
-        @Part("contact_email") contactEmail: RequestBody,
-        @Part("contact_phone") contactPhone: RequestBody,
-        @Part("specialties") specialties: RequestBody,
-        @Part("age") age: RequestBody,
-        @Part("state") state: RequestBody,
-        @Part("city") city: RequestBody,
-        @Part("work_location") workLocation: RequestBody?,
-        @Part profilePicture: MultipartBody.Part?,
-        @Part plansDocument: MultipartBody.Part,
-    ): Response<Unit>
+    suspend fun registerTrainer(@Body data: TrainerRequest): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @PUT("/update_trainer")
+    suspend fun updateTrainer(@Body data: TrainerRequest): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @PUT("/update_user")
+    suspend fun updateUser(@Body data: UserRequest): Response<Unit>
 }

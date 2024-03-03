@@ -69,7 +69,13 @@ fun SettingsScreen(
     val user = (userProfileData as Result.Success).data
     val context = LocalContext.current
 
-    Row {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                navController.navigate(TrainerNavigationScreen.UpdateProfile.route)
+            }
+    ) {
         Image(
             modifier = Modifier.size(60.dp),
             painter = painterResource(id = R.drawable.ic_student),

@@ -36,6 +36,7 @@ import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
+import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
@@ -111,6 +112,10 @@ sealed class TrainerNavigationScreen(
 
     data object CreateWorkout : TrainerNavigationScreen(
         "workouts_create",
+    )
+
+    data object UpdateProfile : TrainerNavigationScreen(
+        "update_profile",
     )
 }
 
@@ -247,7 +252,7 @@ fun TrainerRoutes(
             }
 
             composable(TrainerNavigationScreen.Friends.route) {
-                Container (
+                Container(
                     snackBarMessage = snackbarMessage,
                     resetSnackBarMessage = { resetSnackBarMessage() }
                 ) {
@@ -288,6 +293,18 @@ fun TrainerRoutes(
                     resetSnackBarMessage = { resetSnackBarMessage() }
                 ) {
                     CreateTrainingsScreen(
+                        navController = navController,
+                        showSnackBar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UpdateProfile.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    UpdateTrainerProfileScreen(
                         navController = navController,
                         showSnackBar = { message -> showSnackBar(message) }
                     )

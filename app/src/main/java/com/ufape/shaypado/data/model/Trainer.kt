@@ -11,8 +11,6 @@ data class TrainerRequest(
     val email: String,
     @SerializedName("password")
     val password: String,
-    @SerializedName("userType")
-    val userType: String,
 
     //Related to Trainer
     @SerializedName("profile_picture")

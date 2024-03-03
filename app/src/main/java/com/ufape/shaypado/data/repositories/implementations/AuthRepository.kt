@@ -41,28 +41,25 @@ class AuthRepository(
     }
 
     override suspend fun registerTrainer(data: TrainerRequest): Result<Unit> {
-        val imageFile = data.profilePicture?.let { File(it) }
-        val imageRequestFile = imageFile?.toImageMultiPartBodyPart("profile_picture")
+        val res = api.registerTrainer(data)
+        return if (res.isSuccessful) {
+            Result.Success(Unit)
+        } else {
+            Result.Error(res.getApiError())
+        }
+    }
 
-        val plansFile = File(data.plansDocument)
-        val plansRequestFile = plansFile.toPdfMultiPartBodyPart("plans_document")
+    override suspend fun updateTrainer(data: TrainerRequest): Result<Unit> {
+        val res = api.updateTrainer(data)
+        return if (res.isSuccessful) {
+            Result.Success(Unit)
+        } else {
+            Result.Error(res.getApiError())
+        }
+    }
 
-        val res = api.registerTrainer(
-            profilePicture = imageRequestFile,
-            name = data.name.toRequestBody("text/plain".toMediaTypeOrNull()),
-            email = data.email.toRequestBody("text/plain".toMediaTypeOrNull()),
-            password = data.password.toRequestBody("text/plain".toMediaTypeOrNull()),
-            userType = data.userType.toRequestBody("text/plain".toMediaTypeOrNull()),
-            fullName = data.fullName.toRequestBody("text/plain".toMediaTypeOrNull()),
-            contactEmail = data.contactEmail.toRequestBody("text/plain".toMediaTypeOrNull()),
-            contactPhone = data.contactPhone.toRequestBody("text/plain".toMediaTypeOrNull()),
-            specialties = data.specialties.toRequestBody("text/plain".toMediaTypeOrNull()),
-            age = data.age.toRequestBody("text/plain".toMediaTypeOrNull()),
-            state = data.state.toRequestBody("text/plain".toMediaTypeOrNull()),
-            city = data.city.toRequestBody("text/plain".toMediaTypeOrNull()),
-            workLocation = data.workLocation?.toRequestBody("text/plain".toMediaTypeOrNull()),
-            plansDocument = plansRequestFile
-        )
+    override suspend fun updateUser(data: UserRequest): Result<Unit> {
+        val res = api.updateUser(data)
         return if (res.isSuccessful) {
             Result.Success(Unit)
         } else {

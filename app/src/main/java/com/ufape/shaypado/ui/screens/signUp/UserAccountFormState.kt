@@ -26,7 +26,6 @@ data class UserAccountFormState(
 
 fun UserAccountFormState.toRequest(physicalEvaluationData : UserPhysicalEvaluationFormState) : UserRequest {
     return UserRequest(
-        userType = userType,
         name = name,
         email = email,
         password = password,
