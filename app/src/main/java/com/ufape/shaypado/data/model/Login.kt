@@ -12,7 +12,7 @@ data class LoginRequest(
 )
 
 data class LoginResponse(
-    @SerializedName("token")
+    @SerializedName("acessToken")
     val token: String,
     @SerializedName("userType")
     val userType: String,

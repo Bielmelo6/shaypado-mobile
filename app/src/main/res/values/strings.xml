@@ -236,5 +236,6 @@
     <string name="update">Atualizar informações</string>
     <string name="input_new_password_placeholder">Insira sua nova senha caso deseje</string>
     <string name="input_new_password">Nova senha</string>
+    <string name="loading">Carregando</string>
 
 </resources>

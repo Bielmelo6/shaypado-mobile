@@ -17,12 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.screens.trainer.classDetails.ClassDetailsScreen
@@ -37,12 +39,14 @@ import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
+import com.ufape.shaypado.ui.screens.trainer.updateWorkout.UpdateWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
 sealed class TrainerNavigationScreen(
     val route: String,
-    val barItemStyle: BottomBarItemStyle? = null
+    val barItemStyle: BottomBarItemStyle? = null,
+    val shortName: String = "",
 ) {
     data object NavRoot : TrainerNavigationScreen(
         "trainer_root",
@@ -116,6 +120,11 @@ sealed class TrainerNavigationScreen(
 
     data object UpdateProfile : TrainerNavigationScreen(
         "update_profile",
+    )
+
+    data object EditWorkout : TrainerNavigationScreen(
+        "edit_workout/{workoutId}",
+        shortName = "edit_workout"
     )
 }
 
@@ -307,6 +316,21 @@ fun TrainerRoutes(
                     UpdateTrainerProfileScreen(
                         navController = navController,
                         showSnackBar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(
+                TrainerNavigationScreen.EditWorkout.route,
+            ) { backStackEntry ->
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    UpdateWorkoutScreen(
+                        navController = navController,
+                        showSnackBar = { message -> showSnackBar(message) },
+                        workoutId = backStackEntry.arguments?.getString("workoutId")!!
                     )
                 }
             }
