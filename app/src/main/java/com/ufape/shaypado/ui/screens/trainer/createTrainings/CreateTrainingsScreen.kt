@@ -146,7 +146,7 @@ fun CreateTrainingsScreen(
             label = R.string.training_category,
             value = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].category,
             onValueChange = {
-                createTrainingsViewModel.onTrainingDataEvent(TrainingsFormEvent.OnCategoryChanged(it))
+                createTrainingsViewModel.onTrainingDataEvent(TrainingsFormEvent.OnCategoryChanged(it, ""))
             },
             placeholder = R.string.training_category_placeholder,
         )

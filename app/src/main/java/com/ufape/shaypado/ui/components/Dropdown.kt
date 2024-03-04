@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,14 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-@Preview
-fun Dropdown(
+fun AppDropdown(
     items: List<DropdownItem> = listOf(),
-    onItemSelected: (String) -> Unit = {},
+    onItemSelected: (String, String) -> Unit,
     label: String = "",
     selectedValue: String = ""
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val value = items.find { it.value == selectedValue }?.text ?: selectedValue
 
     Box(
         modifier = Modifier
@@ -71,8 +71,8 @@ fun Dropdown(
 
             ) {
                 AppText(
-                    textType = TextType.HEADLINE_SMALL,
-                    text = selectedValue
+                    textType = TextType.LABEL_LARGE,
+                    text = value
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
@@ -84,9 +84,9 @@ fun Dropdown(
         }
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
-            items.forEach { item ->
+            items.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     text = {
                         AppText(
@@ -96,12 +96,13 @@ fun Dropdown(
                         )
                     },
                     onClick = {
-                        onItemSelected(item.value)
+                        onItemSelected(item.value, item.text)
                         expanded = false
                     }
                 )
-                HorizontalDivider()
-
+                if (index < items.size - 1) {
+                    HorizontalDivider()
+                }
             }
         }
     }
