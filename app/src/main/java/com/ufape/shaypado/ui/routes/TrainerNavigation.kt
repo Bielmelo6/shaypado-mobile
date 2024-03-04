@@ -31,8 +31,10 @@ import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
+import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
+import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 
@@ -102,6 +104,9 @@ sealed class TrainerNavigationScreen(
     data object CreateUsers : TrainerNavigationScreen(
         "create_users",
     )
+    data object ImportFriends : TrainerNavigationScreen(
+        "import_friends",
+    )
 }
 
 @Composable
@@ -162,6 +167,7 @@ fun TrainerRoutes(
 ) {
     val navController: NavHostController = rememberNavController()
     val createClassViewModel = hiltViewModel<CreateClassViewModel>()
+    val editClassViewModel = hiltViewModel<EditClassViewModel>()
     var snackbarMessage: String? by remember { mutableStateOf(null) }
 
     fun showSnackBar(message: String) {
@@ -196,7 +202,7 @@ fun TrainerRoutes(
 
             composable(TrainerNavigationScreen.EditClass.route) {
                 Container {
-                    EditClassScreen(navController)
+                    EditClassScreen(navController, editClassViewModel)
                 }
             }
 
@@ -256,6 +262,18 @@ fun TrainerRoutes(
                     AddUserScreen(
                         navController = navController,
                         showSnackBar = { message -> showSnackBar(message) }
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.ImportFriends.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    ImportFriendsScreen(
+                        navController = navController,
+                        onImport = editClassViewModel::importFriends
                     )
                 }
             }
