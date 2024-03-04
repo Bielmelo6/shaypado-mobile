@@ -18,6 +18,13 @@ data class FriendResponse(
     val name: String,
 )
 
+data class PendingFriendResponse(
+    @SerializedName("friendship_code")
+    val friendshipCode: String,
+    @SerializedName("name")
+    val name: String,
+)
+
 data class FriendshipCodeRequest (
     @SerializedName("friendship_code")
     val friendshipCode: String

@@ -16,32 +16,5 @@ import com.ufape.shaypado.util.Result
 
 interface ITrainerRepository {
     suspend fun fetchTrainerProfile(): Result<TrainerProfileData>
-
-
-    suspend fun fetchFriends(): Result<FriendsData>
-    suspend fun removeFriend(friendshipCode: FriendshipCodeRequest): Result<Unit>
-    suspend fun addFriend(friendshipCode: FriendshipCodeRequest): Result<Unit>
-
-
     suspend fun registerUsers(users: List<UserRequest>): Result<Unit>
-
-
-    suspend fun createTraining(profile: List<CreateWorkoutRequest>): Result<Unit>
-
-
-
-
-    suspend fun fetchWorkouts(): Result<List<WorkoutData>>
-
-    suspend fun deleteWorkout(workoutId: WorkoutIdRequest): Result<Unit>
-
-    suspend fun updateWorkout(workout: UpdateWorkoutRequest): Result<WorkoutData>
-
-    suspend fun fetchWorkout(workoutId: String): Result<WorkoutData>
-    suspend fun fetchCategories(): Result<List<CategoriesState>>
-
-    suspend fun createExercise(exercise: CreateExerciseRequest): Result<ExerciseData>
-
-    suspend fun updateExercise(exercise: UpdateExerciseRequest): Result<ExerciseData>
-
 }

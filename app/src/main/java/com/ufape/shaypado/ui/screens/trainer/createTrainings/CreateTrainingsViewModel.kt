@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
+import com.ufape.shaypado.data.repositories.interfaces.IWorkoutRepository
 import com.ufape.shaypado.ui.model.FriendsData
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTrainingsViewModel @Inject constructor(
     private val handler: ISafeNetworkHandler,
-    private val repository: ITrainerRepository
+    private val repository: IWorkoutRepository
 ) : ViewModel() {
     var numberOfTrainings by mutableIntStateOf(0)
 
@@ -33,11 +34,16 @@ class CreateTrainingsViewModel @Inject constructor(
 
     private fun createTraining() {
         viewModelScope.launch {
+            _trainingRequestStatus.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                repository.createTraining(trainingsData.map { it.toRequest() })
+                repository.createWorkouts(trainingsData.map { it.toRequest() })
             }
 
-            _trainingRequestStatus.send(result)
+            result.fold(
+                onSuccess = { _trainingRequestStatus.send(Result.Success(Unit)) },
+                onFailure = {
+                    _trainingRequestStatus.send(Result.Error(it)) }
+            )
         }
     }
 
