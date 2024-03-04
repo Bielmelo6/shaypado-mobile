@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 
 data class BottomBarItemStyle(
@@ -43,7 +45,7 @@ data class BottomBarItemStyle(
     @DrawableRes val iconFocused: Int,
 )
 
-sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomBarItemStyle) {
+sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomBarItemStyle? = null)  {
     data object NavRoot : MobileNavigationScreen(
         "mobile_root",
         BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
@@ -72,6 +74,10 @@ sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomB
     data object Settings : MobileNavigationScreen(
         "settings",
         BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_settings, R.drawable.ic_nav_settings)
+    )
+
+    data object Tela : MobileNavigationScreen(
+        "tela_nome"
     )
 }
 
@@ -107,7 +113,7 @@ fun BottomBar(navController: NavHostController) {
     ) {
         bottomTabItems.forEach { screen ->
             val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-            BottomTabItem(isSelected, screen.barItemStyle, navController, screen.route)
+            screen.barItemStyle?.let { BottomTabItem(isSelected, it, navController, screen.route) }
         }
     }
 }
@@ -218,6 +224,10 @@ fun MobileRoutes(
             }
             composable(MobileNavigationScreen.Settings.route) {
                 Settings(navController)
+            }
+
+            composable(MobileNavigationScreen.Tela.route) {
+                Text(text = "Tela")
             }
         }
     }

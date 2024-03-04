@@ -74,7 +74,6 @@ data class UserFormState(
 )
 
 fun UserFormState.toRequest () = UserRequest(
-    userType = userType,
     name = name,
     email = email,
     password = password,

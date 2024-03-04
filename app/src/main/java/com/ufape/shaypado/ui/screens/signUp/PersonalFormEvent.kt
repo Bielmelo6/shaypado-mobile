@@ -21,4 +21,6 @@ sealed class PersonalFormEvent {
     data class OnPlansDocumentChanged(val plansDocument: String?) : PersonalFormEvent()
 
     data object OnSubmit : PersonalFormEvent()
+
+    data object OnUpdate : PersonalFormEvent()
 }

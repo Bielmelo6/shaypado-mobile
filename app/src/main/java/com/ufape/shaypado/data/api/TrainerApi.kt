@@ -4,16 +4,20 @@ import com.ufape.shaypado.data.model.FriendsResponse
 import com.ufape.shaypado.data.model.FriendshipCodeRequest
 import com.ufape.shaypado.data.model.TrainerResponse
 import com.ufape.shaypado.data.model.UserRequest
+import com.ufape.shaypado.data.model.WorkoutIdRequest
 import com.ufape.shaypado.data.model.WorkoutRequest
+import com.ufape.shaypado.data.model.WorkoutResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface TrainerApi {
     @Headers("Content-Type: application/json")
-    @GET("/trainer")
+    @GET("/trainer_profile")
     suspend fun fetchProfileData(): Response<TrainerResponse>
 
     @Headers("Content-Type: application/json")
@@ -35,5 +39,17 @@ interface TrainerApi {
     @Headers("Content-Type: application/json")
     @POST("/create_training")
     suspend fun createTraining(@Body data: List<WorkoutRequest>): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @GET("/workouts")
+    suspend fun fetchTrainings(): Response<List<WorkoutResponse>>
+
+    @Headers("Content-Type: application/json")
+    @DELETE("/delete_training")
+    suspend fun deleteWorkout(@Body data: WorkoutIdRequest): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @GET("/workout")
+    suspend fun fetchWorkout(@Query("workout_id") workoutId: String): Response<WorkoutResponse>
 
 }

@@ -87,10 +87,6 @@ class CreateTrainingsViewModel @Inject constructor(
 
     fun onExerciseEvent(event: ExerciseFormEvent) {
         when (event) {
-            is ExerciseFormEvent.OnCategoryChanged -> {
-                exerciseData = exerciseData.copy(category = event.category)
-            }
-
             is ExerciseFormEvent.OnDescriptionChanged -> {
                 exerciseData = exerciseData.copy(description = event.description)
             }

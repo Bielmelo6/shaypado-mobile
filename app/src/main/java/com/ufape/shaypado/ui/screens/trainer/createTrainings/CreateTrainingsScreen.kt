@@ -264,21 +264,6 @@ fun CreateTrainingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomTextField(
-                    label = R.string.exercise_category,
-                    value = createTrainingsViewModel.exerciseData.category,
-                    onValueChange = {
-                        createTrainingsViewModel.onExerciseEvent(
-                            ExerciseFormEvent.OnCategoryChanged(
-                                it
-                            )
-                        )
-                    },
-                    placeholder = R.string.exercise_category_placeholder,
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomTextField(
                     label = R.string.exercise_description,
                     value = createTrainingsViewModel.exerciseData.description,
                     onValueChange = {
