@@ -237,5 +237,6 @@
     <string name="input_new_password_placeholder">Insira sua nova senha caso deseje</string>
     <string name="input_new_password">Nova senha</string>
     <string name="loading">Carregando</string>
+    <string name="remove_exercise">Remover exercício</string>
 
 </resources>

@@ -1,15 +1,20 @@
 package com.ufape.shaypado.data.repositories.implementations
 
 import com.ufape.shaypado.data.api.TrainerApi
+import com.ufape.shaypado.data.model.CreateExerciseRequest
 import com.ufape.shaypado.data.model.FriendshipCodeRequest
 import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.model.WorkoutIdRequest
-import com.ufape.shaypado.data.model.WorkoutRequest
+import com.ufape.shaypado.data.model.CreateWorkoutRequest
+import com.ufape.shaypado.data.model.UpdateExerciseRequest
+import com.ufape.shaypado.data.model.UpdateWorkoutRequest
 import com.ufape.shaypado.data.model.toUiModel
 import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
+import com.ufape.shaypado.ui.model.ExerciseData
 import com.ufape.shaypado.ui.model.FriendsData
 import com.ufape.shaypado.ui.model.TrainerProfileData
 import com.ufape.shaypado.ui.model.WorkoutData
+import com.ufape.shaypado.ui.screens.trainer.updateWorkout.CategoriesState
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getApiError
 
@@ -61,7 +66,7 @@ class TrainerRepository(
         }
     }
 
-    override suspend fun createTraining(profile: List<WorkoutRequest>): Result<Unit> {
+    override suspend fun createTraining(profile: List<CreateWorkoutRequest>): Result<Unit> {
         val result = api.createTraining(profile)
         return if (result.isSuccessful) {
             Result.Success(Unit)
@@ -88,8 +93,44 @@ class TrainerRepository(
         }
     }
 
+    override suspend fun updateWorkout(workout: UpdateWorkoutRequest): Result<WorkoutData> {
+        val result = api.updateWorkout(workout)
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.toUiModel())
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
     override suspend fun fetchWorkout(workoutId: String): Result<WorkoutData> {
         val result = api.fetchWorkout(workoutId)
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.toUiModel())
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
+    override suspend fun fetchCategories(): Result<List<CategoriesState>> {
+        val result = api.fetchCategories()
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.map { it.toUiModel() })
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
+    override suspend fun createExercise(exercise: CreateExerciseRequest): Result<ExerciseData> {
+        val result = api.createExercise(exercise)
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.toUiModel())
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
+    override suspend fun updateExercise(exercise: UpdateExerciseRequest): Result<ExerciseData> {
+        val result = api.updateExercise(exercise)
         return if (result.isSuccessful) {
             Result.Success(result.body()!!.toUiModel())
         } else {

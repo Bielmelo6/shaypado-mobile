@@ -28,10 +28,13 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppDialog
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
+import com.ufape.shaypado.ui.components.EditButton
 import com.ufape.shaypado.ui.components.RemoveButton
 import com.ufape.shaypado.ui.components.TimePicker
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.ExerciseFormEvent
@@ -56,13 +59,13 @@ fun UpdateWorkoutScreen(
         initial = Result.Loading
     )
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         updateWorkoutViewModel.fetchWorkout(workoutId)
     }
 
     if (workoutData is Result.Error) {
         AppText(
-            text = R.string.unknown_error,
+            text = (workoutData as Result.Error).exception.getErrorMessage(LocalContext.current),
         )
         return
     }
@@ -72,6 +75,13 @@ fun UpdateWorkoutScreen(
             text = R.string.loading,
         )
         return
+    }
+
+    val categories = updateWorkoutViewModel.categoriesData.map {
+        DropdownItem(
+            it.category,
+            it.id
+        )
     }
 
     AppHeader(
@@ -88,7 +98,7 @@ fun UpdateWorkoutScreen(
     {
         CustomTextField(
             label = R.string.training_name,
-            value = updateWorkoutViewModel.workoutState.name ,
+            value = updateWorkoutViewModel.workoutState.name,
             onValueChange = {
                 updateWorkoutViewModel.onWorkoutEvent(TrainingsFormEvent.OnNameChanged(it))
             },
@@ -97,13 +107,17 @@ fun UpdateWorkoutScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
-            label = R.string.training_category,
-            value = updateWorkoutViewModel.workoutState.category,
-            onValueChange = {
-                updateWorkoutViewModel.onWorkoutEvent(TrainingsFormEvent.OnCategoryChanged(it))
+        AppDropdown(
+            items = categories,
+            onItemSelected = { value, label ->
+                updateWorkoutViewModel.onWorkoutEvent(
+                    TrainingsFormEvent.OnCategoryChanged(
+                        value, label
+                    )
+                )
             },
-            placeholder = R.string.training_category_placeholder,
+            label = "Categoria",
+            selectedValue = updateWorkoutViewModel.workoutState.category,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -119,6 +133,9 @@ fun UpdateWorkoutScreen(
                 endHeaderContent = {
                     AddButton(
                         onClick = {
+                            updateWorkoutViewModel.setExerciseData(
+                                null
+                            )
                             showCreateExerciseDialog = true
                         }
                     )
@@ -136,16 +153,17 @@ fun UpdateWorkoutScreen(
                                 TrainingImage()
                             },
                             trailingIcon = {
-                                RemoveButton(
-                                    variant = ButtonVariant.ERROR_CONTAINER,
-                                    onClick = {
-                                        updateWorkoutViewModel.onExerciseEvent(
-                                            ExerciseFormEvent.RemoveCurrentExercise(
+                                Row {
+                                    EditButton(
+                                        variant = ButtonVariant.TERTIARY,
+                                        onClick = {
+                                            updateWorkoutViewModel.setExerciseData(
                                                 it
                                             )
-                                        )
-                                    }
-                                )
+                                            showCreateExerciseDialog = true
+                                        }
+                                    )
+                                }
                             }
                         )
                     }
@@ -297,12 +315,21 @@ fun UpdateWorkoutScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (updateWorkoutViewModel.exerciseData.id != null) {
+            AppButton(
+                text = R.string.remove_exercise,
+                onClick = {
+                    updateWorkoutViewModel.removeExercise()
+                },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         AppButton(
-            text = R.string.end,
+            text = R.string.save,
             onClick = {
-                updateWorkoutViewModel.onExerciseEvent(
-                    ExerciseFormEvent.OnSubmit
-                )
+                updateWorkoutViewModel.onExerciseEvent(ExerciseFormEvent.OnSubmit)
                 showCreateExerciseDialog = false
             },
         )

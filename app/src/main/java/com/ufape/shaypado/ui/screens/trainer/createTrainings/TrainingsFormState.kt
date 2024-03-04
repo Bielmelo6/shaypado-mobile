@@ -1,15 +1,15 @@
 package com.ufape.shaypado.ui.screens.trainer.createTrainings
 
 import androidx.annotation.StringRes
-import com.google.gson.annotations.SerializedName
-import com.ufape.shaypado.data.model.ExerciseRequest
-import com.ufape.shaypado.data.model.WorkoutRequest
+import com.ufape.shaypado.data.model.CreateExerciseRequest
+import com.ufape.shaypado.data.model.CreateWorkoutRequest
 
 data class TrainingsFormState(
     val id: String ? = null,
     val name: String = "",
     @StringRes val nameError: Int? = null,
     val category: String = "",
+    val categoryLabel : String = "",
     @StringRes val categoryError: Int? = null,
     var exercises: List<ExerciseFormState> = emptyList(),
 )
@@ -30,15 +30,13 @@ data class ExerciseFormState(
     @StringRes val timeError: Int? = null,
 )
 
-fun TrainingsFormState.toRequest() = WorkoutRequest(
-    id = id,
+fun TrainingsFormState.toRequest() = CreateWorkoutRequest(
     name = name,
     category = category,
     exercises = exercises.map { it.toRequest() }
 )
 
-fun ExerciseFormState.toRequest() = ExerciseRequest(
-    id = id,
+fun ExerciseFormState.toRequest() = CreateExerciseRequest(
     title = title,
     description = description,
     videoUrl = videoUrl,
@@ -49,7 +47,7 @@ fun ExerciseFormState.toRequest() = ExerciseRequest(
 
 sealed class TrainingsFormEvent {
     data class OnNameChanged(val name: String) : TrainingsFormEvent()
-    data class OnCategoryChanged(val category: String) : TrainingsFormEvent()
+    data class OnCategoryChanged(val category: String, val label : String) : TrainingsFormEvent()
     data class OnExercisesChanged(val exercises: List<ExerciseFormState>) : TrainingsFormEvent()
     data object RemoveCurrentTraining : TrainingsFormEvent()
     data object OnSubmit : TrainingsFormEvent()
