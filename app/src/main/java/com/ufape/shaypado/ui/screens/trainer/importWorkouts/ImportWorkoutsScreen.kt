@@ -1,6 +1,6 @@
-package com.ufape.shaypado.ui.screens.trainer.importFriends
+package com.ufape.shaypado.ui.screens.trainer.importWorkouts
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,29 +24,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
-import com.ufape.shaypado.ui.model.FriendState
+import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.ui.theme.BarbellIcon
 import com.ufape.shaypado.util.Result
 
 @Composable
-fun ImportFriendsScreen(
+fun ImportWorkoutsScreen(
     navController: NavController,
-    onImport: (List<FriendState>) -> Unit
+    onImport: (List<WorkoutState>) -> Unit
 ) {
-    val importFriendsViewModel = hiltViewModel<ImportFriendsViewModel>()
-    val isLoading = importFriendsViewModel.friendsData.collectAsState(
+    val importFriendsViewModel = hiltViewModel<ImportWorkoutsViewModel>()
+    val isLoading = importFriendsViewModel.workoutData.collectAsState(
         initial = Result.Loading
     )
 
@@ -96,7 +96,7 @@ fun ImportFriendsScreen(
         AppText(
             textType = TextType.HEADLINE_MEDIUM,
             textAlignment = TextAlign.Center,
-            text = R.string.import_friends,
+            text = R.string.import_workouts,
             fillWidth = true
         )
     }
@@ -109,13 +109,13 @@ fun ImportFriendsScreen(
             .fillMaxHeight(0.8f),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(importFriendsViewModel.friends.size) {
-            FriendCard(
-                selected = importFriendsViewModel.friends[it].isSelected,
-                title = importFriendsViewModel.friends[it].name,
-                description = "",
+        items(importFriendsViewModel.workouts.size) {
+            WorkoutCard(
+                selected = importFriendsViewModel.workouts[it].isSelected,
+                title = importFriendsViewModel.workouts[it].name,
+                description = importFriendsViewModel.workouts[it].category,
                 onSelected = {
-                    importFriendsViewModel.toggleFriend(it)
+                    importFriendsViewModel.toggleWorkout(it)
                 }
             )
         }
@@ -138,7 +138,7 @@ fun ImportFriendsScreen(
         variant = ButtonVariant.PRIMARY,
         onClick = {
             val selectedFriends =
-                importFriendsViewModel.friends.filter { it.isSelected }
+                importFriendsViewModel.workouts.filter { it.isSelected }
             onImport(selectedFriends)
             navController.popBackStack()
         }
@@ -148,10 +148,9 @@ fun ImportFriendsScreen(
 }
 
 @Composable
-@Preview
-fun FriendCard(
-    title: String = "John Doe",
-    description: String = "Some description",
+fun WorkoutCard(
+    title: String ,
+    description: String ,
     selected: Boolean = true,
     onSelected: () -> Unit = {}
 ) {
@@ -161,13 +160,23 @@ fun FriendCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row {
-            Image(
+            Row(
                 modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp),
-                painter = painterResource(id = R.drawable.ic_student),
-                contentDescription = "student"
-            )
+                    .size(50.dp)
+                    .background(
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(50.dp)
+                    )
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(50.dp)
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                BarbellIcon()
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier.width(200.dp)
@@ -208,21 +217,4 @@ fun FriendCard(
 
     Spacer(modifier = Modifier.height(8.dp))
     HorizontalDivider()
-}
-
-@Preview
-@Composable
-fun ImportFriendsScreenPreview() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-    ) {
-        ImportFriendsScreen(
-            navController = rememberNavController(),
-            onImport = {
-
-            }
-        )
-    }
 }

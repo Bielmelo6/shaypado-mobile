@@ -31,7 +31,7 @@ interface ClassApi {
     suspend fun getClasses() : Response<List<ClassResponse>>
 
     @Headers("Content-Type: application/json")
-    @GET("/get_class")
-    suspend fun getClass(@Query("id") id: String) : Response<ClassResponse>
+    @GET("/get_class/{id}")
+    suspend fun getClass(@Path("id") id: String) : Response<ClassResponse>
 }
 

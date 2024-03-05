@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.screens.trainer.createClass
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,11 +9,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.repositories.interfaces.IClassRepository
 import com.ufape.shaypado.ui.model.ClassState
+import com.ufape.shaypado.ui.model.ClassWorkoutState
 import com.ufape.shaypado.ui.model.FriendState
+import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.ui.model.toCreateRequest
-import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormEvent
 import com.ufape.shaypado.util.ISafeNetworkHandler
+import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +31,9 @@ class CreateClassViewModel @Inject constructor(
     var selectedClass by mutableIntStateOf(0)
 
     var classData by mutableStateOf<List<ClassState>>(listOf())
+
+    private val _createClassesEventChannel = Channel<Result<Unit>>()
+    val createClassesEvent = _createClassesEventChannel.receiveAsFlow()
 
     fun onClassDataEvent(event: ClassFormEvent) {
         when (event) {
@@ -70,7 +78,7 @@ class CreateClassViewModel @Inject constructor(
                 }
             }
 
-            ClassFormEvent.OnSubmit ->  {
+            is ClassFormEvent.OnSubmit ->  {
                 createClasses()
             }
         }
@@ -82,6 +90,26 @@ class CreateClassViewModel @Inject constructor(
         classData = classData.mapIndexed { index, classState ->
             if (index == selectedClass){
                 classState.copy(students = newData)
+            }else {
+                classState
+            }
+        }
+    }
+
+
+    fun importWorkouts(workouts : List<WorkoutState>){
+        val data = workouts.map { ClassWorkoutState(
+            id = it.id,
+            categoryId = it.categoryId,
+            category = it.category,
+            title = it.name
+
+        ) }
+        var newData = classData.toMutableList()[selectedClass].workouts
+        newData = newData.union(data).toMutableList()
+        classData = classData.mapIndexed { index, classState ->
+            if (index == selectedClass){
+                classState.copy(workouts = newData)
             }else {
                 classState
             }
@@ -100,12 +128,30 @@ class CreateClassViewModel @Inject constructor(
         }
     }
 
+
+    fun removeWorkout(friend: Int){
+        val newData = classData[selectedClass].workouts.toMutableList()
+        newData.removeAt(friend)
+        classData = classData.mapIndexed { index, classState ->
+            if (index == selectedClass){
+                classState.copy(workouts = newData)
+            }else {
+                classState
+            }
+        }
+    }
+
     fun createClasses() {
         viewModelScope.launch {
             val result = handler.makeSafeApiCall {
                 repository.addClasses(classData.map { it.toCreateRequest() })
             }
 
+            if (result is Result.Success) {
+                _createClassesEventChannel.send(Result.Success(Unit))
+            } else if (result is Result.Error) {
+                _createClassesEventChannel.send(result)
+            }
         }
     }
 

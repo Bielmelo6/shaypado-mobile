@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -29,12 +31,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,18 +55,42 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
-import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
+import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 
 @Composable
 fun TrainerHomeScreen(
     navController: NavController
 ) {
     val viewModel = hiltViewModel<TrainerHomeViewModel>()
+    val context = LocalContext.current
 
-    if (viewModel.classesState.classes.isEmpty()) {
+    val classesData by viewModel.classesData.collectAsState(initial = Result.Loading)
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchClasses()
+    }
+
+    if (classesData is Result.Loading) {
+        return AppText(
+            text = R.string.loading,
+        )
+    }
+    if (classesData is Result.Error) {
+        return AppText(
+            text = (classesData as Result.Error).exception.getErrorMessage(context)
+        )
+    }
+
+    if (viewModel.classes.isEmpty()) {
         TrainerHomeScreenEmptyList(navController)
         return
     }
+
+    val lazyListState = rememberLazyListState()
+
 
     Row(
         modifier = Modifier
@@ -80,20 +110,45 @@ fun TrainerHomeScreen(
             navController.popBackStack()
         })
     }
-    ClassDetailsRenderItem {
-        navController.navigate(
-            TrainerNavigationScreen.ClassDetails.route
-        )
+
+    LazyRow (
+        state = lazyListState,
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(viewModel.classes.size) {
+            ClassDetailsRenderItem(
+                name = viewModel.classes[it].name,
+                description = viewModel.classes[it].startTime + " - " + viewModel.classes[it].endTime,
+                students = viewModel.classes[it].students.size,
+                day = "S",
+                onPress = {
+                    navController.navigate(
+                        TrainerNavigationScreen.ClassDetails.shortName + "/${viewModel.classes[it].id}"
+                    )
+                }
+            )
+        }
     }
+
     Spacer(modifier = Modifier.height(20.dp))
+
+    val visibleClassIndex by remember(lazyListState) {
+        snapshotFlow { lazyListState.firstVisibleItemIndex }
+            .filter { it != -1 } // Evitar -1, que indica nenhum item visível
+            .distinctUntilChanged() // Para evitar emissões repetidas do mesmo índice
+    }.collectAsState(initial = 0)
 
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(10) {
+        items(viewModel.classes[visibleClassIndex].students.size) {
             UserDetailsRenderItem(
+                name = viewModel.classes[visibleClassIndex].students[it].name,
+                description = "",
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_student),
@@ -241,7 +296,7 @@ fun ClassDetailsRenderItem(
     val modifier = if (onPress != null) Modifier.clickable { onPress() } else Modifier
     Row(
         modifier = modifier
-            .fillMaxWidth()
+            .width(350.dp)
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(8.dp)
@@ -294,8 +349,8 @@ fun ClassDetailsRenderItem(
 fun UserDetailsRenderItem(
     leadingIcon: @Composable () -> Unit = { },
     trailingIcon: @Composable () -> Unit = { },
-    name: String = "Nome",
-    description: String = "Descrição",
+    name: String = "",
+    description: String = "",
     onPress: () -> Unit = { }
 ) {
     Row(

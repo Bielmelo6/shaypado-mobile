@@ -4,6 +4,7 @@ import com.ufape.shaypado.data.model.CreateWorkoutRequest
 import com.ufape.shaypado.data.model.UpdateWorkoutRequest
 
 data class WorkoutState(
+    var isSelected : Boolean = false,
     val id: String = "",
     val name: String = "",
     val category: String = "",
