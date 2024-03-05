@@ -35,7 +35,9 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DaysOfWeekChooser
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.components.TimePicker
+import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.screens.trainer.classDetails.EditClassViewModel
+import com.ufape.shaypado.ui.screens.trainer.createClass.ClassFormEvent
 import com.ufape.shaypado.ui.screens.trainer.home.Dropdown
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
 import com.ufape.shaypado.ui.theme.StudentImage
@@ -46,19 +48,19 @@ import com.ufape.shaypado.util.getErrorMessage
 @Composable
 fun EditClassScreen(
     navController: NavController,
-    classId: String
+    classId: String,
+    editClassViewModel: EditClassViewModel
 ) {
     var dropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var usersDropdownExpanded by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
-    val viewModel = hiltViewModel<EditClassViewModel>()
 
-    val fetchClassEvent by viewModel.classEvent.collectAsState(
+    val fetchClassEvent by editClassViewModel.classEvent.collectAsState(
         initial = Result.Loading
     )
 
     LaunchedEffect(Unit) {
-        viewModel.fetchClassInfo(classId)
+        editClassViewModel.fetchClassInfo(classId)
     }
 
     if (fetchClassEvent is Result.Error) {
@@ -103,14 +105,21 @@ fun EditClassScreen(
     {
         CustomTextField(
             label = R.string.class_name,
-            value = viewModel.classInfo.name,
-            onValueChange = { },
+            value = editClassViewModel.classInfo.name,
+            onValueChange = {
+                editClassViewModel.onClassEvent(ClassFormEvent.OnNameChanged(it))
+            },
             placeholder = R.string.class_name_placeholder,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        DaysOfWeekChooser()
+        DaysOfWeekChooser(
+            onItemSelected = {
+                editClassViewModel.onClassEvent(ClassFormEvent.OnDaysOfWeekChanged(it))
+            },
+            itemsSelected = editClassViewModel.classInfo.daysOfWeek
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -121,6 +130,10 @@ fun EditClassScreen(
 
             ) {
                 TimePicker(
+                    time = editClassViewModel.classInfo.startTime,
+                    onConfirm = {
+                        editClassViewModel.onClassEvent(ClassFormEvent.OnStartingTimeChanged(it))
+                    },
                     label = R.string.start_time
                 )
             }
@@ -131,6 +144,10 @@ fun EditClassScreen(
 
             ) {
                 TimePicker(
+                    time = editClassViewModel.classInfo.endTime,
+                    onConfirm = {
+                        editClassViewModel.onClassEvent(ClassFormEvent.OnEndingTimeChanged(it))
+                    },
                     label = R.string.end_time
                 )
             }
@@ -148,7 +165,9 @@ fun EditClassScreen(
                 toggle = { dropdownExpanded = dropdownExpanded.not() },
                 endHeaderContent = {
                     AddButton(
-                        onClick = { }
+                        onClick = {
+                            navController.navigate(TrainerNavigationScreen.ImportFromUpdateWorkouts.route)
+                        }
                     )
                 }
             ) {
@@ -156,8 +175,10 @@ fun EditClassScreen(
                     modifier = Modifier.height(800.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(20) {
+                    items(editClassViewModel.classInfo.workouts.size) {
                         UserDetailsRenderItem(
+                            name = editClassViewModel.classInfo.workouts[it].title,
+                            description = editClassViewModel.classInfo.workouts[it].category,
                             leadingIcon = {
                                 TrainingImage()
                             }
@@ -172,7 +193,9 @@ fun EditClassScreen(
                 toggle = { usersDropdownExpanded = usersDropdownExpanded.not() },
                 endHeaderContent = {
                     AddButton(
-                        onClick = { }
+                        onClick = {
+                            navController.navigate(TrainerNavigationScreen.ImportFromUpdateFriends.route)
+                        }
                     )
                 }
             ) {
@@ -180,8 +203,9 @@ fun EditClassScreen(
                     modifier = Modifier.height(800.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(20) {
+                    items(editClassViewModel.classInfo.students.size) {
                         UserDetailsRenderItem(
+                            name = editClassViewModel.classInfo.students[it].name,
                             leadingIcon = {
                                 StudentImage()
                             }

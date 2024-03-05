@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.repositories.interfaces.IClassRepository
 import com.ufape.shaypado.ui.model.ClassState
+import com.ufape.shaypado.ui.model.ClassWorkoutState
+import com.ufape.shaypado.ui.model.FriendState
+import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.ui.model.toUpdateRequest
 import com.ufape.shaypado.ui.screens.trainer.createClass.ClassFormEvent
 import com.ufape.shaypado.util.ISafeNetworkHandler
@@ -62,6 +65,38 @@ class EditClassViewModel @Inject constructor(
                 _classUpdateChannel.send(result)
             }
         }
+    }
+
+    fun importFriends(friends : List<FriendState>){
+        val newData = classInfo.students.union(friends)
+        classInfo = classInfo.copy(students = newData.toList())
+
+    }
+
+
+    fun importWorkouts(workouts : List<WorkoutState>){
+        val data = workouts.map { ClassWorkoutState(
+            id = it.id,
+            categoryId = it.categoryId,
+            category = it.category,
+            title = it.name
+
+        ) }
+        val newData = classInfo.workouts.union(data).toMutableList()
+        classInfo = classInfo.copy(workouts = newData)
+    }
+
+    fun removeFriend(friend: Int){
+        val newData = classInfo.students.toMutableList()
+        newData.removeAt(friend)
+        classInfo = classInfo.copy(students = newData)
+    }
+
+
+    fun removeWorkout(friend: Int){
+        val newData = classInfo.workouts.toMutableList()
+        newData.removeAt(friend)
+        classInfo = classInfo.copy(workouts = newData)
     }
 
     fun onClassEvent(event : ClassFormEvent) {
