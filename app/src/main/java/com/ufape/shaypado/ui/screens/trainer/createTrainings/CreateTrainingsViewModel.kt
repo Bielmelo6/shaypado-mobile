@@ -6,8 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
-import com.ufape.shaypado.ui.model.FriendsData
+import com.ufape.shaypado.data.repositories.interfaces.IWorkoutRepository
+import com.ufape.shaypado.ui.model.CategoryState
+import com.ufape.shaypado.ui.model.ExerciseState
+import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.ui.model.toCreateRequest
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,25 +22,39 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTrainingsViewModel @Inject constructor(
     private val handler: ISafeNetworkHandler,
-    private val repository: ITrainerRepository
+    private val repository: IWorkoutRepository
 ) : ViewModel() {
     var numberOfTrainings by mutableIntStateOf(0)
 
     var selectedTraining by mutableIntStateOf(0)
 
-    var trainingsData by mutableStateOf<List<TrainingsFormState>>(listOf())
-    var exerciseData by mutableStateOf(ExerciseFormState())
+    var trainingsData by mutableStateOf<List<WorkoutState>>(listOf())
+    var exerciseData by mutableStateOf(ExerciseState())
+
+    var categoriesData by mutableStateOf<List<CategoryState>>(emptyList())
 
     private val _trainingRequestStatus = Channel<Result<Unit>>()
     val trainingRequestStatus = _trainingRequestStatus.receiveAsFlow()
 
     private fun createTraining() {
         viewModelScope.launch {
+            _trainingRequestStatus.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                repository.createTraining(trainingsData.map { it.toRequest() })
+                repository.createWorkouts(trainingsData.map { it.toCreateRequest()})
             }
-
             _trainingRequestStatus.send(result)
+        }
+    }
+
+    fun fetchCategories() {
+        viewModelScope.launch {
+            val result = handler.makeSafeApiCall {
+                repository.fetchWorkoutCategories()
+            }
+            if (result is Result.Success) {
+                val categories = result.data
+                categoriesData = categories
+            }
         }
     }
 
@@ -46,7 +63,7 @@ class CreateTrainingsViewModel @Inject constructor(
             is TrainingsFormEvent.OnCategoryChanged -> {
                 val newTrainingsData = trainingsData.toMutableList()
                 newTrainingsData[selectedTraining] =
-                    newTrainingsData[selectedTraining].copy(category = event.category)
+                    newTrainingsData[selectedTraining].copy(categoryId = event.id, category = event.category)
                 trainingsData = newTrainingsData
             }
 
@@ -139,7 +156,7 @@ class CreateTrainingsViewModel @Inject constructor(
 
     fun allocateTrainings() {
         numberOfTrainings++
-        trainingsData = List(numberOfTrainings) { TrainingsFormState() }
+        trainingsData = List(numberOfTrainings) { WorkoutState() }
     }
 
     fun increaseTrainings() {

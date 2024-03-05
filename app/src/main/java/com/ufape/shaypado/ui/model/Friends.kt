@@ -1,11 +1,11 @@
 package com.ufape.shaypado.ui.model
 
-data class FriendsData(
+data class FriendsState(
     val friendshipCode: String,
-    val friends: List<FriendData>
+    val friends: List<FriendState>
 )
 
-data class FriendData(
+data class FriendState(
     val friendshipCode: String,
     val name: String,
 )

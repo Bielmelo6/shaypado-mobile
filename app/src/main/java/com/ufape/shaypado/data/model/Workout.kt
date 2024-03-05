@@ -2,7 +2,9 @@ package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.ufape.shaypado.ui.model.ExerciseData
+import com.ufape.shaypado.ui.model.ExerciseState
 import com.ufape.shaypado.ui.model.WorkoutData
+import com.ufape.shaypado.ui.model.WorkoutState
 
 data class CreateWorkoutRequest(
     @SerializedName("title")
@@ -24,37 +26,6 @@ data class UpdateWorkoutRequest(
     val exercises: List<String>,
 )
 
-data class CreateExerciseRequest(
-    @SerializedName("title")
-    val title: String,
-    @SerializedName("category")
-    val description: String,
-    @SerializedName("video_url")
-    val videoUrl: String?,
-    @SerializedName("series")
-    val series: Int,
-    @SerializedName("repetitions")
-    val repetitions: Int,
-    @SerializedName("time")
-    val time: String,
-)
-
-data class UpdateExerciseRequest(
-    @SerializedName("id")
-    val id: String,
-    @SerializedName("title")
-    val title: String,
-    @SerializedName("category")
-    val description: String,
-    @SerializedName("video_url")
-    val videoUrl: String?,
-    @SerializedName("series")
-    val series: Int,
-    @SerializedName("repetitions")
-    val repetitions: Int,
-    @SerializedName("time")
-    val time: String,
-)
 
 data class WorkoutResponse(
     @SerializedName("id")
@@ -67,46 +38,17 @@ data class WorkoutResponse(
     val exercises: List<ExerciseResponse>,
 )
 
-data class ExerciseResponse(
-    @SerializedName("id")
-    val id: String,
-    @SerializedName("title")
-    val title: String,
-    @SerializedName("description")
-    val description: String,
-    @SerializedName("video_url")
-    val videoUrl: String?,
-    @SerializedName("series")
-    val series: Int,
-    @SerializedName("repetitions")
-    val repetitions: Int,
-    @SerializedName("time")
-    val time: String,
-)
-
 data class WorkoutIdRequest (
     @SerializedName("workout_id")
     val workoutId: String
 )
 
-fun WorkoutResponse.toUiModel(): WorkoutData {
-    return WorkoutData(
+fun WorkoutResponse.toUiModel(): WorkoutState {
+    return WorkoutState(
         id = this.id,
         name = this.name,
         category = this.category,
         exercises = this.exercises.map { it.toUiModel() }
-    )
-}
-
-fun ExerciseResponse.toUiModel(): ExerciseData {
-    return ExerciseData(
-        id = this.id,
-        title = this.title,
-        description = this.description,
-        videoUrl = this.videoUrl,
-        series = this.series,
-        repetitions = this.repetitions,
-        time = this.time,
     )
 }
 

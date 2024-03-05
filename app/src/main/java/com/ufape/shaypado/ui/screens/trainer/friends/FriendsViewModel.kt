@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
-import com.ufape.shaypado.ui.model.FriendsData
+import com.ufape.shaypado.data.repositories.interfaces.IFriendRepository
+import com.ufape.shaypado.ui.model.FriendsState
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,10 +18,10 @@ import javax.inject.Inject
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
     val handler: ISafeNetworkHandler,
-    val trainerRepository: ITrainerRepository
+    val friendsRepository: IFriendRepository
 ) : ViewModel() {
 
-    private val _friendsData = Channel<Result<FriendsData>>()
+    private val _friendsData = Channel<Result<FriendsState>>()
     val userProfileData = _friendsData.receiveAsFlow()
 
     var selectedFriendToRemove by mutableStateOf(RemoveFriendFormState())
@@ -33,14 +33,12 @@ class FriendsViewModel @Inject constructor(
     private val _removeFriendEvent = Channel<Result<Unit>>()
     val removeFriendEvent = _removeFriendEvent.receiveAsFlow()
 
-
-
     fun fetchFriends() {
         viewModelScope.launch {
             _addFriendEvent.send(Result.Loading)
 
             val result = handler.makeSafeApiCall {
-                trainerRepository.fetchFriends()
+                friendsRepository.getFriends()
             }
 
             _friendsData.send(result)
@@ -52,7 +50,7 @@ class FriendsViewModel @Inject constructor(
             _removeFriendEvent.send(Result.Loading)
 
             val result = handler.makeSafeApiCall {
-                trainerRepository.addFriend(selectedFriendToAdd.toRequest())
+                friendsRepository.addFriend(selectedFriendToAdd.toRequest())
             }
 
             if (result is Result.Success) {
@@ -66,7 +64,7 @@ class FriendsViewModel @Inject constructor(
     fun removeFriend() {
         viewModelScope.launch {
             val result = handler.makeSafeApiCall {
-                trainerRepository.removeFriend(selectedFriendToRemove.toRequest())
+                friendsRepository.removeFriend(selectedFriendToRemove.toRequest())
             }
 
             if (result is Result.Success) {

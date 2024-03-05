@@ -35,7 +35,6 @@ import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.EditButton
-import com.ufape.shaypado.ui.components.RemoveButton
 import com.ufape.shaypado.ui.components.TimePicker
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.ExerciseFormEvent
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormEvent
@@ -53,14 +52,27 @@ fun UpdateWorkoutScreen(
 ) {
     var dropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var showCreateExerciseDialog by rememberSaveable { mutableStateOf(false) }
+    var showEditExerciseDialog by rememberSaveable { mutableStateOf(false) }
 
     val updateWorkoutViewModel = hiltViewModel<UpdateWorkoutViewModel>()
     val workoutData by updateWorkoutViewModel.workoutData.collectAsState(
         initial = Result.Loading
     )
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         updateWorkoutViewModel.fetchWorkout(workoutId)
+    }
+
+    LaunchedEffect(key1 = updateWorkoutViewModel.workoutUpdateEvent) {
+        updateWorkoutViewModel.workoutUpdateEvent.collect {
+            if (it is Result.Success) {
+                navController.popBackStack()
+            } else if (it is Result.Error) {
+                showSnackBar(it.exception.getErrorMessage(context))
+            }
+        }
     }
 
     if (workoutData is Result.Error) {
@@ -112,12 +124,13 @@ fun UpdateWorkoutScreen(
             onItemSelected = { value, label ->
                 updateWorkoutViewModel.onWorkoutEvent(
                     TrainingsFormEvent.OnCategoryChanged(
-                        value, label
+                        id = value,
+                        category = label
                     )
                 )
             },
             label = "Categoria",
-            selectedValue = updateWorkoutViewModel.workoutState.category,
+            selectedValue = updateWorkoutViewModel.workoutState.categoryId,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -133,9 +146,6 @@ fun UpdateWorkoutScreen(
                 endHeaderContent = {
                     AddButton(
                         onClick = {
-                            updateWorkoutViewModel.setExerciseData(
-                                null
-                            )
                             showCreateExerciseDialog = true
                         }
                     )
@@ -160,7 +170,7 @@ fun UpdateWorkoutScreen(
                                             updateWorkoutViewModel.setExerciseData(
                                                 it
                                             )
-                                            showCreateExerciseDialog = true
+                                            showEditExerciseDialog = true
                                         }
                                     )
                                 }
@@ -202,9 +212,10 @@ fun UpdateWorkoutScreen(
     ) {
         CustomTextField(
             label = R.string.exercise_title,
-            value = updateWorkoutViewModel.exerciseData.title,
+            errorMessage = updateWorkoutViewModel.createExerciseData.titleError,
+            value = updateWorkoutViewModel.createExerciseData.title,
             onValueChange = {
-                updateWorkoutViewModel.onExerciseEvent(ExerciseFormEvent.OnTitleChanged(it))
+                updateWorkoutViewModel.onCreateExerciseEvent(ExerciseFormEvent.OnTitleChanged(it))
             },
             placeholder = R.string.exercise_title_placeholder,
         )
@@ -213,9 +224,10 @@ fun UpdateWorkoutScreen(
 
         CustomTextField(
             label = R.string.exercise_description,
-            value = updateWorkoutViewModel.exerciseData.description,
+            errorMessage = updateWorkoutViewModel.createExerciseData.descriptionError,
+            value = updateWorkoutViewModel.createExerciseData.description,
             onValueChange = {
-                updateWorkoutViewModel.onExerciseEvent(
+                updateWorkoutViewModel.onCreateExerciseEvent(
                     ExerciseFormEvent.OnDescriptionChanged(
                         it
                     )
@@ -228,9 +240,10 @@ fun UpdateWorkoutScreen(
 
         CustomTextField(
             label = R.string.exercise_video_url,
-            value = updateWorkoutViewModel.exerciseData.videoUrl,
+            errorMessage = updateWorkoutViewModel.createExerciseData.videoUrlError,
+            value = updateWorkoutViewModel.createExerciseData.videoUrl ?: "",
             onValueChange = {
-                updateWorkoutViewModel.onExerciseEvent(
+                updateWorkoutViewModel.onCreateExerciseEvent(
                     ExerciseFormEvent.OnVideoUrlChanged(
                         it
                     )
@@ -250,10 +263,10 @@ fun UpdateWorkoutScreen(
                 CustomTextField(
                     label = R.string.series,
                     keyboardType = KeyboardType.Number,
-                    value = updateWorkoutViewModel.exerciseData.series,
-                    errorMessage = updateWorkoutViewModel.exerciseData.seriesError,
+                    value = updateWorkoutViewModel.createExerciseData.series,
+                    errorMessage = updateWorkoutViewModel.createExerciseData.seriesError,
                     onValueChange = {
-                        updateWorkoutViewModel.onExerciseEvent(
+                        updateWorkoutViewModel.onCreateExerciseEvent(
                             ExerciseFormEvent.OnSeriesChanged(
                                 it
                             )
@@ -271,10 +284,10 @@ fun UpdateWorkoutScreen(
                 CustomTextField(
                     label = R.string.repetitions,
                     keyboardType = KeyboardType.Number,
-                    value = updateWorkoutViewModel.exerciseData.repetitions,
-                    errorMessage = updateWorkoutViewModel.exerciseData.repetitionsError,
+                    value = updateWorkoutViewModel.createExerciseData.repetitions,
+                    errorMessage = updateWorkoutViewModel.createExerciseData.repetitionsError,
                     onValueChange = {
-                        updateWorkoutViewModel.onExerciseEvent(
+                        updateWorkoutViewModel.onCreateExerciseEvent(
                             ExerciseFormEvent.OnRepetitionsChanged(
                                 it
                             )
@@ -290,10 +303,10 @@ fun UpdateWorkoutScreen(
 
             ) {
                 TimePicker(
-                    time = updateWorkoutViewModel.exerciseData.time,
+                    time = updateWorkoutViewModel.createExerciseData.time,
                     label = R.string.time,
                     onConfirm = {
-                        updateWorkoutViewModel.onExerciseEvent(
+                        updateWorkoutViewModel.onCreateExerciseEvent(
                             ExerciseFormEvent.OnTimeChanged(
                                 it
                             )
@@ -315,22 +328,155 @@ fun UpdateWorkoutScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (updateWorkoutViewModel.exerciseData.id != null) {
-            AppButton(
-                text = R.string.remove_exercise,
-                onClick = {
-                    updateWorkoutViewModel.removeExercise()
-                },
-            )
+        AppButton(
+            text = R.string.create_exercise,
+            onClick = {
+                updateWorkoutViewModel.onCreateExerciseEvent(ExerciseFormEvent.OnSubmit)
+                showCreateExerciseDialog = false
+            },
+        )
+    }
 
-            Spacer(modifier = Modifier.height(16.dp))
+    AppDialog(
+        onDismiss = {
+            showEditExerciseDialog = false
+        },
+        isDialogVisible = showEditExerciseDialog
+    ) {
+        CustomTextField(
+            label = R.string.exercise_title,
+
+            value = updateWorkoutViewModel.editExerciseData.title,
+            errorMessage = updateWorkoutViewModel.editExerciseData.titleError,
+            onValueChange = {
+                updateWorkoutViewModel.onEditExerciseEvent(ExerciseFormEvent.OnTitleChanged(it))
+            },
+            placeholder = R.string.exercise_title_placeholder,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            label = R.string.exercise_description,
+            value = updateWorkoutViewModel.editExerciseData.description,
+            onValueChange = {
+                updateWorkoutViewModel.onEditExerciseEvent(
+                    ExerciseFormEvent.OnDescriptionChanged(
+                        it
+                    )
+                )
+            },
+            placeholder = R.string.exercise_description_placeholder,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomTextField(
+            label = R.string.exercise_video_url,
+            value = updateWorkoutViewModel.editExerciseData.videoUrl ?: "",
+            errorMessage = updateWorkoutViewModel.editExerciseData.videoUrlError,
+            onValueChange = {
+                updateWorkoutViewModel.onEditExerciseEvent(
+                    ExerciseFormEvent.OnVideoUrlChanged(
+                        it
+                    )
+                )
+            },
+            placeholder = R.string.exercise_video_url_placeholder,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+
+            ) {
+                CustomTextField(
+                    label = R.string.series,
+                    keyboardType = KeyboardType.Number,
+                    value = updateWorkoutViewModel.editExerciseData.series,
+                    errorMessage = updateWorkoutViewModel.editExerciseData.seriesError,
+                    onValueChange = {
+                        updateWorkoutViewModel.onEditExerciseEvent(
+                            ExerciseFormEvent.OnSeriesChanged(
+                                it
+                            )
+                        )
+                    },
+                    placeholder = R.string.series_placeholder,
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+
+            ) {
+                CustomTextField(
+                    label = R.string.repetitions,
+                    keyboardType = KeyboardType.Number,
+                    value = updateWorkoutViewModel.editExerciseData.repetitions,
+                    errorMessage = updateWorkoutViewModel.editExerciseData.repetitionsError,
+                    onValueChange = {
+                        updateWorkoutViewModel.onEditExerciseEvent(
+                            ExerciseFormEvent.OnRepetitionsChanged(
+                                it
+                            )
+                        )
+                    },
+                    placeholder = R.string.repetitions_placeholder,
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+
+            ) {
+                TimePicker(
+                    time = updateWorkoutViewModel.editExerciseData.time,
+                    label = R.string.time,
+                    onConfirm = {
+                        updateWorkoutViewModel.onEditExerciseEvent(
+                            ExerciseFormEvent.OnTimeChanged(
+                                it
+                            )
+                        )
+                    }
+                )
+            }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         AppButton(
-            text = R.string.save,
+            text = R.string.cancel,
             onClick = {
-                updateWorkoutViewModel.onExerciseEvent(ExerciseFormEvent.OnSubmit)
-                showCreateExerciseDialog = false
+                showEditExerciseDialog = false
+            },
+            variant = ButtonVariant.SECONDARY_CONTAINER
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AppButton(
+            variant = ButtonVariant.ERROR_CONTAINER,
+            text = R.string.remove_exercise,
+            onClick = {
+                updateWorkoutViewModel.removeExercise()
+                showEditExerciseDialog = false
+            },
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AppButton(
+            text = R.string.update_exercise,
+            onClick = {
+                updateWorkoutViewModel.onEditExerciseEvent(ExerciseFormEvent.OnSubmit)
+                showEditExerciseDialog = false
             },
         )
     }
