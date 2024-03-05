@@ -31,6 +31,7 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DaysOfWeekChooser
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.components.TimePicker
+import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.screens.trainer.home.Dropdown
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
 import com.ufape.shaypado.ui.theme.StudentImage
@@ -38,7 +39,8 @@ import com.ufape.shaypado.ui.theme.TrainingImage
 
 @Composable
 fun EditClassScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: EditClassViewModel
 ) {
     var dropdownExpanded by rememberSaveable { mutableStateOf(false) }
     var usersDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -141,7 +143,9 @@ fun EditClassScreen(
                 toggle = { usersDropdownExpanded = usersDropdownExpanded.not() },
                 endHeaderContent = {
                     AddButton(
-                        onClick = { }
+                        onClick = {
+                            navController.navigate(TrainerNavigationScreen.ImportFriends.route)
+                        }
                     )
                 }
             ) {
@@ -149,11 +153,13 @@ fun EditClassScreen(
                     modifier = Modifier.height(800.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(20) {
+                    items(viewModel.friends.size) {
                         UserDetailsRenderItem(
                             leadingIcon = {
                                 StudentImage()
-                            }
+                            },
+                            name= viewModel.friends[it].name,
+                            description = viewModel.friends[it].friendshipCode,
                         )
                     }
                 }

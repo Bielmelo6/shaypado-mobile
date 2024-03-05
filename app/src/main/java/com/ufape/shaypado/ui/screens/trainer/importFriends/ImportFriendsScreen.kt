@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,13 +36,18 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.model.FriendState
+import com.ufape.shaypado.util.Result
 
 @Composable
 fun ImportFriendsScreen(
     navController: NavController,
-    onImport: (List<Friend>) -> Unit
+    onImport: (List<FriendState>) -> Unit
 ) {
     val importFriendsViewModel = hiltViewModel<ImportFriendsViewModel>()
+    val friendsData by importFriendsViewModel.friendsData.collectAsState(
+        initial = Result.Loading
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -58,6 +65,10 @@ fun ImportFriendsScreen(
             fillWidth = true
         )
     }
+    if (friendsData !is Result.Success){
+        return
+    }
+    val friends = (friendsData as Result.Success).data.friends
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -67,13 +78,13 @@ fun ImportFriendsScreen(
             .fillMaxHeight(0.8f),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(10) {
+        items(friends.size) { index ->
             FriendCard(
-                selected = importFriendsViewModel.friends[it].isSelected,
-                title = importFriendsViewModel.friends[it].data.value,
-                description = importFriendsViewModel.friends[it].data.title,
+                selected = importFriendsViewModel.isSelected(friends[index].friendshipCode),
+                title = friends[index].name,
+                description = friends[index].friendshipCode,
                 onSelected = {
-                    importFriendsViewModel.toggleFriend(it)
+                    importFriendsViewModel.toggleFriend(friends[index].friendshipCode)
                 }
             )
         }
@@ -95,8 +106,7 @@ fun ImportFriendsScreen(
         text = R.string.button_import,
         variant = ButtonVariant.PRIMARY,
         onClick = {
-            val selectedFriends =
-                importFriendsViewModel.friends.filter { it.isSelected }.map { it.data }
+            val selectedFriends = friends.filter { it.friendshipCode in importFriendsViewModel.selectedFriends.value }
             onImport(selectedFriends)
             navController.popBackStack()
         }
@@ -132,13 +142,13 @@ fun FriendCard(
             ) {
                 AppText(
                     fillWidth = true,
-                    text = "John Doe",
+                    text = title,
                     textType = TextType.TITLE_MEDIUM
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 AppText(
                     fillWidth = true,
-                    text = "Some description",
+                    text = description,
                     textType = TextType.TITLE_SMALL
                 )
 
