@@ -242,5 +242,7 @@
     <string name="update_exercise">Atualziar exercício</string>
     <string name="error_loading_friends">Erro ao carregar amigos</string>
     <string name="import_workouts">Importar treinos</string>
+    <string name="delete_class_confirmation">Tem certeza que deseja remover essa turma? Todos os alunos dela perderão acesso aos treinos.</string>
+    <string name="delete">Deletar</string>
 
 </resources>

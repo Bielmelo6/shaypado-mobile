@@ -1,6 +1,7 @@
 package com.ufape.shaypado.ui.screens.trainer.importWorkouts
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,7 +43,8 @@ import com.ufape.shaypado.util.Result
 @Composable
 fun ImportWorkoutsScreen(
     navController: NavController,
-    onImport: (List<WorkoutState>) -> Unit
+    onImport: (List<WorkoutState>) -> Unit,
+    onBackPressed : (() -> Unit)? = null
 ) {
     val importFriendsViewModel = hiltViewModel<ImportWorkoutsViewModel>()
     val isLoading = importFriendsViewModel.workoutData.collectAsState(
@@ -51,7 +53,18 @@ fun ImportWorkoutsScreen(
 
     LaunchedEffect(Unit) {
         importFriendsViewModel.fetchFriends()
+    }
 
+    fun backPressed() {
+        if (onBackPressed != null) {
+            onBackPressed()
+        } else {
+            navController.popBackStack()
+        }
+    }
+
+    BackHandler {
+        backPressed()
     }
 
     if (isLoading.value is Result.Loading)
@@ -82,7 +95,6 @@ fun ImportWorkoutsScreen(
             )
         }
 
-
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -90,7 +102,7 @@ fun ImportWorkoutsScreen(
         verticalAlignment = Alignment.CenterVertically
     ) {
         BackButton {
-            navController.popBackStack()
+            backPressed()
         }
 
         AppText(
@@ -127,7 +139,7 @@ fun ImportWorkoutsScreen(
         text = R.string.cancel,
         variant = ButtonVariant.SECONDARY_CONTAINER,
         onClick = {
-            navController.popBackStack()
+            backPressed()
         }
     )
 
@@ -140,7 +152,7 @@ fun ImportWorkoutsScreen(
             val selectedFriends =
                 importFriendsViewModel.workouts.filter { it.isSelected }
             onImport(selectedFriends)
-            navController.popBackStack()
+            backPressed()
         }
     )
 

@@ -136,14 +136,6 @@ sealed class TrainerNavigationScreen(
     data object ImportWorkouts : TrainerNavigationScreen(
         "workouts_import"
     )
-
-    data object ImportFromUpdateFriends : TrainerNavigationScreen(
-        "friends_import_update"
-    )
-
-    data object ImportFromUpdateWorkouts : TrainerNavigationScreen(
-        "workouts_import_update"
-    )
 }
 
 @Composable
@@ -204,7 +196,6 @@ fun TrainerRoutes(
 ) {
     val navController: NavHostController = rememberNavController()
     val createClassViewModel = hiltViewModel<CreateClassViewModel>()
-    val editClassViewModel = hiltViewModel<EditClassViewModel>()
     var snackbarMessage: String? by remember { mutableStateOf(null) }
 
     fun showSnackBar(message: String) {
@@ -247,36 +238,8 @@ fun TrainerRoutes(
                 ) {
                     EditClassScreen(
                         navController,
-                        editClassViewModel = editClassViewModel,
-                        classId = backStackEntry.arguments?.getString("classId")!!
-                    )
-                }
-            }
-
-            composable(
-                TrainerNavigationScreen.ImportFromUpdateFriends.route,
-            ) {
-                Container(
-                    snackBarMessage = snackbarMessage,
-                    resetSnackBarMessage = { resetSnackBarMessage() }
-                ) {
-                    ImportFriendsScreen(
-                        navController = navController,
-                        onImport = editClassViewModel::importFriends,
-                    )
-                }
-            }
-
-            composable(
-                TrainerNavigationScreen.ImportFromUpdateWorkouts.route,
-            ) {
-                Container(
-                    snackBarMessage = snackbarMessage,
-                    resetSnackBarMessage = { resetSnackBarMessage() }
-                ) {
-                    ImportWorkoutsScreen(
-                        navController = navController,
-                        onImport = editClassViewModel::importWorkouts,
+                        classId = backStackEntry.arguments?.getString("classId")!!,
+                        showSnackbar = ::showSnackBar
                     )
                 }
             }

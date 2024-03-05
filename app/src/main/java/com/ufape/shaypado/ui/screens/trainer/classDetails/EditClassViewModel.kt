@@ -1,6 +1,5 @@
 package com.ufape.shaypado.ui.screens.trainer.classDetails
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,6 +32,9 @@ class EditClassViewModel @Inject constructor(
     val _classUpdateChannel = Channel<Result<Unit>>()
     val classUpdateEvent = _classUpdateChannel.receiveAsFlow()
 
+    val _classDeleteChannel = Channel<Result<Unit>>()
+    val classDeleteEvent = _classDeleteChannel.receiveAsFlow()
+
     var classInfo by mutableStateOf(ClassState())
 
     fun fetchClassInfo(id : String) {
@@ -52,6 +54,7 @@ class EditClassViewModel @Inject constructor(
     }
 
     fun updateClass() {
+        if (classInfo.id.isEmpty()) return
         viewModelScope.launch {
             _classUpdateChannel.send(Result.Loading)
             val result = handler.makeSafeApiCall {
@@ -63,6 +66,22 @@ class EditClassViewModel @Inject constructor(
                 _classUpdateChannel.send(Result.Success(Unit))
             } else if (result is Result.Error) {
                 _classUpdateChannel.send(result)
+            }
+        }
+    }
+
+    fun deleteClass() {
+        if (classInfo.id.isEmpty()) return
+        viewModelScope.launch {
+            _classDeleteChannel.send(Result.Loading)
+            val result = handler.makeSafeApiCall {
+                classRepository.deleteClass(classInfo.id)
+            }
+
+            if (result is Result.Success) {
+                _classDeleteChannel.send(Result.Success(Unit))
+            } else if (result is Result.Error) {
+                _classDeleteChannel.send(result)
             }
         }
     }

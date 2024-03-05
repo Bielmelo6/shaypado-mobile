@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.screens.trainer.importFriends
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,16 +43,28 @@ import com.ufape.shaypado.util.Result
 @Composable
 fun ImportFriendsScreen(
     navController: NavController,
-    onImport: (List<FriendState>) -> Unit
+    onImport: (List<FriendState>) -> Unit,
+    onBackPressed : (() -> Unit)? = null
 ) {
     val importFriendsViewModel = hiltViewModel<ImportFriendsViewModel>()
     val isLoading = importFriendsViewModel.friendsData.collectAsState(
         initial = Result.Loading
     )
 
+    fun backPressed() {
+        if (onBackPressed != null) {
+            onBackPressed()
+        } else {
+            navController.popBackStack()
+        }
+    }
+
     LaunchedEffect(Unit) {
         importFriendsViewModel.fetchFriends()
+    }
 
+    BackHandler {
+        backPressed()
     }
 
     if (isLoading.value is Result.Loading)
@@ -90,7 +103,7 @@ fun ImportFriendsScreen(
         verticalAlignment = Alignment.CenterVertically
     ) {
         BackButton {
-            navController.popBackStack()
+            backPressed()
         }
 
         AppText(
@@ -127,7 +140,7 @@ fun ImportFriendsScreen(
         text = R.string.cancel,
         variant = ButtonVariant.SECONDARY_CONTAINER,
         onClick = {
-            navController.popBackStack()
+            backPressed()
         }
     )
 
@@ -140,7 +153,7 @@ fun ImportFriendsScreen(
             val selectedFriends =
                 importFriendsViewModel.friends.filter { it.isSelected }
             onImport(selectedFriends)
-            navController.popBackStack()
+            backPressed()
         }
     )
 

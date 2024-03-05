@@ -23,7 +23,7 @@ interface ClassApi {
     suspend fun updateClass(@Body data : UpdateClassRequest) : Response<ClassResponse>
 
     @Headers("Content-Type: application/json")
-    @DELETE("/delete_class")
+    @DELETE("/delete_class/{id}")
     suspend fun deleteClass(@Path("id") id : String) : Response<Unit>
 
     @Headers("Content-Type: application/json")
