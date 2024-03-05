@@ -147,6 +147,15 @@ fun InfoIcon(){
 
 @Composable
 @Preview
+fun BarbellIcon(){
+    Icon(
+        painter = painterResource(id = R.drawable.ic_barbell),
+        contentDescription = "Info"
+    )
+}
+
+@Composable
+@Preview
 fun TrainingImage() {
     Image(
         painter = painterResource(id = R.drawable.ic_training),

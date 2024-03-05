@@ -1,12 +1,11 @@
 package com.ufape.shaypado.ui.model
-
-import com.ufape.shaypado.ui.screens.trainer.importFriends.FriendsState
-
 data class TrainerProfileData (
     val name: String,
     val email: String,
 
     val profilePicture: String?,
+    val profilePictureId: String?,
+    val plansDocumentId : String?,
     val plansDocument: String,
     val fullName: String,
     val contactEmail: String,

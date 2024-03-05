@@ -231,5 +231,14 @@
     <string name="use_friendship_code">Usar código de amizade</string>
     <string name="create_users">Cadastrar usuários</string>
     <string name="remove">Remover</string>
+    <string name="exercises">Exercícios</string>
+    <string name="update_profile">Atualizar perfil</string>
+    <string name="update">Atualizar informações</string>
+    <string name="input_new_password_placeholder">Insira sua nova senha caso deseje</string>
+    <string name="input_new_password">Nova senha</string>
+    <string name="loading">Carregando</string>
+    <string name="remove_exercise">Remover exercício</string>
+    <string name="create_exercise">Criar exercício</string>
+    <string name="update_exercise">Atualziar exercício</string>
 
 </resources>

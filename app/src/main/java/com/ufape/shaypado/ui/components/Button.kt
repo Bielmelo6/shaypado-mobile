@@ -162,20 +162,32 @@ fun RemoveButton(
 @Composable
 fun EditButton(
     enabled: Boolean = true,
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
     onClick: () -> Unit = { }
 ) {
+
+    val containerColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.tertiaryContainer
+    }
+
+    val iconColor = when (variant) {
+        ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onTertiaryContainer
+    }
+
     FilledIconButton(
         shape = RoundedCornerShape(8.dp),
         enabled = enabled,
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = containerColor
         )
     ) {
         Icon(
             imageVector = Icons.Default.ModeEdit,
             contentDescription = "Add",
-            tint = MaterialTheme.colorScheme.onPrimary
+            tint = iconColor
         )
     }
 }

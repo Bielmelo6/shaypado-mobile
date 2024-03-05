@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.model.TrainerRequest
 import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
+import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateAge
 import com.ufape.shaypado.ui.domain.use_case.validateCity
@@ -38,7 +39,8 @@ import java.lang.Exception
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
-    private val handler: ISafeNetworkHandler
+    private val handler: ISafeNetworkHandler,
+    private val trainerRepository: ITrainerRepository
 ) : ViewModel() {
     var userAccountDataState by mutableStateOf(UserAccountFormState())
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
@@ -66,9 +68,91 @@ class SignUpViewModel @Inject constructor(
     private fun registerPersonal() {
         if (_hasValidationErrors.value !is Result.Success) return
         viewModelScope.launch {
+            val plansDocumentId =
+                handler.makeSafeApiCall { authRepository.uploadPlansDocument(personalFormDataState.plansDocument!!) }
+            if (personalFormDataState.profilePicture != null) {
+                val profilePictureId = handler.makeSafeApiCall {
+                    authRepository.uploadProfilePicture(personalFormDataState.profilePicture!!)
+                }
+                if (profilePictureId is Result.Success) {
+                    personalFormDataState =
+                        personalFormDataState.copy(profilePictureId = profilePictureId.data.id)
+                }
+            }
+            if (plansDocumentId is Result.Success) {
+                personalFormDataState =
+                    personalFormDataState.copy(plansDocumentId = plansDocumentId.data.id)
+                val data = personalFormDataState.toRequest(userAccountDataState)
+                val result = handler.makeSafeApiCall { authRepository.registerTrainer(data) }
+                _trainerRegistrationEventChannel.send(result)
+                resetValidationStatus()
+            }
+        }
+    }
+
+    fun fetchUserProfileData() {
+        viewModelScope.launch {
+            val result = handler.makeSafeApiCall {
+                trainerRepository.fetchTrainerProfile()
+            }
+            if (result is Result.Success) {
+                val data = result.data
+                userAccountDataState = userAccountDataState.copy(
+                    name = data.name,
+                    email = data.email,
+                )
+                personalFormDataState = personalFormDataState.copy(
+                    profilePictureUrl = data.profilePicture,
+                    name = data.fullName,
+                    email = data.contactEmail,
+                    phone = data.contactPhone,
+                    specialties = data.specialties,
+                    age = data.age,
+                    state = data.state,
+                    city = data.city,
+                    workLocation = data.workLocation ?: "",
+                    plansDocumentUrl = data.plansDocument,
+                    plansDocumentId = data.plansDocumentId,
+                    profilePictureId = data.profilePictureId
+                )
+            }
+        }
+    }
+
+    private fun updateTrainer() {
+        if (_hasValidationErrors.value !is Result.Success) return
+        viewModelScope.launch {
+            if (personalFormDataState.plansDocument != null) {
+                val plansDocumentId =
+                    handler.makeSafeApiCall { authRepository.uploadPlansDocument(personalFormDataState.plansDocument!!) }
+                if (plansDocumentId is Result.Success) {
+                    personalFormDataState = personalFormDataState.copy(plansDocumentId = plansDocumentId.data.id)
+                }
+            }
+
+
+            if (personalFormDataState.profilePicture != null) {
+                val profilePictureId = handler.makeSafeApiCall {
+                    authRepository.uploadProfilePicture(personalFormDataState.profilePicture!!)
+                }
+                if (profilePictureId is Result.Success) {
+                    personalFormDataState = personalFormDataState.copy(profilePictureId = profilePictureId.data.id)
+                }
+            }
+
             val data = personalFormDataState.toRequest(userAccountDataState)
-            val result = handler.makeSafeApiCall { authRepository.registerTrainer(data) }
+            val result = handler.makeSafeApiCall { authRepository.updateTrainer(data) }
             _trainerRegistrationEventChannel.send(result)
+            resetValidationStatus()
+        }
+    }
+
+    private fun updateUserData() {
+        if (_hasValidationErrors.value !is Result.Success) return
+        viewModelScope.launch {
+            val userRequest = userAccountDataState.toRequest(userPhysicalEvaluationDataState)
+            val result = handler.makeSafeApiCall { authRepository.updateUser(userRequest) }
+            userRegistrationEventChannel.send(result)
             resetValidationStatus()
         }
     }
@@ -186,7 +270,8 @@ class SignUpViewModel @Inject constructor(
             }
 
             is UserPhysicalEvaluationFormEvent.OnObjectiveChanged -> {
-                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(objective = event.objective)
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(objective = event.objective)
             }
 
             else -> {}
@@ -242,22 +327,24 @@ class SignUpViewModel @Inject constructor(
                 validateTrainerData()
                 registerPersonal()
             }
+
+            is PersonalFormEvent.OnUpdate -> {
+                updateTrainer()
+            }
         }
     }
+
 
     private fun validateUserData(): Boolean {
         val nameValidation = validateName(userAccountDataState.name)
         val emailValidation = validateEmail(userAccountDataState.email)
         val emailConfirmationValidation = validateEmailConfirmation(
-            userAccountDataState.email,
-            userAccountDataState.emailConfirmation
+            userAccountDataState.email, userAccountDataState.emailConfirmation
         )
         val passwordValidation = validatePassword(userAccountDataState.password)
-        val passwordConfirmationValidation =
-            validatePasswordConfirmation(
-                userAccountDataState.password,
-                userAccountDataState.passwordConfirmation
-            )
+        val passwordConfirmationValidation = validatePasswordConfirmation(
+            userAccountDataState.password, userAccountDataState.passwordConfirmation
+        )
 
         userAccountDataState = userAccountDataState.copy(
             nameError = nameValidation.error,
@@ -289,8 +376,7 @@ class SignUpViewModel @Inject constructor(
         val termsAcceptedValidation = validateTermsAndConditions(userAccountDataState.termsAccepted)
 
         userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(
-            weightError = weightValidation.error,
-            heightError = heightValidation.error
+            weightError = weightValidation.error, heightError = heightValidation.error
         )
 
         val hasAnyError = if (validateTerms) {
@@ -299,9 +385,7 @@ class SignUpViewModel @Inject constructor(
             )
 
             hasError(
-                weightValidation,
-                heightValidation,
-                termsAcceptedValidation
+                weightValidation, heightValidation, termsAcceptedValidation
             )
         } else {
             hasError(

@@ -3,7 +3,12 @@ package com.ufape.shaypado.di
 import com.ufape.shaypado.data.AuthInterceptor
 import com.ufape.shaypado.data.TokenAuthenticator
 import com.ufape.shaypado.data.api.AuthApi
+import com.ufape.shaypado.data.api.ClassApi
+import com.ufape.shaypado.data.api.ExerciseApi
+import com.ufape.shaypado.data.api.FriendApi
 import com.ufape.shaypado.data.api.TrainerApi
+import com.ufape.shaypado.data.api.UserApi
+import com.ufape.shaypado.data.api.WorkoutApi
 import com.ufape.shaypado.data.local.ISessionManager
 import dagger.Module
 import dagger.Provides
@@ -19,7 +24,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    val BASE_URL = "http://192.168.1.111:3001"
+    val BASE_URL = "http://192.168.1.105:3001"
 
     @Singleton
     @Provides
@@ -74,4 +79,26 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideTrainerApi(retrofit: Retrofit): TrainerApi = retrofit.create(TrainerApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideExerciseApi(retrofit: Retrofit): ExerciseApi = retrofit.create(ExerciseApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideClassApi(retrofit: Retrofit): ClassApi = retrofit.create(ClassApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideWorkoutApi(retrofit: Retrofit): WorkoutApi = retrofit.create(WorkoutApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
+
+    @Singleton
+    @Provides
+    fun friendApi(retrofit: Retrofit): FriendApi = retrofit.create(FriendApi::class.java)
+
+
 }

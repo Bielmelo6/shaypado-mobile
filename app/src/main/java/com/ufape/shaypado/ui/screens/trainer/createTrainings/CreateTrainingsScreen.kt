@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -34,10 +37,12 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.NextButton
 import com.ufape.shaypado.ui.components.RemoveButton
 import com.ufape.shaypado.ui.components.TextType
@@ -45,11 +50,15 @@ import com.ufape.shaypado.ui.components.TimePicker
 import com.ufape.shaypado.ui.screens.trainer.home.Dropdown
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
 import com.ufape.shaypado.ui.theme.TrainingImage
+import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun CreateTrainingsScreen(
     navController: NavController,
+    showSnackBar: (String) -> Unit
 ) {
+    val context = LocalContext.current
     var shouldShowForm by remember { mutableStateOf(false) }
     var dropdownExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -57,10 +66,25 @@ fun CreateTrainingsScreen(
 
     val createTrainingsViewModel = hiltViewModel<CreateTrainingsViewModel>()
 
+    LaunchedEffect(Unit) {
+        createTrainingsViewModel.fetchCategories()
+    }
+
+    LaunchedEffect(key1 = createTrainingsViewModel.trainingRequestStatus) {
+        createTrainingsViewModel.trainingRequestStatus.collect {
+            if (it is Result.Success) {
+                showSnackBar("Treino criado com sucesso")
+                navController.popBackStack()
+            } else if (it is Result.Error) {
+                showSnackBar(it.exception.getErrorMessage(context))
+            }
+        }
+    }
+
     if (!shouldShowForm) {
         CounterBase(
             navController = navController,
-            title = "Quantos alunos você deseja cadastrar?",
+            title = "Quantos treinos diferentes deseja cadastrar?",
             value = createTrainingsViewModel.numberOfTrainings + 1,
             decrease = {
                 createTrainingsViewModel.decreaseTrainings()
@@ -78,6 +102,13 @@ fun CreateTrainingsScreen(
 
     BackHandler {
         shouldShowForm = false
+    }
+
+    val categories = createTrainingsViewModel.categoriesData.map {
+        DropdownItem(
+            it.category,
+            it.id
+        )
     }
 
     Row(
@@ -124,13 +155,18 @@ fun CreateTrainingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
-            label = R.string.training_category,
-            value = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].category,
-            onValueChange = {
-                createTrainingsViewModel.onTrainingDataEvent(TrainingsFormEvent.OnCategoryChanged(it))
+        AppDropdown(
+            items = categories,
+            onItemSelected = { value, label ->
+                createTrainingsViewModel.onTrainingDataEvent(
+                    TrainingsFormEvent.OnCategoryChanged(
+                        id = value,
+                        category = label
+                    )
+                )
             },
-            placeholder = R.string.training_category_placeholder,
+            label = "Categoria",
+            selectedValue = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].categoryId,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -140,7 +176,7 @@ fun CreateTrainingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             Dropdown(
-                title = R.string.trainings,
+                title = R.string.exercises,
                 isExpanded = dropdownExpanded,
                 toggle = { dropdownExpanded = dropdownExpanded.not() },
                 endHeaderContent = {
@@ -207,7 +243,7 @@ fun CreateTrainingsScreen(
         AppButton(
             text = R.string.end,
             onClick = {
-
+                createTrainingsViewModel.onTrainingDataEvent(TrainingsFormEvent.OnSubmit)
             },
         )
     }
@@ -246,21 +282,6 @@ fun CreateTrainingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomTextField(
-                    label = R.string.exercise_category,
-                    value = createTrainingsViewModel.exerciseData.category,
-                    onValueChange = {
-                        createTrainingsViewModel.onExerciseEvent(
-                            ExerciseFormEvent.OnCategoryChanged(
-                                it
-                            )
-                        )
-                    },
-                    placeholder = R.string.exercise_category_placeholder,
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomTextField(
                     label = R.string.exercise_description,
                     value = createTrainingsViewModel.exerciseData.description,
                     onValueChange = {
@@ -277,7 +298,7 @@ fun CreateTrainingsScreen(
 
                 CustomTextField(
                     label = R.string.exercise_video_url,
-                    value = createTrainingsViewModel.exerciseData.videoUrl,
+                    value = createTrainingsViewModel.exerciseData.videoUrl ?: "",
                     onValueChange = {
                         createTrainingsViewModel.onExerciseEvent(
                             ExerciseFormEvent.OnVideoUrlChanged(
@@ -298,10 +319,12 @@ fun CreateTrainingsScreen(
                     ) {
                         CustomTextField(
                             label = R.string.series,
-                            value = createTrainingsViewModel.exerciseData.videoUrl,
+                            keyboardType = KeyboardType.Number,
+                            value = createTrainingsViewModel.exerciseData.series,
+                            errorMessage = createTrainingsViewModel.exerciseData.seriesError,
                             onValueChange = {
                                 createTrainingsViewModel.onExerciseEvent(
-                                    ExerciseFormEvent.OnVideoUrlChanged(
+                                    ExerciseFormEvent.OnSeriesChanged(
                                         it
                                     )
                                 )
@@ -317,10 +340,12 @@ fun CreateTrainingsScreen(
                     ) {
                         CustomTextField(
                             label = R.string.repetitions,
-                            value = createTrainingsViewModel.exerciseData.videoUrl,
+                            keyboardType = KeyboardType.Number,
+                            value = createTrainingsViewModel.exerciseData.repetitions,
+                            errorMessage = createTrainingsViewModel.exerciseData.repetitionsError,
                             onValueChange = {
                                 createTrainingsViewModel.onExerciseEvent(
-                                    ExerciseFormEvent.OnVideoUrlChanged(
+                                    ExerciseFormEvent.OnRepetitionsChanged(
                                         it
                                     )
                                 )

@@ -39,13 +39,12 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppDialog
-import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.Chip
 import com.ufape.shaypado.ui.components.ChipSelectionGroup
 import com.ufape.shaypado.ui.components.CustomTextField
-import com.ufape.shaypado.ui.components.Header
+import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.util.Result
@@ -102,7 +101,7 @@ fun FriendsScreen(
     val friends = (friendsData as Result.Success).data
 
 
-    Header(
+    AppHeader(
         navController = navController,
         trailingContent = {
             AddButton(

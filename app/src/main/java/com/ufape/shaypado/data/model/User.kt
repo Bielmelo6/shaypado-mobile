@@ -9,8 +9,6 @@ data class UserRequest(
     val email: String,
     @SerializedName("password")
     val password: String,
-    @SerializedName("userType")
-    val userType: String,
 
     @SerializedName("fat_percentage")
     val fatPercentage: String?,
