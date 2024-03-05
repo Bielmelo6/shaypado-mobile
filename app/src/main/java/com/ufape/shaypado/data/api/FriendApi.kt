@@ -33,5 +33,5 @@ interface FriendApi {
 
     @Headers("Content-Type: application/json")
     @GET("/pending_friends")
-    suspend fun getPendingFriends() : Response<List<PendingFriendResponse>>
+    suspend fun getPendingFriends() : Response<List<FriendsResponse>>
 }

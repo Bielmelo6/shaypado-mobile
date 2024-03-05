@@ -2,6 +2,7 @@ package com.ufape.shaypado.util
 
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.MutableLiveData
 import com.ufape.shaypado.R
 import kotlinx.coroutines.Dispatchers
@@ -11,8 +12,14 @@ import java.lang.Exception
 
 interface ISafeNetworkHandler {
     suspend fun <T : Any> makeSafeApiCall(
-        apiFunction: suspend () -> kotlin.Result<T>
-    ): kotlin.Result<T>
+        outputLiveData: MutableLiveData<Result<T>>,
+        apiFunction: suspend () -> Result<T>,
+    )
+
+    suspend fun <T : Any> makeSafeApiCall(
+        apiFunction: suspend () -> Result<T>
+    ): Result<T>
+
 }
 
 class NoNetworkException(
@@ -23,22 +30,28 @@ class NoNetworkException(
 class NetworkHelper(
     private val networkValidator: INetworkValidator,
 ) : ISafeNetworkHandler {
+    override suspend fun <T : Any> makeSafeApiCall(
+        outputLiveData: MutableLiveData<Result<T>>,
+        apiFunction: suspend () -> Result<T>
+    ) {
+        outputLiveData.postValue(makeSafeApiCall(apiFunction))
+    }
 
-    override suspend fun <T : Any> makeSafeApiCall(apiFunction: suspend () -> kotlin.Result<T>): kotlin.Result<T> {
-        val result: kotlin.Result<T> = try {
+    override suspend fun <T : Any> makeSafeApiCall(apiFunction: suspend () -> Result<T>): Result<T> {
+        val result: Result<T> = try {
             if (networkValidator.hasInternetConnection()) {
                 (Dispatchers.IO){ apiFunction() }
             } else {
-                kotlin.Result.failure(NoNetworkException())
+                Result.Error(NoNetworkException())
             }
         } catch (t: Throwable) {
             when (t) {
                 is IOException -> {
-                    kotlin.Result.failure(NoNetworkException())
+                    Result.Error(NoNetworkException())
                 }
 
                 else -> {
-                    kotlin.Result.failure(Exception(t))
+                    Result.Error(Exception(t))
                 }
             }
         }

@@ -37,10 +37,12 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.NextButton
 import com.ufape.shaypado.ui.components.RemoveButton
 import com.ufape.shaypado.ui.components.TextType
@@ -63,6 +65,10 @@ fun CreateTrainingsScreen(
     var showCreateExerciseDialog by rememberSaveable { mutableStateOf(false) }
 
     val createTrainingsViewModel = hiltViewModel<CreateTrainingsViewModel>()
+
+    LaunchedEffect(Unit) {
+        createTrainingsViewModel.fetchCategories()
+    }
 
     LaunchedEffect(key1 = createTrainingsViewModel.trainingRequestStatus) {
         createTrainingsViewModel.trainingRequestStatus.collect {
@@ -96,6 +102,13 @@ fun CreateTrainingsScreen(
 
     BackHandler {
         shouldShowForm = false
+    }
+
+    val categories = createTrainingsViewModel.categoriesData.map {
+        DropdownItem(
+            it.category,
+            it.id
+        )
     }
 
     Row(
@@ -142,13 +155,18 @@ fun CreateTrainingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
-            label = R.string.training_category,
-            value = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].category,
-            onValueChange = {
-                createTrainingsViewModel.onTrainingDataEvent(TrainingsFormEvent.OnCategoryChanged(it, ""))
+        AppDropdown(
+            items = categories,
+            onItemSelected = { value, label ->
+                createTrainingsViewModel.onTrainingDataEvent(
+                    TrainingsFormEvent.OnCategoryChanged(
+                        id = value,
+                        category = label
+                    )
+                )
             },
-            placeholder = R.string.training_category_placeholder,
+            label = "Categoria",
+            selectedValue = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].categoryId,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -280,7 +298,7 @@ fun CreateTrainingsScreen(
 
                 CustomTextField(
                     label = R.string.exercise_video_url,
-                    value = createTrainingsViewModel.exerciseData.videoUrl,
+                    value = createTrainingsViewModel.exerciseData.videoUrl ?: "",
                     onValueChange = {
                         createTrainingsViewModel.onExerciseEvent(
                             ExerciseFormEvent.OnVideoUrlChanged(

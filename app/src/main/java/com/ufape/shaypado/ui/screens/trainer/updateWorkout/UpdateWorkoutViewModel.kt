@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.model.UpdateExerciseRequest
 import com.ufape.shaypado.data.model.UpdateWorkoutRequest
-import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
+import com.ufape.shaypado.data.repositories.interfaces.IExerciseRepository
+import com.ufape.shaypado.data.repositories.interfaces.IWorkoutRepository
+import com.ufape.shaypado.ui.model.CategoryState
+import com.ufape.shaypado.ui.model.ExerciseState
+import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.ui.model.toRequest
+import com.ufape.shaypado.ui.model.toUpdateRequest
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.ExerciseFormEvent
-import com.ufape.shaypado.ui.screens.trainer.createTrainings.ExerciseFormState
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormEvent
-import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormState
-import com.ufape.shaypado.ui.screens.trainer.createTrainings.toRequest
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,50 +28,42 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateWorkoutViewModel @Inject constructor(
     private val handler: ISafeNetworkHandler,
-    private val trainerRepository: ITrainerRepository
+    private val workoutRepository: IWorkoutRepository,
+    private val exerciseRepository: IExerciseRepository
 ) : ViewModel() {
-
-    var workoutState by mutableStateOf(TrainingsFormState())
-    var exerciseData by mutableStateOf(ExerciseFormState())
-    var categoriesData by mutableStateOf<List<CategoriesState>>(emptyList())
+    var workoutState by mutableStateOf(WorkoutState())
+    var createExerciseData by mutableStateOf(ExerciseState())
+    var editExerciseData by mutableStateOf(ExerciseState())
+    var categoriesData by mutableStateOf<List<CategoryState>>(emptyList())
 
     private val _workoutData = Channel<Result<Unit>>()
     val workoutData = _workoutData.receiveAsFlow()
 
-    var selectedExerciseToEdit by mutableStateOf<Int?>(0)
+    private val _workoutUpdateEvent = Channel<Result<Unit>>()
+    val workoutUpdateEvent = _workoutUpdateEvent.receiveAsFlow()
 
     fun fetchWorkout(workoutId: String) {
         viewModelScope.launch {
             _workoutData.send(Result.Loading)
 
             val result = handler.makeSafeApiCall {
-                trainerRepository.fetchWorkout(
+                workoutRepository.getWorkout(
                     workoutId
                 )
             }
 
             val categories = handler.makeSafeApiCall {
-                trainerRepository.fetchCategories()
+                workoutRepository.fetchWorkoutCategories()
             }
 
             if (result is Result.Success && categories is Result.Success) {
                 categoriesData = categories.data
                 _workoutData.send(Result.Success(Unit))
 
-                val exercises = result.data.exercises.map {
-                    ExerciseFormState(
-                        title = it.title,
-                        description = it.description,
-                        videoUrl = it.videoUrl ?: "",
-                        series = it.series.toString(),
-                        repetitions = it.repetitions.toString(),
-                        time = it.time
-                    )
-                }
                 workoutState = workoutState.copy(
                     name = result.data.name,
                     category = result.data.category,
-                    exercises = exercises
+                    exercises = result.data.exercises
                 )
             } else {
                 _workoutData.send(Result.Error(Exception("Error fetching workout")))
@@ -80,7 +75,7 @@ class UpdateWorkoutViewModel @Inject constructor(
         when (event) {
             is TrainingsFormEvent.OnCategoryChanged -> {
                 workoutState =
-                    workoutState.copy(category = event.category, categoryLabel = event.label)
+                    workoutState.copy(categoryId = event.id, category = event.category)
             }
 
             is TrainingsFormEvent.OnExercisesChanged -> {
@@ -91,6 +86,10 @@ class UpdateWorkoutViewModel @Inject constructor(
                 workoutState = workoutState.copy(name = event.name)
             }
 
+            is TrainingsFormEvent.OnSubmit -> {
+                updateWorkout()
+            }
+
             else -> {}
         }
     }
@@ -99,88 +98,51 @@ class UpdateWorkoutViewModel @Inject constructor(
         viewModelScope.launch {
             _workoutData.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                trainerRepository.updateWorkout(
-                    UpdateWorkoutRequest(
-                        id = workoutState.id!!,
-                        name = workoutState.name,
-                        category = workoutState.category,
-                        exercises = workoutState.exercises.map { it.id!! }
-                    )
+                workoutRepository.updateWorkout(
+                    workoutState.toUpdateRequest()
                 )
             }
 
             if (result is Result.Success) {
-                _workoutData.send(Result.Success(Unit))
+                _workoutUpdateEvent.send(Result.Success(Unit))
             } else {
-                _workoutData.send(Result.Error(Exception("Error updating workout")))
+                _workoutUpdateEvent.send(result as Result.Error)
             }
         }
     }
 
     fun createExercise() {
         viewModelScope.launch {
-            _workoutData.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                trainerRepository.createExercise(
-                    exerciseData.toRequest()
+                exerciseRepository.addExercise(
+                    createExerciseData.toRequest()
                 )
             }
 
             if (result is Result.Success) {
                 val newExercises = workoutState.exercises.toMutableList()
-                val data = result.data
                 newExercises.add(
-                    ExerciseFormState(
-                        id = data.id,
-                        title = data.title,
-                        description = data.description,
-                        videoUrl = data.videoUrl ?: "",
-                        series = data.series.toString(),
-                        repetitions = data.repetitions.toString(),
-                        time = data.time
-                    )
+                    result.data
                 )
                 workoutState = workoutState.copy(exercises = newExercises)
-                _workoutData.send(Result.Success(Unit))
-            } else if (result is Result.Error) {
-                _workoutData.send(Result.Error(Exception("Error creating exercise")))
             }
         }
     }
 
-    fun updateExercise() {
+    private fun updateExercise() {
         viewModelScope.launch {
             _workoutData.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                trainerRepository.updateExercise(
-                    UpdateExerciseRequest(
-                        id = exerciseData.id!!,
-                        title = exerciseData.title,
-                        description = exerciseData.description,
-                        videoUrl = exerciseData.videoUrl,
-                        series = exerciseData.series.toInt(),
-                        repetitions = exerciseData.repetitions.toInt(),
-                        time = exerciseData.time
-
-                    )
+                exerciseRepository.updateExercise(
+                   editExerciseData.toUpdateRequest()
                 )
             }
 
-            Log.d("UpdateExercise", "Result: $result")
-
-
             if (result is Result.Success) {
-                val newExercises = workoutState.exercises.toMutableList()
-                newExercises.map {
-                    if (it.id == exerciseData.id) {
-                        it.copy(
-                            title = exerciseData.title,
-                            description = exerciseData.description,
-                            videoUrl = exerciseData.videoUrl,
-                            series = exerciseData.series,
-                            repetitions = exerciseData.repetitions,
-                            time = exerciseData.time
-                        )
+                val data = result.data
+                val newExercises = workoutState.exercises.toMutableList().map {
+                    if (it.id == data.id) {
+                        data
                     } else {
                         it
                     }
@@ -188,52 +150,77 @@ class UpdateWorkoutViewModel @Inject constructor(
                 workoutState = workoutState.copy(exercises = newExercises)
                 _workoutData.send(Result.Success(Unit))
             } else if (result is Result.Error) {
-                _workoutData.send(Result.Error(Exception("Error updating exercise")))
+                _workoutData.send(result)
             }
-
-
         }
     }
 
-    fun setExerciseData(exerciseIndex: Int?) {
-        if (exerciseIndex != null) {
-            exerciseData = workoutState.exercises[exerciseIndex]
-        }
-        selectedExerciseToEdit = exerciseIndex
+    fun setExerciseData(exerciseIndex: Int) {
+        editExerciseData = workoutState.exercises[exerciseIndex]
     }
 
-    fun onExerciseEvent(event: ExerciseFormEvent) {
+    fun onEditExerciseEvent(event: ExerciseFormEvent) {
         when (event) {
             is ExerciseFormEvent.OnDescriptionChanged -> {
-                exerciseData = exerciseData.copy(description = event.description)
+                editExerciseData = editExerciseData.copy(description = event.description)
             }
 
             is ExerciseFormEvent.OnRepetitionsChanged -> {
-                exerciseData = exerciseData.copy(repetitions = event.repetitions)
+                editExerciseData = editExerciseData.copy(repetitions = event.repetitions)
             }
 
             is ExerciseFormEvent.OnSeriesChanged -> {
-                exerciseData = exerciseData.copy(series = event.series)
+                editExerciseData = editExerciseData.copy(series = event.series)
             }
 
             is ExerciseFormEvent.OnTimeChanged -> {
-                exerciseData = exerciseData.copy(time = event.time)
+                editExerciseData = editExerciseData.copy(time = event.time)
             }
 
             is ExerciseFormEvent.OnTitleChanged -> {
-                exerciseData = exerciseData.copy(title = event.title)
+                editExerciseData = editExerciseData.copy(title = event.title)
             }
 
             is ExerciseFormEvent.OnVideoUrlChanged -> {
-                exerciseData = exerciseData.copy(videoUrl = event.videoUrl)
+                editExerciseData = editExerciseData.copy(videoUrl = event.videoUrl)
             }
 
             is ExerciseFormEvent.OnSubmit -> {
-                if (selectedExerciseToEdit == null) {
-                    createExercise()
-                } else {
-                    updateExercise()
-                }
+                updateExercise()
+            }
+
+            else -> {}
+        }
+    }
+
+    fun onCreateExerciseEvent(event: ExerciseFormEvent) {
+        when (event) {
+            is ExerciseFormEvent.OnDescriptionChanged -> {
+                createExerciseData = createExerciseData.copy(description = event.description)
+            }
+
+            is ExerciseFormEvent.OnRepetitionsChanged -> {
+                createExerciseData = createExerciseData.copy(repetitions = event.repetitions)
+            }
+
+            is ExerciseFormEvent.OnSeriesChanged -> {
+                createExerciseData = createExerciseData.copy(series = event.series)
+            }
+
+            is ExerciseFormEvent.OnTimeChanged -> {
+                createExerciseData = createExerciseData.copy(time = event.time)
+            }
+
+            is ExerciseFormEvent.OnTitleChanged -> {
+                createExerciseData = createExerciseData.copy(title = event.title)
+            }
+
+            is ExerciseFormEvent.OnVideoUrlChanged -> {
+                createExerciseData = createExerciseData.copy(videoUrl = event.videoUrl)
+            }
+
+            is ExerciseFormEvent.OnSubmit -> {
+                createExercise()
             }
 
             else -> {}
@@ -241,11 +228,14 @@ class UpdateWorkoutViewModel @Inject constructor(
     }
 
     fun removeExercise() {
-        if (selectedExerciseToEdit != null) {
-            val newExercises = workoutState.exercises.toMutableList()
-            newExercises.removeAt(selectedExerciseToEdit!!)
-            workoutState = workoutState.copy(exercises = newExercises)
-        }
+        val newExercises =
+            workoutState.exercises.toMutableList().mapIndexed { index, exerciseFormState ->
+                if (exerciseFormState.id == editExerciseData.id) {
+                    null
+                } else {
+                    exerciseFormState
+                }
+            }.filterNotNull()
+        workoutState = workoutState.copy(exercises = newExercises)
     }
-
 }

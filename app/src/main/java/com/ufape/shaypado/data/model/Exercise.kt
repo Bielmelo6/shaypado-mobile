@@ -1,6 +1,7 @@
 package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
+import com.ufape.shaypado.ui.model.ExerciseState
 
 data class CreateExerciseRequest(
     @SerializedName("title")
@@ -10,9 +11,9 @@ data class CreateExerciseRequest(
     @SerializedName("video_url")
     val videoUrl: String?,
     @SerializedName("series")
-    val series: Int,
+    val series: String,
     @SerializedName("repetitions")
-    val repetitions: Int,
+    val repetitions: String,
     @SerializedName("time")
     val time: String,
 )
@@ -27,9 +28,9 @@ data class UpdateExerciseRequest(
     @SerializedName("video_url")
     val videoUrl: String?,
     @SerializedName("series")
-    val series: Int,
+    val series: String,
     @SerializedName("repetitions")
-    val repetitions: Int,
+    val repetitions: String,
     @SerializedName("time")
     val time: String,
 )
@@ -45,9 +46,21 @@ data class ExerciseResponse(
     @SerializedName("video_url")
     val videoUrl: String?,
     @SerializedName("series")
-    val series: Int,
+    val series: String,
     @SerializedName("repetitions")
-    val repetitions: Int,
+    val repetitions: String,
     @SerializedName("time")
     val time: String,
 )
+
+fun ExerciseResponse.toUiModel(): ExerciseState {
+    return ExerciseState(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        videoUrl = this.videoUrl,
+        series = this.series,
+        repetitions = this.repetitions,
+        time = this.time,
+    )
+}

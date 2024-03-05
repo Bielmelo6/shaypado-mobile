@@ -10,6 +10,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -19,7 +20,7 @@ interface WorkoutApi {
     suspend fun getWorkouts(): Response<List<WorkoutResponse>>
 
     @Headers("Content-Type: application/json")
-    @DELETE("/delete_training")
+    @DELETE("/delete_workout/{id}")
     suspend fun deleteWorkout(@Path("id") id : String): Response<Unit>
 
     @Headers("Content-Type: application/json")
@@ -31,7 +32,7 @@ interface WorkoutApi {
     suspend fun createWorkouts(@Body data: List<CreateWorkoutRequest>): Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @POST("/update_training")
+    @PUT("/update_workout")
     suspend fun updateWorkout(@Body data: UpdateWorkoutRequest): Response<WorkoutResponse>
 
     @Headers("Content-Type: application/json")

@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.theme.BarbellIcon
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun WorkoutsScreen(
@@ -56,6 +58,7 @@ fun WorkoutsScreen(
 ) {
     val workoutViewModel = hiltViewModel<WorkoutsViewModel>()
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     val workoutsData by workoutViewModel.workoutsData.collectAsState(
         initial = Result.Loading
@@ -63,6 +66,17 @@ fun WorkoutsScreen(
 
     LaunchedEffect(Unit) {
         workoutViewModel.fetchWorkouts()
+    }
+
+    LaunchedEffect(key1 = workoutViewModel.removeWorkoutEvent) {
+        workoutViewModel.removeWorkoutEvent.collect {
+            if (it is Result.Success) {
+                showSnackBar("Workout deleted successfully")
+                showDeleteDialog = false
+            }else if (it is Result.Error) {
+                showSnackBar(it.exception.getErrorMessage(context))
+            }
+        }
     }
 
     if (workoutsData is Result.Error) {

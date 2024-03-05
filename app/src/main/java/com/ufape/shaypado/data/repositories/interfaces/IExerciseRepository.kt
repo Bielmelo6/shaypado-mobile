@@ -3,11 +3,13 @@ package com.ufape.shaypado.data.repositories.interfaces
 import com.ufape.shaypado.data.model.CreateExerciseRequest
 import com.ufape.shaypado.data.model.ExerciseResponse
 import com.ufape.shaypado.data.model.UpdateExerciseRequest
+import com.ufape.shaypado.ui.model.ExerciseState
+import com.ufape.shaypado.util.Result
 
 interface IExerciseRepository {
     suspend fun addExercise(
         addExerciseRequest: CreateExerciseRequest
-    ): Result<ExerciseResponse>
+    ): Result<ExerciseState>
 
-    suspend fun updateExercise(updateExerciseRequest: UpdateExerciseRequest): Result<ExerciseResponse>
+    suspend fun updateExercise(updateExerciseRequest: UpdateExerciseRequest): Result<ExerciseState>
 }

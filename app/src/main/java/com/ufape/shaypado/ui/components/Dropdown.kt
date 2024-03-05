@@ -39,7 +39,7 @@ fun AppDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val value = items.find { it.value == selectedValue }?.text ?: selectedValue
+    val value = items.find { it.value == selectedValue }?.text ?: "Selecione uma opção"
 
     Box(
         modifier = Modifier

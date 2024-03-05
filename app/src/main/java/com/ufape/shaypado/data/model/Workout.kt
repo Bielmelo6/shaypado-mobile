@@ -2,7 +2,9 @@ package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.ufape.shaypado.ui.model.ExerciseData
+import com.ufape.shaypado.ui.model.ExerciseState
 import com.ufape.shaypado.ui.model.WorkoutData
+import com.ufape.shaypado.ui.model.WorkoutState
 
 data class CreateWorkoutRequest(
     @SerializedName("title")
@@ -41,24 +43,12 @@ data class WorkoutIdRequest (
     val workoutId: String
 )
 
-fun WorkoutResponse.toUiModel(): WorkoutData {
-    return WorkoutData(
+fun WorkoutResponse.toUiModel(): WorkoutState {
+    return WorkoutState(
         id = this.id,
         name = this.name,
         category = this.category,
         exercises = this.exercises.map { it.toUiModel() }
-    )
-}
-
-fun ExerciseResponse.toUiModel(): ExerciseData {
-    return ExerciseData(
-        id = this.id,
-        title = this.title,
-        description = this.description,
-        videoUrl = this.videoUrl,
-        series = this.series,
-        repetitions = this.repetitions,
-        time = this.time,
     )
 }
 

@@ -3,6 +3,7 @@ package com.ufape.shaypado.ui.screens.trainer.createTrainings
 import androidx.annotation.StringRes
 import com.ufape.shaypado.data.model.CreateExerciseRequest
 import com.ufape.shaypado.data.model.CreateWorkoutRequest
+import com.ufape.shaypado.ui.model.ExerciseState
 
 data class TrainingsFormState(
     val id: String ? = null,
@@ -40,15 +41,15 @@ fun ExerciseFormState.toRequest() = CreateExerciseRequest(
     title = title,
     description = description,
     videoUrl = videoUrl,
-    series = series.toInt(),
-    repetitions = repetitions.toInt(),
+    series = series,
+    repetitions = repetitions,
     time = time
 )
 
 sealed class TrainingsFormEvent {
     data class OnNameChanged(val name: String) : TrainingsFormEvent()
-    data class OnCategoryChanged(val category: String, val label : String) : TrainingsFormEvent()
-    data class OnExercisesChanged(val exercises: List<ExerciseFormState>) : TrainingsFormEvent()
+    data class OnCategoryChanged(val id: String, val category : String) : TrainingsFormEvent()
+    data class OnExercisesChanged(val exercises: List<ExerciseState>) : TrainingsFormEvent()
     data object RemoveCurrentTraining : TrainingsFormEvent()
     data object OnSubmit : TrainingsFormEvent()
 }
