@@ -6,6 +6,7 @@ data class FriendsState(
 )
 
 data class FriendState(
+    var isSelected: Boolean = false,
     val friendshipCode: String,
     val name: String,
 )

@@ -94,12 +94,19 @@ fun FriendsScreen(
         }
     }
 
-    if (friendsData !is Result.Success) {
-        return
-    }
+    if (friendsData is Result.Loading)
+        return AppText(
+            text = "Carregando...",
+            textType = TextType.TITLE_MEDIUM
+        )
+
+    if (friendsData is Result.Error)
+        return AppText(
+            text = (friendsData as Result.Error).exception.getErrorMessage(context),
+            textType = TextType.TITLE_MEDIUM
+        )
 
     val friends = (friendsData as Result.Success).data
-
 
     AppHeader(
         navController = navController,

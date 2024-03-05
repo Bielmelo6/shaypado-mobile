@@ -31,12 +31,15 @@ import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DaysOfWeekChooser
 import com.ufape.shaypado.ui.components.NextButton
+import com.ufape.shaypado.ui.components.RemoveButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.components.TimePicker
+import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.screens.trainer.counter.CounterBase
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormEvent
 import com.ufape.shaypado.ui.screens.trainer.home.Dropdown
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
+import com.ufape.shaypado.ui.theme.StudentImage
 import com.ufape.shaypado.ui.theme.TrainingImage
 
 @Composable
@@ -44,9 +47,9 @@ fun CreateClassesScreen(
     navController: NavController,
     createClassViewModel: CreateClassViewModel
 ) {
-    var shouldShowForm by remember { mutableStateOf(false) }
+    var shouldShowForm by rememberSaveable { mutableStateOf(false) }
     var dropdownExpanded by rememberSaveable { mutableStateOf(false) }
-
+    var usersDropdownExpanded by rememberSaveable { mutableStateOf(false) }
 
     if (!shouldShowForm) {
         CounterBase(
@@ -131,7 +134,7 @@ fun CreateClassesScreen(
 
             ) {
                 TimePicker(
-                    time = createClassViewModel.classData[createClassViewModel.selectedClass].startingTime,
+                    time = createClassViewModel.classData[createClassViewModel.selectedClass].endTime,
                     label = R.string.start_time,
                     onConfirm = {
                         createClassViewModel.onClassDataEvent(ClassFormEvent.OnStartingTimeChanged(it))
@@ -145,7 +148,7 @@ fun CreateClassesScreen(
 
             ) {
                 TimePicker(
-                    time = createClassViewModel.classData[createClassViewModel.selectedClass].endingTime,
+                    time = createClassViewModel.classData[createClassViewModel.selectedClass].startTime,
                     label = R.string.end_time,
                     onConfirm = {
                         createClassViewModel.onClassDataEvent(ClassFormEvent.OnEndingTimeChanged(it))
@@ -183,6 +186,41 @@ fun CreateClassesScreen(
                     }
                 }
             }
+
+            Dropdown(
+                title = R.string.stundets,
+                isExpanded = usersDropdownExpanded,
+                toggle = { usersDropdownExpanded = usersDropdownExpanded.not() },
+                endHeaderContent = {
+                    AddButton(
+                        onClick = {
+                            navController.navigate(TrainerNavigationScreen.ImportFriends.route)
+                            shouldShowForm = true
+                        }
+                    )
+                }
+            ) {
+                LazyColumn(
+                    modifier = Modifier.height(800.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(createClassViewModel.classData[createClassViewModel.selectedClass].students.size) {
+                        UserDetailsRenderItem(
+                            leadingIcon = {
+                                StudentImage()
+                            },
+                            trailingIcon = {
+                                RemoveButton(
+                                    variant = ButtonVariant.ERROR_CONTAINER,
+                                    onClick = {
+                                        createClassViewModel.removeFriend(it)
+                                    }
+                                )
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -210,7 +248,7 @@ fun CreateClassesScreen(
         AppButton(
             text = R.string.end,
             onClick = {
-
+                      createClassViewModel.onClassDataEvent(ClassFormEvent.OnSubmit)
             },
         )
     }

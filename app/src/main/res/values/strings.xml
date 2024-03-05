@@ -240,5 +240,6 @@
     <string name="remove_exercise">Remover exercício</string>
     <string name="create_exercise">Criar exercício</string>
     <string name="update_exercise">Atualziar exercício</string>
+    <string name="error_loading_friends">Erro ao carregar amigos</string>
 
 </resources>

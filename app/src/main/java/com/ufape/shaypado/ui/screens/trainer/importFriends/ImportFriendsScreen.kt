@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,13 +36,53 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.model.FriendState
+import com.ufape.shaypado.util.Result
 
 @Composable
 fun ImportFriendsScreen(
     navController: NavController,
-    onImport: (List<Friend>) -> Unit
+    onImport: (List<FriendState>) -> Unit
 ) {
     val importFriendsViewModel = hiltViewModel<ImportFriendsViewModel>()
+    val isLoading = importFriendsViewModel.friendsData.collectAsState(
+        initial = Result.Loading
+    )
+
+    LaunchedEffect(Unit) {
+        importFriendsViewModel.fetchFriends()
+
+    }
+
+    if (isLoading.value is Result.Loading)
+        return Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            AppText(
+                textType = TextType.TITLE_MEDIUM,
+                text = R.string.loading,
+                fillWidth = true
+            )
+        }
+
+    if (isLoading.value is Result.Error)
+        return Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            AppText(
+                textType = TextType.TITLE_MEDIUM,
+                text = R.string.error_loading_friends,
+                fillWidth = true
+            )
+        }
+
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -67,11 +109,11 @@ fun ImportFriendsScreen(
             .fillMaxHeight(0.8f),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(10) {
+        items(importFriendsViewModel.friends.size) {
             FriendCard(
                 selected = importFriendsViewModel.friends[it].isSelected,
-                title = importFriendsViewModel.friends[it].data.value,
-                description = importFriendsViewModel.friends[it].data.title,
+                title = importFriendsViewModel.friends[it].name,
+                description = "",
                 onSelected = {
                     importFriendsViewModel.toggleFriend(it)
                 }
@@ -96,7 +138,7 @@ fun ImportFriendsScreen(
         variant = ButtonVariant.PRIMARY,
         onClick = {
             val selectedFriends =
-                importFriendsViewModel.friends.filter { it.isSelected }.map { it.data }
+                importFriendsViewModel.friends.filter { it.isSelected }
             onImport(selectedFriends)
             navController.popBackStack()
         }

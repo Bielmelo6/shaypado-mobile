@@ -37,8 +37,6 @@ data class ClassWorkoutResponse(
 )
 
 data class CreateClassRequest(
-    @SerializedName("id")
-    val id: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("description")
