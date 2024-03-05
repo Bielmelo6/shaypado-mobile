@@ -36,13 +36,13 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
-import com.ufape.shaypado.ui.model.FriendData
+import com.ufape.shaypado.ui.model.FriendState
 import com.ufape.shaypado.util.Result
 
 @Composable
 fun ImportFriendsScreen(
     navController: NavController,
-    onImport: (List<FriendData>) -> Unit
+    onImport: (List<FriendState>) -> Unit
 ) {
     val importFriendsViewModel = hiltViewModel<ImportFriendsViewModel>()
     val friendsData by importFriendsViewModel.friendsData.collectAsState(
