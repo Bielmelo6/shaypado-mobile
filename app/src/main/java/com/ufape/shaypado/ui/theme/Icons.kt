@@ -129,6 +129,15 @@ fun GoogleImage(){
 
 @Composable
 @Preview
+fun WhatsappImage(){
+    Image(
+        painter = painterResource(id = R.drawable.whatsapp),
+        contentDescription = "Whatsapp"
+    )
+}
+
+@Composable
+@Preview
 fun ShaypadoPetImage(){
     Image(
         painter = painterResource(id = R.drawable.brand_logo),
@@ -171,3 +180,4 @@ fun StudentImage() {
         contentDescription = "Student",
     )
 }
+
