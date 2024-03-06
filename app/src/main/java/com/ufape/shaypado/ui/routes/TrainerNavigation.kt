@@ -44,6 +44,7 @@ import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileS
 import com.ufape.shaypado.ui.screens.trainer.updateWorkout.UpdateWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
+import com.ufape.shaypado.ui.screens.trainer.userProfile.UserWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
@@ -101,6 +102,15 @@ sealed class TrainerNavigationScreen(
 
     data object UserFriends : TrainerNavigationScreen(
         "user_friends",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserWorkout : TrainerNavigationScreen(
+        "user_workout",
         BottomBarItemStyle(
             R.string.profile,
             R.drawable.ic_nav_settings,
@@ -241,6 +251,14 @@ fun TrainerRoutes(
             composable(TrainerNavigationScreen.UserProfile.route) {
                 Container {
                     UserProfileScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserWorkout.route) {
+                Container {
+                    UserWorkoutScreen(
                         navController
                     )
                 }
