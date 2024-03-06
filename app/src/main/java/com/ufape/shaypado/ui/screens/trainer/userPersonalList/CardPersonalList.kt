@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +31,7 @@ fun CardPersonalList() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp).shadow(elevation = 6.dp ,spotColor = Color.Black),
+            .height(140.dp).shadow(elevation = 6.dp ,spotColor = Color.Black).clickable{},
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
