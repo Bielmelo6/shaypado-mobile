@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.routes
 
+import UserDetailsPersonalScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -121,6 +122,15 @@ sealed class TrainerNavigationScreen(
 
     data object UserPersonalList : TrainerNavigationScreen(
         "user_personal_list",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserDetailsPersonal : TrainerNavigationScreen(
+        "user_details_personal",
         BottomBarItemStyle(
             R.string.profile,
             R.drawable.ic_nav_settings,
@@ -261,6 +271,14 @@ fun TrainerRoutes(
             composable(TrainerNavigationScreen.UserProfile.route) {
                 Container {
                     UserProfileScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserProfile.route) {
+                Container {
+                    UserDetailsPersonalScreen(
                         navController
                     )
                 }
