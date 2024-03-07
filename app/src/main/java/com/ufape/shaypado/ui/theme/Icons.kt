@@ -156,6 +156,15 @@ fun InfoIcon(){
 
 @Composable
 @Preview
+fun PerfilShaypado2Icon(){
+    Image(
+        painter = painterResource(id = R.drawable.ic_sh_perfil_2),
+        contentDescription = "Perfil2"
+    )
+}
+
+@Composable
+@Preview
 fun BarbellIcon(){
     Icon(
         painter = painterResource(id = R.drawable.ic_barbell),
