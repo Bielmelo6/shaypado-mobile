@@ -81,6 +81,4 @@ fun CardHomeLogado(navController: NavController) {
             }
         }
     }
-
-
 }

@@ -131,7 +131,7 @@ fun HomeUserLogadoScreen(navController: NavController) {
                     CardHomeLogado(navController)
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             AppButton(onClick = {}, variant = ButtonVariant.PRIMARY, text = "Iniciar")
         }
     }
