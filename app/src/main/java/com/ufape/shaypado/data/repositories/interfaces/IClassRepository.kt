@@ -9,7 +9,7 @@ import com.ufape.shaypado.util.Result
 interface IClassRepository {
     suspend fun addClasses(classes: List<CreateClassRequest>) : Result<Unit>
 
-    suspend fun updateClass(classData : UpdateClassRequest) : Result<ClassState>
+    suspend fun updateClass(id : String, classData : UpdateClassRequest) : Result<ClassState>
 
     suspend fun deleteClass(deleteClass : String) : Result<Unit>
 

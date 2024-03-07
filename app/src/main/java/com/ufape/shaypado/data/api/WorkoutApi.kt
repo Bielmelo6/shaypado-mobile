@@ -24,23 +24,23 @@ interface WorkoutApi {
     suspend fun getWorkouts(): Response<List<WorkoutResponse>>
 
     @Headers("Content-Type: application/json")
-    @DELETE("/delete_workout/{id}")
+    @DELETE("/workouts/{id}")
     suspend fun deleteWorkout(@Path("id") id : String): Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @GET("/workout")
+    @GET("/workouts/workout")
     suspend fun getWorkout(@Query("id") id: String): Response<WorkoutResponse>
 
     @Headers("Content-Type: application/json")
-    @POST("/create_training")
+    @POST("/workouts//multiple-create-workouts")
     suspend fun createWorkouts(@Body data: List<CreateWorkoutRequest>): Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @PUT("/update_workout")
+    @PUT("/workouts/update_workout")
     suspend fun updateWorkout(@Body data: UpdateWorkoutRequest): Response<WorkoutResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/fetch_categories")
+    @GET("/workouts/workout-types")
     suspend fun fetchWorkoutCategories(): Response<List<CategoryResponse>>
 
     @Multipart

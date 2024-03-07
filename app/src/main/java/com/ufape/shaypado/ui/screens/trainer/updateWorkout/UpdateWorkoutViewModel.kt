@@ -75,7 +75,7 @@ class UpdateWorkoutViewModel @Inject constructor(
         when (event) {
             is TrainingsFormEvent.OnCategoryChanged -> {
                 workoutState =
-                    workoutState.copy(categoryId = event.id, category = event.category)
+                    workoutState.copy(category = event.category)
             }
 
             is TrainingsFormEvent.OnExercisesChanged -> {
@@ -183,6 +183,10 @@ class UpdateWorkoutViewModel @Inject constructor(
 
             is ExerciseFormEvent.OnVideoUrlChanged -> {
                 editExerciseData = editExerciseData.copy(videoUrl = event.videoUrl)
+            }
+
+            is ExerciseFormEvent.OnCategoryChanged -> {
+                editExerciseData = editExerciseData.copy(category = event.category, categoryId = event.id)
             }
 
             is ExerciseFormEvent.OnSubmit -> {

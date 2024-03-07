@@ -35,12 +35,15 @@ import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.theme.BarbellIcon
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.copyToClipboard
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun SettingsScreen(
     navController: NavController,
     onLogout: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val viewModel = hiltViewModel<SettingsViewModel>()
     val userProfileData by viewModel.userProfileData.collectAsState(
         initial = Result.Loading
@@ -52,7 +55,7 @@ fun SettingsScreen(
 
     if (userProfileData is Result.Error) {
         AppText(
-            text = "Error",
+            text = (userProfileData as Result.Error).exception.getErrorMessage(context),
             color = Color.Red
         )
         return
@@ -67,7 +70,6 @@ fun SettingsScreen(
     }
 
     val user = (userProfileData as Result.Success).data
-    val context = LocalContext.current
 
     Row(
         modifier = Modifier

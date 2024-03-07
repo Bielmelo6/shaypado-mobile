@@ -74,15 +74,13 @@ data class CreateClassRequest(
     val startTime: String,
     @SerializedName("end_time")
     val endTime: String,
-    @SerializedName("students")
+    @SerializedName("friends_code")
     val students : List<String>,
     @SerializedName("workouts")
     val workouts : List<String>
 )
 
 data class UpdateClassRequest(
-    @SerializedName("id")
-    val id: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("description")

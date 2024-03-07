@@ -9,10 +9,10 @@ import com.ufape.shaypado.ui.model.WorkoutState
 data class CreateWorkoutRequest(
     @SerializedName("title")
     val name: String,
-    @SerializedName("category")
+    @SerializedName("workoutType")
     val category: String,
     @SerializedName("exercises")
-    val exercises: List<CreateExerciseRequest>,
+    val exercises: List<String>,
 )
 
 data class UpdateWorkoutRequest(
@@ -32,10 +32,12 @@ data class WorkoutResponse(
     val id: String,
     @SerializedName("title")
     val name: String,
-    @SerializedName("category")
+    @SerializedName("workoutType")
     val category: String,
     @SerializedName("exercises")
     val exercises: List<ExerciseResponse>,
+    @SerializedName("endWorkout")
+    val endWorkout: Boolean
 )
 
 data class WorkoutIdRequest (
@@ -48,6 +50,7 @@ fun WorkoutResponse.toUiModel(): WorkoutState {
         id = this.id,
         name = this.name,
         category = this.category,
+        endWorkout = this.endWorkout,
         exercises = this.exercises.map { it.toUiModel() }
     )
 }

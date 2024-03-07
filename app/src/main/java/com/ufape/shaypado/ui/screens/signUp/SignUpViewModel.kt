@@ -274,6 +274,12 @@ class SignUpViewModel @Inject constructor(
                     userPhysicalEvaluationDataState.copy(objective = event.objective)
             }
 
+            is UserPhysicalEvaluationFormEvent.OnGenderChanged -> {
+                userPhysicalEvaluationDataState = userPhysicalEvaluationDataState.copy(
+                    gender = event.gender
+                )
+            }
+
             else -> {}
         }
     }

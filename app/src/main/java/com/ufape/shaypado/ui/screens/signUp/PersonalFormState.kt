@@ -18,7 +18,7 @@ data class PersonalFormState(
     @StringRes val specialtiesError: Int? = null,
     val age: String = "",
     @StringRes val ageError: Int? = null,
-    val state: String = "",
+    val state: String = "PE",
     @StringRes val stateError: Int? = null,
     val city: String = "",
     @StringRes val cityError: Int? = null,

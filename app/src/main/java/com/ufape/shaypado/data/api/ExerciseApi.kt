@@ -12,12 +12,12 @@ import retrofit2.http.PUT
 interface ExerciseApi {
 
     @Headers("Content-Type: application/json")
-    @POST("/create_exercise")
+    @POST("/exercises")
     suspend fun createExercise(@Body data: CreateExerciseRequest): Response<ExerciseResponse>
 
 
     @Headers("Content-Type: application/json")
-    @PUT("/update_exercise")
+    @PUT("/exercises")
     suspend fun updateExercise(@Body data: UpdateExerciseRequest): Response<ExerciseResponse>
 }
 

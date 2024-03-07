@@ -119,19 +119,20 @@ fun UpdateWorkoutScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AppDropdown(
-            items = categories,
-            onItemSelected = { value, label ->
+
+        CustomTextField(
+            label = R.string.training_category,
+            value = updateWorkoutViewModel.workoutState.category,
+            onValueChange = {
                 updateWorkoutViewModel.onWorkoutEvent(
                     TrainingsFormEvent.OnCategoryChanged(
-                        id = value,
-                        category = label
+                        category = it
                     )
                 )
             },
-            label = "Categoria",
-            selectedValue = updateWorkoutViewModel.workoutState.categoryId,
+            placeholder = R.string.training_category_placeholder,
         )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -218,6 +219,23 @@ fun UpdateWorkoutScreen(
                 updateWorkoutViewModel.onCreateExerciseEvent(ExerciseFormEvent.OnTitleChanged(it))
             },
             placeholder = R.string.exercise_title_placeholder,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        AppDropdown(
+            items = categories,
+            onItemSelected = { value, label ->
+                updateWorkoutViewModel.onEditExerciseEvent(
+                    ExerciseFormEvent.OnCategoryChanged(
+                        id = value,
+                        category = label
+                    )
+                )
+            },
+            label = "Categoria",
+            selectedValue = updateWorkoutViewModel.editExerciseData.categoryId,
         )
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -58,7 +58,7 @@ class EditClassViewModel @Inject constructor(
         viewModelScope.launch {
             _classUpdateChannel.send(Result.Loading)
             val result = handler.makeSafeApiCall {
-                classRepository.updateClass(classInfo.toUpdateRequest())
+                classRepository.updateClass(classInfo.id, classInfo.toUpdateRequest())
             }
 
             if (result is Result.Success) {
@@ -96,7 +96,7 @@ class EditClassViewModel @Inject constructor(
     fun importWorkouts(workouts : List<WorkoutState>){
         val data = workouts.map { ClassWorkoutState(
             id = it.id,
-            categoryId = it.categoryId,
+            categoryId = it.category,
             category = it.category,
             title = it.name
 

@@ -2,6 +2,10 @@ package com.ufape.shaypado.ui.routes
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -92,6 +96,16 @@ fun Routes(authViewModel: AuthViewModel) {
         }
     }
 
+    var snackbarMessage: String? by remember { mutableStateOf(null) }
+
+    fun showSnackBar(message: String) {
+        snackbarMessage = message
+    }
+
+    fun resetSnackBarMessage() {
+        snackbarMessage = null
+    }
+
     NavHost(
         navController = navController,
         startDestination = AuthNavigationScreen.NavRoot.route
@@ -99,7 +113,10 @@ fun Routes(authViewModel: AuthViewModel) {
         authNavGraph(
             navController = navController,
             signUpViewModel = signUpViewModel,
-            authViewModel = authViewModel
+            authViewModel = authViewModel,
+            showSnackbar = ::showSnackBar,
+            resetSnackBarMessage = ::resetSnackBarMessage,
+            snackbarMessage = snackbarMessage
         )
 
         composable(route = MobileNavigationScreen.NavRoot.route) {

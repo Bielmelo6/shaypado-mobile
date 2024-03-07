@@ -157,7 +157,7 @@ fun TrainerHomeScreen(
                 },
                 onPress = {
                     navController.navigate(
-                        TrainerNavigationScreen.StudentDetails.route
+                        TrainerNavigationScreen.StudentDetails.route + "/${viewModel.classes[visibleClassIndex].students[it].friendshipCode}"
                     )
                 }
             )

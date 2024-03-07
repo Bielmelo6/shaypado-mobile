@@ -21,8 +21,8 @@ class ClassRepository(
         }
     }
 
-    override suspend fun updateClass(classData: UpdateClassRequest): Result<ClassState> {
-        val result = api.updateClass(classData)
+    override suspend fun updateClass(id : String, classData: UpdateClassRequest): Result<ClassState> {
+        val result = api.updateClass(id, classData)
         return if (result.isSuccessful) {
             Result.Success(result.body()!!.toUiModel())
         } else {

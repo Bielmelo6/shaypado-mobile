@@ -1,50 +1,66 @@
 package com.ufape.shaypado.ui.screens.signUp
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.CameraButton
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun PhysicalFormScreen(
     navController: NavController,
-    viewModel: SignUpViewModel
+    viewModel: SignUpViewModel,
+    showSnackbar : (String) -> Unit,
 ) {
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = viewModel.validationStatus) {
-        viewModel.validationStatus.collect {
+    LaunchedEffect(key1 = viewModel.userRegisterEvent) {
+        viewModel.userRegisterEvent.collect {
             if (it is Result.Success) {
-                navController.navigate(AuthNavigationScreen.SignUpPhysicalForm.route)
-                viewModel.resetValidationStatus()
+                navController.navigate(AuthNavigationScreen.SignUserCreated.route)
+            }else if (it is Result.Error) {
+                showSnackbar(it.exception.getErrorMessage(context))
             }
         }
     }
 
-    SignUpScreenBase(
-        title = R.string.sign_up_person_data_title,
-        buttonText = if (viewModel.userAccountDataState.saveCorporalData) R.string.button_next else R.string.sign_up_finish,
-        onButtonClicked = {
-            viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
-        },
-        navController = navController,
-        topTitleSpacing = 24
-    ) {
+    AppHeader(navController = navController, title = R.string.sign_up_person_data_title)
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Column(
+        modifier =
+        Modifier
+            .fillMaxHeight(0.9f)
+            .verticalScroll(rememberScrollState())
+    )
+    {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
@@ -180,25 +196,25 @@ fun PhysicalFormScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-                value = viewModel.userPhysicalEvaluationDataState.thighCircumference,
-        errorMessage = viewModel.userPhysicalEvaluationDataState.thighCircumferenceError,
-        keyboardType = KeyboardType.Number,
-        onValueChange = {
-            viewModel.onPhysicalEvaluationDataEvent(
-                UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged(
-                    it
+            value = viewModel.userPhysicalEvaluationDataState.thighCircumference,
+            errorMessage = viewModel.userPhysicalEvaluationDataState.thighCircumferenceError,
+            keyboardType = KeyboardType.Number,
+            onValueChange = {
+                viewModel.onPhysicalEvaluationDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged(
+                        it
+                    )
                 )
-            )
-        },
-        trailingIcon = {
-            AppText(
-                color = MaterialTheme.colorScheme.primary,
-                text = R.string.input_height_cm,
-                textType = TextType.LABEL_LARGE
-            )
-        },
-        placeholder = R.string.input_thigh_circumference_placeholder,
-        label = R.string.input_thigh_circumference
+            },
+            trailingIcon = {
+                AppText(
+                    color = MaterialTheme.colorScheme.primary,
+                    text = R.string.input_height_cm,
+                    textType = TextType.LABEL_LARGE
+                )
+            },
+            placeholder = R.string.input_thigh_circumference_placeholder,
+            label = R.string.input_thigh_circumference
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -226,5 +242,51 @@ fun PhysicalFormScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        HorizontalDivider()
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(checked = viewModel.userAccountDataState.termsAccepted,
+                onCheckedChange = {
+                    viewModel.onUserDataEvent(
+                        UserAccountFormEvent.OnTermsAcceptedChanged(
+                            it
+                        )
+                    )
+                })
+            AppText(
+                text = R.string.input_terms_acceptance, textType = TextType.TITLE_MEDIUM
+            )
+
+            TextButton(onClick = {
+
+            }) {
+                AppText(
+                    color = MaterialTheme.colorScheme.primary,
+                    text = R.string.input_terms_link,
+                    textType = TextType.TITLE_MEDIUM
+                )
+            }
+
+            AppText(
+                text = R.string.input_terms_acceptance2, textType = TextType.TITLE_MEDIUM
+            )
+        }
+        if (viewModel.userAccountDataState.termsAcceptedError != null && !viewModel.userAccountDataState.saveCorporalData) {
+            AppText(
+                textType = TextType.LABEL_MEDIUM,
+                text = viewModel.userAccountDataState.termsAcceptedError!!,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
+
+    AppButton(
+        text =  R.string.sign_up_finish,
+        onClick = {
+            viewModel.onUserDataEvent(UserAccountFormEvent.OnSubmit)
+        }
+    )
 }

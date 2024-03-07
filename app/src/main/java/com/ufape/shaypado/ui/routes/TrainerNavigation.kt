@@ -40,6 +40,7 @@ import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
 import com.ufape.shaypado.ui.screens.trainer.updateWorkout.UpdateWorkoutScreen
+import com.ufape.shaypado.ui.screens.trainer.workoutSheet.WorkoutSheetScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
@@ -97,7 +98,8 @@ sealed class TrainerNavigationScreen(
     )
 
     data object StudentDetails : TrainerNavigationScreen(
-        "student_details",
+        "student_details/{studentId}",
+        shortName = "student_details"
     )
 
     data object CreateClasses : TrainerNavigationScreen(
@@ -135,6 +137,11 @@ sealed class TrainerNavigationScreen(
 
     data object ImportWorkouts : TrainerNavigationScreen(
         "workouts_import"
+    )
+
+    data object WorkoutSheet : TrainerNavigationScreen(
+        "workout_sheet/{studentId}",
+        shortName = "workout_sheet"
     )
 }
 
@@ -244,9 +251,12 @@ fun TrainerRoutes(
                 }
             }
 
-            composable(TrainerNavigationScreen.StudentDetails.route) {
+            composable(TrainerNavigationScreen.StudentDetails.route) {backstackENtry ->
                 Container {
-                    StudentDetailsScreen(navController)
+                    StudentDetailsScreen(
+                        navController,
+                        studentId = backstackENtry.arguments?.getString("studentId")!!
+                    )
                 }
             }
 
@@ -381,6 +391,21 @@ fun TrainerRoutes(
                     ImportWorkoutsScreen(
                         navController = navController,
                         onImport = createClassViewModel::importWorkouts,
+                    )
+                }
+            }
+
+            composable(
+                TrainerNavigationScreen.WorkoutSheet.route,
+            ) { backStackEntry ->
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    WorkoutSheetScreen(
+                        navController = navController,
+                        showSnackBar = ::showSnackBar,
+                        studentId = backStackEntry.arguments?.getString("studentId")!!
                     )
                 }
             }

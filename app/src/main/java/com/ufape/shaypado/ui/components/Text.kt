@@ -76,6 +76,7 @@ fun AppText(
 @Composable
 @Preview
 fun AppText(
+    modifier: Modifier = Modifier,
     textType: TextType = TextType.TITLE_LARGE,
     text: String = "R.string.label",
     color: Color = textPrimary,
@@ -105,12 +106,12 @@ fun AppText(
         fontSize = size ?: style.fontSize,
     )
 
-    val modifier = if (fillWidth) Modifier.fillMaxWidth() else Modifier
+    val modifierA = if (fillWidth) modifier.fillMaxWidth() else Modifier
 
     Text(
         text = text,
         style = style,
         color = color,
-        modifier = if (onPress != null) modifier.clickable { onPress() } else modifier
+        modifier = if (onPress != null) modifierA.clickable { onPress() } else modifier
     )
 }

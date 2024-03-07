@@ -45,16 +45,125 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.createTempPdfFileFromUri
 import com.ufape.shaypado.util.getErrorMessage
 import java.io.File
+
+val item = listOf(
+    DropdownItem(
+        value = "SP",
+        text = "São Paulo"
+    ),
+    DropdownItem(
+        value = "RJ",
+        text = "Rio de Janeiro"
+    ),
+    DropdownItem(
+        value = "MG",
+        text = "Minas Gerais"
+    ),
+    DropdownItem(
+        value = "RS",
+        text = "Rio Grande do Sul"
+    ),
+    DropdownItem(
+        value = "PR",
+        text = "Paraná"
+    ),
+    DropdownItem(
+        value = "SC",
+        text = "Santa Catarina"
+    ),
+    DropdownItem(
+        value = "BA",
+        text = "Bahia"
+    ),
+    DropdownItem(
+        value = "CE",
+        text = "Ceará"
+    ),
+    DropdownItem(
+        value = "PE",
+        text = "Pernambuco"
+    ),
+    DropdownItem(
+        value = "PA",
+        text = "Pará"
+    ),
+    DropdownItem(
+        value = "MA",
+        text = "Maranhão"
+    ),
+    DropdownItem(
+        value = "GO",
+        text = "Goiás"
+    ),
+    DropdownItem(
+        value = "AM",
+        text = "Amazonas"
+    ),
+    DropdownItem(
+        value = "ES",
+        text = "Espírito Santo"
+    ),
+    DropdownItem(
+        value = "PB",
+        text = "Paraíba"
+    ),
+    DropdownItem(
+        value = "RN",
+        text = "Rio Grande do Norte"
+    ),
+    DropdownItem(
+        value = "AL",
+        text = "Alagoas"
+    ),
+    DropdownItem(
+        value = "PI",
+        text = "Piauí"
+    ),
+    DropdownItem(
+        value = "MT",
+        text = "Mato Grosso"
+    ),
+    DropdownItem(
+        value = "MS",
+        text = "Mato Grosso do Sul"
+    ),
+    DropdownItem(
+        value = "SE",
+        text = "Sergipe"
+    ),
+    DropdownItem(
+        value = "TO",
+        text = "Tocantins"
+    ),
+    DropdownItem(
+        value = "AC",
+        text = "Acre"
+    ),
+    DropdownItem(
+        value = "RO",
+        text = "Rondônia"
+    ),
+    DropdownItem(
+        value = "RR",
+        text = "Roraima"
+    ),
+    DropdownItem(
+        value = "AP",
+        text = "Amapá"
+    )
+)
 
 @Composable
 fun PersonalFormScreen(
@@ -64,7 +173,7 @@ fun PersonalFormScreen(
     var snackbarMessage: String? by remember { mutableStateOf(null) }
     val context = LocalContext.current
 
-    fun onFile ( file : File) {
+    fun onFile(file: File) {
         viewModel.onPersonalDataEvent(
             PersonalFormEvent.OnPlansDocumentChanged(
                 file.path
@@ -145,7 +254,8 @@ fun PersonalFormScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         if (viewModel.personalFormDataState.profilePicture != null) {
-                            val file = viewModel.personalFormDataState.profilePicture?.let { File(it) }
+                            val file =
+                                viewModel.personalFormDataState.profilePicture?.let { File(it) }
 
                             if (file != null) {
                                 Image(
@@ -269,18 +379,17 @@ fun PersonalFormScreen(
                 Row(
                     modifier = Modifier.weight(1f)
                 ) {
-                    CustomTextField(
-                        value = viewModel.personalFormDataState.state,
-                        errorMessage = viewModel.personalFormDataState.stateError,
-                        onValueChange = {
+                    AppDropdown(
+                        label = "Estado",
+                        onItemSelected = { value, label ->
                             viewModel.onPersonalDataEvent(
                                 PersonalFormEvent.OnStateChanged(
-                                    it
+                                    value
                                 )
                             )
                         },
-                        placeholder = R.string.input_state_placeholder,
-                        label = R.string.input_state
+                        items = item,
+                        selectedValue = viewModel.personalFormDataState.state
                     )
                 }
 
@@ -325,7 +434,8 @@ fun PersonalFormScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             val plansDocumentNameA = viewModel.personalFormDataState.plansDocument?.split("/")
-            val plansDocument = plansDocumentNameA?.get(plansDocumentNameA.size - 1) ?: stringResource(id = R.string.input_plans_document_placeholder)
+            val plansDocument = plansDocumentNameA?.get(plansDocumentNameA.size - 1)
+                ?: stringResource(id = R.string.input_plans_document_placeholder)
             AppButton(
                 variant = ButtonVariant.SECONDARY_CONTAINER,
                 text = plansDocument,

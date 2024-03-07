@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.google.android.material.snackbar.Snackbar
 import com.ufape.shaypado.ui.components.Camera
 import com.ufape.shaypado.ui.screens.forgotPassword.ForgotPasswordScreen
 import com.ufape.shaypado.ui.screens.login.LoginScreen
@@ -37,8 +38,12 @@ sealed class AuthNavigationScreen(val route: String) {
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
     signUpViewModel: SignUpViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    showSnackbar: (String) -> Unit,
+    resetSnackBarMessage: () -> Unit,
+    snackbarMessage: String?
 ) {
+
     navigation(
         route = AuthNavigationScreen.NavRoot.route,
         startDestination = AuthNavigationScreen.OnBoard.route
@@ -64,7 +69,14 @@ fun NavGraphBuilder.authNavGraph(
             ProfileFormScreen(navController, signUpViewModel)
         }
         composable(AuthNavigationScreen.SignUpPhysicalForm.route) {
-            PhysicalFormScreen(navController, signUpViewModel)
+            Container (
+                snackBarMessage = snackbarMessage,
+                resetSnackBarMessage = {
+                    resetSnackBarMessage()
+                },
+            ) {
+                PhysicalFormScreen(navController, signUpViewModel, showSnackbar)
+            }
         }
         composable(AuthNavigationScreen.SignUpPersonalForm.route) {
             PersonalFormScreen(navController, signUpViewModel)

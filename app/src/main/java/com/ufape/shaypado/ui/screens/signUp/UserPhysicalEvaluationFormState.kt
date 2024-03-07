@@ -49,5 +49,7 @@ data class UserPhysicalEvaluationFormState(
     @StringRes val objectiveError: Int? = null,
     val exerciseExperience: Boolean = false,
     val spineProblem: Boolean = false,
-    val isSmoker: Boolean = false
+    val isSmoker: Boolean = false,
+    val gender : String = "M",
+    @StringRes val genderError: Int? = null
 )

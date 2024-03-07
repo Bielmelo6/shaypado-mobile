@@ -142,7 +142,7 @@ fun ClassDetailsScreen(
                             StudentImage()
                         },
                         onPress = {
-                            navController.navigate(TrainerNavigationScreen.StudentDetails.route)
+                            navController.navigate(TrainerNavigationScreen.StudentDetails.route + "/${classInfo.students[it].friendshipCode}")
                         },
                     )
                 }

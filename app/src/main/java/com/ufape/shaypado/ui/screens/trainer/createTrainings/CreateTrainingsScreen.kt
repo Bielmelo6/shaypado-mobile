@@ -155,18 +155,18 @@ fun CreateTrainingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AppDropdown(
-            items = categories,
-            onItemSelected = { value, label ->
+
+        CustomTextField(
+            label = R.string.training_category,
+            value = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].category,
+            onValueChange = {
                 createTrainingsViewModel.onTrainingDataEvent(
                     TrainingsFormEvent.OnCategoryChanged(
-                        id = value,
-                        category = label
+                        category = it
                     )
                 )
             },
-            label = "Categoria",
-            selectedValue = createTrainingsViewModel.trainingsData[createTrainingsViewModel.selectedTraining].categoryId,
+            placeholder = R.string.training_category_placeholder,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -296,6 +296,23 @@ fun CreateTrainingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+
+                AppDropdown(
+                    items = categories,
+                    onItemSelected = { value, label ->
+                        createTrainingsViewModel.onExerciseEvent(
+                            ExerciseFormEvent.OnCategoryChanged(
+                                id = value,
+                                category = label
+                            )
+                        )
+                    },
+                    label = "Categoria",
+                    selectedValue = createTrainingsViewModel.exerciseData.categoryId,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 CustomTextField(
                     label = R.string.exercise_video_url,
                     value = createTrainingsViewModel.exerciseData.videoUrl ?: "",
@@ -386,7 +403,7 @@ fun CreateTrainingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 AppButton(
-                    text = R.string.end,
+                    text = R.string.create_exercise,
                     onClick = {
                         createTrainingsViewModel.onExerciseEvent(
                             ExerciseFormEvent.OnSubmit

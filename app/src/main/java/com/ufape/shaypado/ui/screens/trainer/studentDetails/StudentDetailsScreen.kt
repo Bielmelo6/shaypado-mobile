@@ -16,7 +16,9 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
+import com.ufape.shaypado.ui.components.EditButton
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainingDetailsRenderItem
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
 import com.ufape.shaypado.ui.theme.StudentImage
@@ -24,7 +26,8 @@ import com.ufape.shaypado.ui.theme.TrainingImage
 
 @Composable
 fun StudentDetailsScreen(
-    navController: NavController
+    navController: NavController,
+    studentId : String
 ) {
     Row(
         modifier = Modifier
@@ -46,7 +49,14 @@ fun StudentDetailsScreen(
     Spacer(modifier = Modifier.height(16.dp))
 
     UserDetailsRenderItem(
-        trailingIcon = { StudentImage() }
+        trailingIcon = { StudentImage() },
+        leadingIcon = {
+            EditButton(
+                onClick = {
+                    navController.navigate(TrainerNavigationScreen.WorkoutSheet.route + "/${"id"}")
+                }
+            )
+        }
     )
 
     Spacer(modifier = Modifier.height(12.dp))

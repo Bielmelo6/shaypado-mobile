@@ -4,137 +4,115 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
+import com.ufape.shaypado.ui.screens.signUp.UserPhysicalEvaluationFormEvent
+import com.ufape.shaypado.ui.screens.signUp.UserPhysicalEvaluationFormState
 import com.ufape.shaypado.ui.screens.trainer.createUser.UserFormEvent
 import com.ufape.shaypado.ui.screens.trainer.createUser.UserFormState
+import com.ufape.shaypado.util.ISafeNetworkHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkoutSheetViewModel @Inject constructor(
-
+    private val handler: ISafeNetworkHandler,
+    private val trainerRepository: ITrainerRepository
 ) : ViewModel() {
 
-    var studentsData by mutableStateOf(UserFormState())
+    var studentsData by mutableStateOf(UserPhysicalEvaluationFormState())
+
+    var userName by mutableStateOf("")
 
 
-    fun onUserDataEvent(event: UserFormEvent) {
+    private fun updatePhysicalEvaluation() {
+
+    }
+
+
+    fun onUserDataEvent(event: UserPhysicalEvaluationFormEvent) {
         when (event) {
-            is UserFormEvent.OnNameChanged -> {
-                studentsData = studentsData.copy(name = event.name)
-            }
-
-            is UserFormEvent.OnEmailChanged -> {
-                studentsData = studentsData.copy(email = event.email)
-            }
-
-            is UserFormEvent.OnAbdomenCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnAbdomenCircumferenceChanged ->  {
                 studentsData = studentsData.copy(abdomenCircumference = event.abdomenCircumference)
             }
-
-            is UserFormEvent.OnAbdominalFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnAbdominalFoldChanged ->  {
                 studentsData = studentsData.copy(abdominalFold = event.abdominalFold)
             }
-
-            is UserFormEvent.OnAgeChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnAgeChanged ->  {
                 studentsData = studentsData.copy(age = event.age)
             }
-
-            is UserFormEvent.OnArmCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnArmCircumferenceChanged -> {
                 studentsData = studentsData.copy(armCircumference = event.armCircumference)
             }
-
-            is UserFormEvent.OnAxialFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnAxialFoldChanged ->  {
                 studentsData = studentsData.copy(axialFold = event.axialFold)
             }
-
-            is UserFormEvent.OnBicepsFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnBicepsFoldChanged ->  {
                 studentsData = studentsData.copy(bicepsFold = event.bicepsFold)
             }
-
-            is UserFormEvent.OnChestFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnChestFoldChanged ->  {
                 studentsData = studentsData.copy(chestFold = event.chestFold)
             }
-
-            is UserFormEvent.OnExerciseExperienceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnExerciseExperienceChanged ->  {
                 studentsData = studentsData.copy(exerciseExperience = event.exerciseExperience)
             }
-
-            is UserFormEvent.OnFatPercentageChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnFatPercentageChanged ->  {
                 studentsData = studentsData.copy(fatPercentage = event.fatPercentage)
             }
-
-            is UserFormEvent.OnHealthIssueChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnGenderChanged ->  {
+                studentsData = studentsData.copy(gender = event.gender)
+            }
+            is UserPhysicalEvaluationFormEvent.OnHealthIssueChanged ->  {
                 studentsData = studentsData.copy(healthIssue = event.healthIssue)
             }
-
-            is UserFormEvent.OnHeightChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnHeightChanged ->  {
                 studentsData = studentsData.copy(height = event.height)
             }
-
-            is UserFormEvent.OnHipCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnHipCircumferenceChanged ->  {
                 studentsData = studentsData.copy(hipCircumference = event.hipCircumference)
             }
-
-            is UserFormEvent.OnLegCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged ->  {
                 studentsData = studentsData.copy(legCircumference = event.legCircumference)
             }
-
-            is UserFormEvent.OnLegFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnLegFoldChanged ->  {
                 studentsData = studentsData.copy(legFold = event.legFold)
             }
-
-            is UserFormEvent.OnObjectiveChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnObjectiveChanged ->  {
                 studentsData = studentsData.copy(objective = event.objective)
             }
-
-            is UserFormEvent.OnScapularFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnScapularFoldChanged -> {
                 studentsData = studentsData.copy(scapularFold = event.scapularFold)
             }
-
-            is UserFormEvent.OnShoulderCircumferenceChanged -> {
-                studentsData =
-                    studentsData.copy(shoulderCircumference = event.shoulderCircumference)
+            is UserPhysicalEvaluationFormEvent.OnShoulderCircumferenceChanged ->  {
+                studentsData = studentsData.copy(shoulderCircumference = event.shoulderCircumference)
             }
-
-            is UserFormEvent.OnSmokerChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnSmokerChanged ->  {
                 studentsData = studentsData.copy(isSmoker = event.isSmoker)
             }
-
-            is UserFormEvent.OnSpineProblemChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnSpineProblemChanged ->  {
                 studentsData = studentsData.copy(spineProblem = event.hasSpineProblem)
             }
-
-            is UserFormEvent.OnSuprailiacFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnSuprailiacFoldChanged ->  {
                 studentsData = studentsData.copy(suprailiacFold = event.suprailiacFold)
             }
-
-            is UserFormEvent.OnThighCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged ->  {
                 studentsData = studentsData.copy(thighCircumference = event.thighCircumference)
             }
-
-            is UserFormEvent.OnThighFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnThighFoldChanged ->  {
                 studentsData = studentsData.copy(thighFold = event.thighFold)
             }
-
-            is UserFormEvent.OnTricepsFoldChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnTricepsFoldChanged ->  {
                 studentsData = studentsData.copy(tricepsFold = event.tricepsFold)
             }
-
-            is UserFormEvent.OnUserTypeChanged -> {
-                studentsData = studentsData.copy(userType = event.userType)
-            }
-
-            is UserFormEvent.OnWaistCircumferenceChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnWaistCircumferenceChanged ->  {
                 studentsData = studentsData.copy(waistCircumference = event.waistCircumference)
             }
-
-            is UserFormEvent.OnWeightChanged -> {
+            is UserPhysicalEvaluationFormEvent.OnWeightChanged ->  {
                 studentsData = studentsData.copy(weight = event.weight)
             }
 
-            UserFormEvent.OnSubmit -> {}
-
-            else -> {}
+            is UserPhysicalEvaluationFormEvent.OnSubmit ->  {
+                updatePhysicalEvaluation()
+            }
         }
     }
 }

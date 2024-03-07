@@ -100,7 +100,7 @@ class CreateClassViewModel @Inject constructor(
     fun importWorkouts(workouts : List<WorkoutState>){
         val data = workouts.map { ClassWorkoutState(
             id = it.id,
-            categoryId = it.categoryId,
+            categoryId = it.category,
             category = it.category,
             title = it.name
 

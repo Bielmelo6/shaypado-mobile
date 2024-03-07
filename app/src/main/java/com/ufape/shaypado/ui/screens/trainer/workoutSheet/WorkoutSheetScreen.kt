@@ -13,23 +13,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
+import com.ufape.shaypado.ui.screens.signUp.UserPhysicalEvaluationFormEvent
 import com.ufape.shaypado.ui.screens.trainer.createUser.AgesLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.CmLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.KgLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.MmLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.PercentageLabel
-import com.ufape.shaypado.ui.screens.trainer.createUser.UserFormEvent
 
 @Composable
-fun WorkoutSheet(
-    navController: NavController
+fun WorkoutSheetScreen(
+    navController: NavController,
+    showSnackBar: (String) -> Unit,
+    studentId : String
 ) {
+    val viewModel = hiltViewModel<WorkoutSheetViewModel>()
     AppHeader(navController = navController, title = R.string.workout_sheet)
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -42,43 +48,8 @@ fun WorkoutSheet(
     )
     {
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].name,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].nameError,
-            onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnNameChanged(it)
-                )
-            },
-            placeholder = R.string.input_full_name_placeholder,
-            label = R.string.input_full_name
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].email,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].emailError,
-            onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnEmailChanged(it)
-                )
-            },
-            placeholder = R.string.input_email_placeholder,
-            label = R.string.input_email
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].password,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].passwordError,
-            onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnPasswordChanged(it)
-                )
-            },
-            placeholder = R.string.input_password_placeholder,
-            label = R.string.input_password
+            label = R.string.input_user_name,
+            value = viewModel.userName,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -90,12 +61,12 @@ fun WorkoutSheet(
                 modifier = Modifier.weight(1f)
             ) {
                 CustomTextField(
-                    value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].height,
-                    errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].heightError,
+                    value = viewModel.studentsData.height,
+                    errorMessage = viewModel.studentsData.heightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
-                        createUserViewModel.onUserDataEvent(
-                            UserFormEvent.OnHeightChanged(it)
+                        viewModel.onUserDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnHeightChanged(it)
                         )
                     },
                     trailingIcon = { CmLabel() },
@@ -110,12 +81,12 @@ fun WorkoutSheet(
 
             ) {
                 CustomTextField(
-                    value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].weight,
-                    errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].weightError,
+                    value = viewModel.studentsData.weight,
+                    errorMessage = viewModel.studentsData.weightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
-                        createUserViewModel.onUserDataEvent(
-                            UserFormEvent.OnWeightChanged(it)
+                        viewModel.onUserDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnWeightChanged(it)
                         )
                     },
                     trailingIcon = { KgLabel() },
@@ -127,29 +98,67 @@ fun WorkoutSheet(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].age,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].ageError,
-            keyboardType = KeyboardType.Number,
-            onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnAgeChanged(it)
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.weight(1f)
+            ) {
+                CustomTextField(
+                    value = viewModel.studentsData.age,
+                    errorMessage = viewModel.studentsData.ageError,
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = {
+                        viewModel.onUserDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnAgeChanged(it)
+                        )
+                    },
+                    trailingIcon = { AgesLabel() },
+                    placeholder = R.string.input_age_placeholder,
+                    label = R.string.input_age
                 )
-            },
-            trailingIcon = { AgesLabel() },
-            placeholder = R.string.input_age_placeholder,
-            label = R.string.input_age
-        )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Row(
+                modifier = Modifier.weight(1f)
+
+            ) {
+                AppDropdown(
+                    onItemSelected = { value, label ->
+                        viewModel.onUserDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnGenderChanged(
+                                value
+                            )
+                        )
+                    },
+                    label = "Gênero",
+                    error = viewModel.studentsData.genderError,
+                    selectedValue = viewModel.studentsData.gender,
+                    items = listOf(
+                        DropdownItem(
+                            value = "M",
+                            text = "Masculino"
+                        ),
+                        DropdownItem(
+                            value = "F",
+                            text = "Feminino"
+                        )
+                    )
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].armCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].armCircumferenceError,
+            value = viewModel.studentsData.armCircumference,
+            errorMessage = viewModel.studentsData.armCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnArmCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnArmCircumferenceChanged(it)
                 )
             },
             trailingIcon = { CmLabel() },
@@ -160,12 +169,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].waistCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].waistCircumferenceError,
+            value = viewModel.studentsData.waistCircumference,
+            errorMessage = viewModel.studentsData.waistCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnWaistCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnWaistCircumferenceChanged(it)
                 )
             },
             trailingIcon = { CmLabel() },
@@ -176,12 +185,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdomenCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdomenCircumferenceError,
+            value = viewModel.studentsData.abdomenCircumference,
+            errorMessage = viewModel.studentsData.abdomenCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnAbdomenCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnAbdomenCircumferenceChanged(it)
                 )
             },
             trailingIcon = { CmLabel() },
@@ -192,12 +201,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].hipCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].hipCircumferenceError,
+            value = viewModel.studentsData.hipCircumference,
+            errorMessage = viewModel.studentsData.hipCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnHipCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnHipCircumferenceChanged(it)
                 )
             },
             trailingIcon = { CmLabel() },
@@ -208,12 +217,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighCircumferenceError,
+            value = viewModel.studentsData.thighCircumference,
+            errorMessage = viewModel.studentsData.thighCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnThighCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnThighCircumferenceChanged(it)
                 )
             },
             trailingIcon = {
@@ -226,12 +235,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].scapularFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].scapularFoldError,
+            value = viewModel.studentsData.scapularFold,
+            errorMessage = viewModel.studentsData.scapularFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnScapularFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnScapularFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -242,12 +251,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legCircumference,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legCircumferenceError,
+            value = viewModel.studentsData.legCircumference,
+            errorMessage = viewModel.studentsData.legCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnLegCircumferenceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnLegCircumferenceChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -258,12 +267,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].tricepsFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].tricepsFoldError,
+            value = viewModel.studentsData.tricepsFold,
+            errorMessage = viewModel.studentsData.tricepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnTricepsFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnTricepsFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -275,12 +284,12 @@ fun WorkoutSheet(
 
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].bicepsFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].bicepsFoldError,
+            value = viewModel.studentsData.bicepsFold,
+            errorMessage = viewModel.studentsData.bicepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnBicepsFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnBicepsFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -291,12 +300,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].chestFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].chestFoldError,
+            value = viewModel.studentsData.chestFold,
+            errorMessage = viewModel.studentsData.chestFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnChestFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnChestFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -307,12 +316,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].axialFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].axialFoldError,
+            value = viewModel.studentsData.axialFold,
+            errorMessage = viewModel.studentsData.axialFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnAxialFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnAxialFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -323,12 +332,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].suprailiacFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].suprailiacFoldError,
+            value = viewModel.studentsData.suprailiacFold,
+            errorMessage = viewModel.studentsData.suprailiacFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnSuprailiacFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnSuprailiacFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -339,12 +348,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdominalFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].abdominalFoldError,
+            value = viewModel.studentsData.abdominalFold,
+            errorMessage = viewModel.studentsData.abdominalFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnAbdominalFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnAbdominalFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -355,12 +364,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].thighFoldError,
+            value = viewModel.studentsData.thighFold,
+            errorMessage = viewModel.studentsData.thighFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnThighFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnThighFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -371,12 +380,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legFold,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].legFoldError,
+            value = viewModel.studentsData.legFold,
+            errorMessage = viewModel.studentsData.legFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnLegFoldChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnLegFoldChanged(it)
                 )
             },
             trailingIcon = { MmLabel() },
@@ -387,12 +396,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].healthIssue,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].healthIssueError,
+            value = viewModel.studentsData.healthIssue,
+            errorMessage = viewModel.studentsData.healthIssueError,
             keyboardType = KeyboardType.Text,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnHealthIssueChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnHealthIssueChanged(it)
                 )
             },
             placeholder = R.string.input_health_issue_placeholder,
@@ -402,12 +411,12 @@ fun WorkoutSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = createUserViewModel.studentsData[createUserViewModel.selectedStudent].fatPercentage,
-            errorMessage = createUserViewModel.studentsData[createUserViewModel.selectedStudent].fatPercentageError,
+            value = viewModel.studentsData.fatPercentage,
+            errorMessage = viewModel.studentsData.fatPercentageError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnFatPercentageChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(it)
                 )
             },
             trailingIcon = { PercentageLabel() },
@@ -419,36 +428,36 @@ fun WorkoutSheet(
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].exerciseExperience,
+            isChecked = viewModel.studentsData.exerciseExperience,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnExerciseExperienceChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnExerciseExperienceChanged(it)
                 )
             }
         )
 
         GroupedLabeledCheckbox(
             title = R.string.input_spine_problem,
-            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].spineProblem,
+            isChecked = viewModel.studentsData.spineProblem,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnSpineProblemChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnSpineProblemChanged(it)
                 )
             }
         )
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = createUserViewModel.studentsData[createUserViewModel.selectedStudent].isSmoker,
+            isChecked = viewModel.studentsData.isSmoker,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
-                createUserViewModel.onUserDataEvent(
-                    UserFormEvent.OnSmokerChanged(it)
+                viewModel.onUserDataEvent(
+                    UserPhysicalEvaluationFormEvent.OnSmokerChanged(it)
                 )
             }
         )
@@ -459,8 +468,8 @@ fun WorkoutSheet(
     AppButton(
         text = R.string.button_register,
         onClick = {
-            createUserViewModel.onUserDataEvent(
-                UserFormEvent.OnSubmit
+            viewModel.onUserDataEvent(
+                UserPhysicalEvaluationFormEvent.OnSubmit
             )
         }
     )

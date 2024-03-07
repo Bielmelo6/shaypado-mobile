@@ -31,7 +31,6 @@ fun ClassState.toCreateRequest() = CreateClassRequest(
 )
 
 fun ClassState.toUpdateRequest() = UpdateClassRequest(
-    id = id,
     name = name,
     daysOfWeek = daysOfWeek,
     startTime = startTime,

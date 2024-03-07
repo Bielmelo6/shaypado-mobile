@@ -6,7 +6,9 @@ import com.ufape.shaypado.ui.model.ExerciseState
 data class CreateExerciseRequest(
     @SerializedName("title")
     val title: String,
-    @SerializedName("category")
+    @SerializedName("workoutType")
+    val workoutType: List<String>,
+    @SerializedName("description")
     val description: String,
     @SerializedName("video_url")
     val videoUrl: String?,
@@ -16,6 +18,8 @@ data class CreateExerciseRequest(
     val repetitions: String,
     @SerializedName("time")
     val time: String,
+    @SerializedName("end_exercise")
+    val endExercise: Boolean = false,
 )
 
 data class UpdateExerciseRequest(

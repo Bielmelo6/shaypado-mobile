@@ -1,10 +1,8 @@
 package com.ufape.shaypado.ui.model
 
-
 data class UserState(
     val name: String,
     val email: String,
-    val password: String,
 
     val fatPercentage: String?,
     val armCircumference: String?,
@@ -28,8 +26,10 @@ data class UserState(
     val healthIssue: String?,
     val scapularFold: String?,
     val objective: String?,
-    val exerciseExperience: Boolean,
-    val spineProblem: Boolean,
-    val isSmoker: Boolean
+    val exerciseExperience: Boolean?,
+    val spineProblem: Boolean ,
+    val isSmoker: Boolean,
+    val gender : String?,
 )
+
 
