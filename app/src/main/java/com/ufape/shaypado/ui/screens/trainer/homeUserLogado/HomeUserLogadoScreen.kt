@@ -25,9 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ufape.shaypado.ui.components.AddButton
+import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.BackButton
 import com.ufape.shaypado.ui.components.ButtonVariant
+import com.ufape.shaypado.ui.components.EditButton
 import com.ufape.shaypado.ui.components.NextButton
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.theme.PerfilShaypado2Icon
@@ -41,6 +44,11 @@ fun HomeUserLogadoScreen(navController: NavController) {
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.matchParentSize()) {
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                EditButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {})
+                AddButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {})
+            }
+            Spacer(modifier = Modifier.height(12.dp))
             Card(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
@@ -123,6 +131,8 @@ fun HomeUserLogadoScreen(navController: NavController) {
                     CardHomeLogado(navController)
                 }
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            AppButton(onClick = {}, variant = ButtonVariant.PRIMARY, text = "Iniciar")
         }
     }
 }
