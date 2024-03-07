@@ -1,6 +1,7 @@
 package com.ufape.shaypado.ui.routes
 
 import HomeUserLogadoScreen
+import PetNvlScreen
 import SocialNetworkScreen
 import UserDetailsPersonalScreen
 import UserTrainingScreen
@@ -167,6 +168,15 @@ sealed class TrainerNavigationScreen(
         )
     )
 
+    data object PetNvl : TrainerNavigationScreen(
+        "pet_nvl",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
     data object ClassDetails : TrainerNavigationScreen(
         "class_details",
     )
@@ -316,6 +326,14 @@ fun TrainerRoutes(
             composable(TrainerNavigationScreen.SocialNetwork.route) {
                 Container {
                     SocialNetworkScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.PetNvl.route) {
+                Container {
+                    PetNvlScreen(
                         navController
                     )
                 }

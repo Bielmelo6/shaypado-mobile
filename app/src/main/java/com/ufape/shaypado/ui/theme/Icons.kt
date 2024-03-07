@@ -3,9 +3,12 @@ package com.ufape.shaypado.ui.theme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -172,9 +175,15 @@ fun PerfilShaypado2Icon() {
 //}
 
 @Composable
-fun MedalImage2() {
-    Image(painter = painterResource(id = R.drawable.ic_medalha_menor), contentDescription = "Medal")
+fun MedalImage() {
+    Image(painter = painterResource(id = R.drawable.ic_medalha_1), contentDescription = "Medal")
 }
+
+@Composable
+fun PetAxolotImage() {
+    Image(painter = painterResource(id = R.drawable.axolot_sh), contentDescription = "AxolotPet")
+}
+
 
 @Composable
 @Preview
