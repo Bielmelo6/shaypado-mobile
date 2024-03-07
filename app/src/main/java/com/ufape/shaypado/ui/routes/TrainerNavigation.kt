@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.routes
 
+import HomeUserLogadoScreen
 import UserDetailsPersonalScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -138,6 +139,15 @@ sealed class TrainerNavigationScreen(
         )
     )
 
+    data object HomeUserLogado : TrainerNavigationScreen(
+        "home_user_logado",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
     data object ClassDetails : TrainerNavigationScreen(
         "class_details",
     )
@@ -263,6 +273,14 @@ fun TrainerRoutes(
             composable(TrainerNavigationScreen.Classes.route) {
                 Container {
                     TrainerHomeScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.HomeUserLogado.route) {
+                Container {
+                    HomeUserLogadoScreen(
                         navController
                     )
                 }
