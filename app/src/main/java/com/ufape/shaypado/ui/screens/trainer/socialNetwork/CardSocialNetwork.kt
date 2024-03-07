@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.TextType
-import com.ufape.shaypado.ui.theme.MedalImage2
+import com.ufape.shaypado.ui.theme.MedalImage
 import com.ufape.shaypado.ui.theme.PerfilShaypado2Icon
 
 @Composable
@@ -48,7 +48,7 @@ fun CardSocialNetwork() {
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier
-                    .width(180.dp)
+                    .width(190.dp)
                     .fillMaxHeight(), horizontalAlignment = Alignment.Start
             ) {
                 AppText(
@@ -74,8 +74,8 @@ fun CardSocialNetwork() {
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(24.dp))
-            MedalImage2()
+            Spacer(modifier = Modifier.width(18.dp))
+            MedalImage()
         }
     }
     HorizontalDivider(
