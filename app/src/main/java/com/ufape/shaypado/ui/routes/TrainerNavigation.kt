@@ -224,7 +224,7 @@ fun TrainerRoutes(
             composable(TrainerNavigationScreen.Classes.route) {
                 Container {
                     TrainerHomeScreen(
-                        navController
+                        navController, ::showSnackBar
                     )
                 }
             }

@@ -55,6 +55,7 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.screens.shimmers.TrainerHomeShimmer
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -62,25 +63,44 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun TrainerHomeScreen(
-    navController: NavController
+    navController: NavController,
+    showSnackBar: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TrainerHomeViewModel>()
     val context = LocalContext.current
 
-    val classesData by viewModel.classesData.collectAsState(initial = Result.Loading)
+    var status by remember { mutableStateOf<Result<Unit>>(Result.Loading) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchClasses()
     }
 
-    if (classesData is Result.Loading) {
-        return AppText(
-            text = R.string.loading,
-        )
+    LaunchedEffect(key1 = viewModel.classesData) {
+        viewModel.classesData.collect {
+            when (it) {
+                is Result.Loading -> {
+                    status = it
+                }
+
+                is Result.Success -> {
+                    status = it
+                }
+
+                is Result.Error -> {
+                    showSnackBar(it.exception.getErrorMessage(context))
+                    status = it
+                }
+            }
+        }
     }
-    if (classesData is Result.Error) {
+
+    if (status is Result.Loading) {
+        return TrainerHomeShimmer()
+    }
+
+    if (status is Result.Error) {
         return AppText(
-            text = (classesData as Result.Error).exception.getErrorMessage(context)
+            text = (status as Result.Error).exception.getErrorMessage(context)
         )
     }
 
@@ -111,7 +131,7 @@ fun TrainerHomeScreen(
         })
     }
 
-    LazyRow (
+    LazyRow(
         state = lazyListState,
         modifier = Modifier
             .fillMaxWidth(),
@@ -157,7 +177,7 @@ fun TrainerHomeScreen(
                 },
                 onPress = {
                     navController.navigate(
-                        TrainerNavigationScreen.StudentDetails.route + "/${viewModel.classes[visibleClassIndex].students[it].friendshipCode}"
+                        TrainerNavigationScreen.StudentDetails.shortName + "/${viewModel.classes[visibleClassIndex].students[it].friendshipCode}"
                     )
                 }
             )
