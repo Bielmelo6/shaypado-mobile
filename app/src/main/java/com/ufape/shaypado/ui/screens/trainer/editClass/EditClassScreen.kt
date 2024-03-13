@@ -51,6 +51,7 @@ import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun EditClassScreen(
+    viewModel: EditClassViewModel,
     navController: NavController,
     classId: String,
     showSnackbar: (String) -> Unit
@@ -113,12 +114,7 @@ fun EditClassScreen(
     if (showImportFriends) {
         return ImportFriendsScreen(
             navController = navController,
-            onImport = {
-                editClassViewModel.importFriends(it)
-            },
-            onBackPressed = {
-                showImportFriends = false
-            }
+
         )
     }
 

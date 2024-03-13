@@ -1,5 +1,10 @@
 package com.ufape.shaypado.ui.routes
 
+import HomeUserLogadoScreen
+import PetNvlScreen
+import SocialNetworkScreen
+import UserDetailsPersonalScreen
+import UserTrainingScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,15 +37,21 @@ import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.CreateTrainingsScreen
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
+import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.importWorkouts.ImportWorkoutsScreen
+import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
 import com.ufape.shaypado.ui.screens.trainer.updateWorkout.UpdateWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workoutSheet.WorkoutSheetScreen
+import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
+import com.ufape.shaypado.ui.screens.trainer.userPersonalList.UserPersonalListScreen
+import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
+import com.ufape.shaypado.ui.screens.trainer.userProfile.UserWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
@@ -82,6 +93,86 @@ sealed class TrainerNavigationScreen(
         "trainer_settings",
         BottomBarItemStyle(
             R.string.settings,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserProfile : TrainerNavigationScreen(
+        "user_profile",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object SocialNetwork : TrainerNavigationScreen(
+        "social_network",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserTraining : TrainerNavigationScreen(
+        "user_training",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+    data object UserFriends : TrainerNavigationScreen(
+        "user_friends",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserWorkout : TrainerNavigationScreen(
+        "user_workout",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserPersonalList : TrainerNavigationScreen(
+        "user_personal_list",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserDetailsPersonal : TrainerNavigationScreen(
+        "user_details_personal",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object HomeUserLogado : TrainerNavigationScreen(
+        "home_user_logado",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object PetNvl : TrainerNavigationScreen(
+        "pet_nvl",
+        BottomBarItemStyle(
+            R.string.profile,
             R.drawable.ic_nav_settings,
             R.drawable.ic_nav_settings
         )
@@ -230,6 +321,80 @@ fun TrainerRoutes(
             }
 
             composable(TrainerNavigationScreen.ClassDetails.route) { backStackEntry ->
+            composable(TrainerNavigationScreen.HomeUserLogado.route) {
+                Container {
+                    HomeUserLogadoScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserProfile.route) {
+                Container {
+                    UserProfileScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.SocialNetwork.route) {
+                Container {
+                    SocialNetworkScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.PetNvl.route) {
+                Container {
+                    PetNvlScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserProfile.route) {
+                Container {
+                    UserDetailsPersonalScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserPersonalList.route) {
+                Container {
+                    UserPersonalListScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserWorkout.route) {
+                Container {
+                    UserWorkoutScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserFriends.route) {
+                Container {
+                    UserFriendsScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(TrainerNavigationScreen.UserTraining.route) {
+                Container {
+                    UserTrainingScreen(
+                        navController
+                    )
+                }
+            }
+
+
+            composable(TrainerNavigationScreen.ClassDetails.route) {
                 Container {
                     ClassDetailsScreen(
                         navController,
@@ -412,6 +577,18 @@ fun TrainerRoutes(
             }
 
 
+
+            composable(TrainerNavigationScreen.ImportFriends.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    ImportFriendsScreen(
+                        navController = navController,
+                        onImport = editClassViewModel::importFriends
+                    )
+                }
+            }
         }
     }
 }

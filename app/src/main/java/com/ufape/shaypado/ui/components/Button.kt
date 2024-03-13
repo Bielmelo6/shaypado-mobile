@@ -168,11 +168,13 @@ fun EditButton(
 
     val containerColor = when (variant) {
         ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.primary
+        ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.secondaryContainer
         else -> MaterialTheme.colorScheme.tertiaryContainer
     }
 
     val iconColor = when (variant) {
         ButtonVariant.PRIMARY -> MaterialTheme.colorScheme.onPrimary
+        ButtonVariant.SECONDARY_CONTAINER -> MaterialTheme.colorScheme.onSecondaryContainer
         else -> MaterialTheme.colorScheme.onTertiaryContainer
     }
 

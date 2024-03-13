@@ -1,15 +1,22 @@
 package com.ufape.shaypado.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.ufape.shaypado.R
 
 @Composable
 @Preview
-fun KeyIcon(){
+fun KeyIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_key),
@@ -19,7 +26,7 @@ fun KeyIcon(){
 
 @Composable
 @Preview
-fun EyeIcon(){
+fun EyeIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_eye_show),
@@ -29,7 +36,7 @@ fun EyeIcon(){
 
 @Composable
 @Preview
-fun EyeSlashIcon(){
+fun EyeSlashIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_eye_hide),
@@ -38,10 +45,9 @@ fun EyeSlashIcon(){
 }
 
 
-
 @Composable
 @Preview
-fun AtIcon(){
+fun AtIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_at),
@@ -51,7 +57,7 @@ fun AtIcon(){
 
 @Composable
 @Preview
-fun EmailIcon(){
+fun EmailIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_email),
@@ -61,7 +67,7 @@ fun EmailIcon(){
 
 @Composable
 @Preview
-fun PersonIcon(){
+fun PersonIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_person),
@@ -71,7 +77,7 @@ fun PersonIcon(){
 
 @Composable
 @Preview
-fun UserIcon(){
+fun UserIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_user),
@@ -81,7 +87,7 @@ fun UserIcon(){
 
 @Composable
 @Preview
-fun UserOutlinedIcon(){
+fun UserOutlinedIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_user_outlined),
@@ -91,7 +97,7 @@ fun UserOutlinedIcon(){
 
 @Composable
 @Preview
-fun SmilingFaceIcon(){
+fun SmilingFaceIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_smilling_face),
@@ -101,7 +107,7 @@ fun SmilingFaceIcon(){
 
 @Composable
 @Preview
-fun BackIcon(){
+fun BackIcon() {
     Icon(
         tint = textSecondary,
         painter = painterResource(id = R.drawable.ic_back),
@@ -111,7 +117,7 @@ fun BackIcon(){
 
 @Composable
 @Preview
-fun ShaypadoImage(){
+fun ShaypadoImage() {
     Image(
         painter = painterResource(id = R.drawable.ic_shaypado_name),
         contentDescription = "Shaypado"
@@ -120,7 +126,7 @@ fun ShaypadoImage(){
 
 @Composable
 @Preview
-fun GoogleImage(){
+fun GoogleImage() {
     Image(
         painter = painterResource(id = R.drawable.ic_google),
         contentDescription = "Google"
@@ -129,7 +135,16 @@ fun GoogleImage(){
 
 @Composable
 @Preview
-fun ShaypadoPetImage(){
+fun WhatsappImage() {
+    Image(
+        painter = painterResource(id = R.drawable.whatsapp),
+        contentDescription = "Whatsapp"
+    )
+}
+
+@Composable
+@Preview
+fun ShaypadoPetImage() {
     Image(
         painter = painterResource(id = R.drawable.brand_logo),
         contentDescription = "Shaypado logo"
@@ -138,7 +153,7 @@ fun ShaypadoPetImage(){
 
 @Composable
 @Preview
-fun InfoIcon(){
+fun InfoIcon() {
     Icon(
         painter = painterResource(id = R.drawable.ic_info),
         contentDescription = "Info"
@@ -147,7 +162,32 @@ fun InfoIcon(){
 
 @Composable
 @Preview
-fun BarbellIcon(){
+fun PerfilShaypado2Icon() {
+    Image(
+        painter = painterResource(id = R.drawable.ic_sh_perfil_2),
+        contentDescription = "Perfil2"
+    )
+}
+
+//@Composable
+//fun MedalImage() {
+//    Image(painter = painterResource(id = R.drawable.ic_medalha), contentDescription = "Medal",)
+//}
+
+@Composable
+fun MedalImage() {
+    Image(painter = painterResource(id = R.drawable.ic_medalha_1), contentDescription = "Medal")
+}
+
+@Composable
+fun PetAxolotImage() {
+    Image(painter = painterResource(id = R.drawable.axolot_sh), contentDescription = "AxolotPet")
+}
+
+
+@Composable
+@Preview
+fun BarbellIcon() {
     Icon(
         painter = painterResource(id = R.drawable.ic_barbell),
         contentDescription = "Info"
@@ -171,3 +211,4 @@ fun StudentImage() {
         contentDescription = "Student",
     )
 }
+

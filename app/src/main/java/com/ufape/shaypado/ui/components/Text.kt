@@ -22,6 +22,7 @@ enum class TextType {
     LABEL_MEDIUM,
     LABEL_SMALL,
     LABEL_LARGE,
+    BODY_SMALL,
     BODY_LARGE,
     BODY_MEDIUM,
     HEADLINE_LARGE,
@@ -49,6 +50,7 @@ fun AppText(
         TextType.LABEL_MEDIUM -> MaterialTheme.typography.labelMedium
         TextType.LABEL_SMALL -> MaterialTheme.typography.labelSmall
         TextType.LABEL_LARGE -> MaterialTheme.typography.labelLarge
+        TextType.BODY_SMALL -> MaterialTheme.typography.bodySmall
         TextType.BODY_LARGE -> MaterialTheme.typography.bodyLarge
         TextType.BODY_MEDIUM -> MaterialTheme.typography.bodyMedium
         TextType.HEADLINE_LARGE -> MaterialTheme.typography.headlineLarge
@@ -92,6 +94,7 @@ fun AppText(
         TextType.LABEL_MEDIUM -> MaterialTheme.typography.labelMedium
         TextType.LABEL_SMALL -> MaterialTheme.typography.labelSmall
         TextType.LABEL_LARGE -> MaterialTheme.typography.labelLarge
+        TextType.BODY_SMALL -> MaterialTheme.typography.bodySmall
         TextType.BODY_LARGE -> MaterialTheme.typography.bodyLarge
         TextType.BODY_MEDIUM -> MaterialTheme.typography.bodyMedium
         TextType.HEADLINE_LARGE -> MaterialTheme.typography.headlineLarge
