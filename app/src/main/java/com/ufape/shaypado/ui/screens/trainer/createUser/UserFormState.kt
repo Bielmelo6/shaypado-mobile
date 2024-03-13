@@ -70,7 +70,9 @@ data class UserFormState(
     @StringRes val objectiveError: Int? = null,
     val exerciseExperience: Boolean = false,
     val spineProblem: Boolean = false,
-    val isSmoker: Boolean = false
+    val isSmoker: Boolean = false,
+    val gender : String = "",
+    @StringRes val genderError : Int? = null
 )
 
 fun UserFormState.toRequest () = UserRequest(
@@ -102,6 +104,7 @@ fun UserFormState.toRequest () = UserRequest(
     exerciseExperience = exerciseExperience,
     spineProblem = spineProblem,
     isSmoker = isSmoker,
+    gender = gender
 )
 
 sealed class UserFormEvent {

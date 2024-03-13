@@ -166,8 +166,7 @@ fun TimePicker(
     try {
         selectedHour = time.substringBefore(":").toInt()
         selectedMinute = time.substringAfter(":").toInt()
-    } catch (e: Exception){
-        e.printStackTrace()
+    } catch (_: Exception){
     }
 
     var showPicker by rememberSaveable { mutableStateOf(false) }

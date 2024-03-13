@@ -1,5 +1,6 @@
 package com.ufape.shaypado.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ fun AppDropdown(
     items: List<DropdownItem> = listOf(),
     onItemSelected: (String, String) -> Unit,
     label: String = "",
+    @StringRes error : Int? = null,
     selectedValue: String = ""
 ) {
     var expanded by remember { mutableStateOf(false) }

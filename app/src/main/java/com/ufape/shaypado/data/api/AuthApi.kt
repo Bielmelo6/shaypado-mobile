@@ -6,7 +6,6 @@ import com.ufape.shaypado.data.model.LoginResponse
 import com.ufape.shaypado.data.model.TrainerRequest
 import com.ufape.shaypado.data.model.UploadResponse
 import com.ufape.shaypado.data.model.UserRequest
-import com.ufape.shaypado.data.model.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

@@ -1,10 +1,11 @@
 package com.ufape.shaypado.data.repositories.implementations
 
 import com.ufape.shaypado.data.api.ClassApi
-import com.ufape.shaypado.data.model.ClassResponse
 import com.ufape.shaypado.data.model.CreateClassRequest
 import com.ufape.shaypado.data.model.UpdateClassRequest
+import com.ufape.shaypado.data.model.toUiModel
 import com.ufape.shaypado.data.repositories.interfaces.IClassRepository
+import com.ufape.shaypado.ui.model.ClassState
 import com.ufape.shaypado.util.getApiError
 import com.ufape.shaypado.util.Result
 
@@ -20,10 +21,10 @@ class ClassRepository(
         }
     }
 
-    override suspend fun updateClass(classData: UpdateClassRequest): Result<ClassResponse> {
-        val result = api.updateClass(classData)
+    override suspend fun updateClass(id : String, classData: UpdateClassRequest): Result<ClassState> {
+        val result = api.updateClass(id, classData)
         return if (result.isSuccessful) {
-            Result.Success(result.body()!!)
+            Result.Success(result.body()!!.toUiModel())
         } else {
             Result.Error(result.getApiError())
         }
@@ -38,19 +39,19 @@ class ClassRepository(
         }
     }
 
-    override suspend fun getClasses(): Result<List<ClassResponse>> {
+    override suspend fun getClasses(): Result<List<ClassState>> {
         val result = api.getClasses()
         return if (result.isSuccessful) {
-            Result.Success(result.body()!!)
+            Result.Success(result.body()!!.map { it.toUiModel() })
         } else {
             Result.Error(result.getApiError())
         }
     }
 
-    override suspend fun getClass(id: String): Result<ClassResponse> {
+    override suspend fun getClass(id: String): Result<ClassState> {
         val result = api.getClass(id)
         return if (result.isSuccessful) {
-            Result.Success(result.body()!!)
+            Result.Success(result.body()!!.toUiModel())
         } else {
             Result.Error(result.getApiError())
         }

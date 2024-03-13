@@ -1,4 +1,4 @@
-package com.ufape.shaypado.ui.screens.trainer.importFriends
+package com.ufape.shaypado.ui.screens.trainer.importWorkouts
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,8 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ufape.shaypado.data.repositories.interfaces.IFriendRepository
+import com.ufape.shaypado.data.repositories.interfaces.IWorkoutRepository
 import com.ufape.shaypado.ui.model.FriendState
-import com.ufape.shaypado.ui.model.FriendsState
+import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,40 +18,40 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ImportFriendsViewModel @Inject constructor(
+class ImportWorkoutsViewModel @Inject constructor(
     private val handler: ISafeNetworkHandler,
-    private val friendsRepository: IFriendRepository
+    private val workoutsRepository: IWorkoutRepository
 ) : ViewModel(){
-    private val _friendsData = Channel<Result<Unit>>()
-    val friendsData = _friendsData.receiveAsFlow()
+    private val _workoutData = Channel<Result<Unit>>()
+    val workoutData = _workoutData.receiveAsFlow()
 
-    var friends by mutableStateOf<List<FriendState>>(listOf())
+    var workouts by mutableStateOf<List<WorkoutState>>(listOf())
 
     fun fetchFriends() {
         viewModelScope.launch {
-            _friendsData.send(Result.Loading)
+            _workoutData.send(Result.Loading)
 
             val result = handler.makeSafeApiCall {
-                friendsRepository.getFriends()
+                workoutsRepository.getWorkouts()
             }
 
             if (result is Result.Success) {
-                friends = result.data.friends
-                _friendsData.send(Result.Success(Unit))
+                workouts = result.data
+                _workoutData.send(Result.Success(Unit))
             }else if (result is Result.Error){
-                _friendsData.send(result)
+                _workoutData.send(result)
             }
         }
     }
 
-    fun toggleFriend(key: Int){
-        val newFriend = friends.toMutableList().mapIndexed { index, friend ->
+    fun toggleWorkout(key: Int){
+        val newFriend = workouts.toMutableList().mapIndexed { index, friend ->
             if (key == index){
                 friend.copy(isSelected = !friend.isSelected)
             }else {
                 friend
             }
         }
-        friends = newFriend
+        workouts = newFriend
     }
 }

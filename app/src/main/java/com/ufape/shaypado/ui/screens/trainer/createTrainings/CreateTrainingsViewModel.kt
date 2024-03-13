@@ -6,11 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.repositories.interfaces.IExerciseRepository
+import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.data.repositories.interfaces.IWorkoutRepository
 import com.ufape.shaypado.ui.model.CategoryState
 import com.ufape.shaypado.ui.model.ExerciseState
 import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.ui.model.toCreateRequest
+import com.ufape.shaypado.ui.model.toRequest
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTrainingsViewModel @Inject constructor(
     private val handler: ISafeNetworkHandler,
-    private val repository: IWorkoutRepository
+    private val repository: IWorkoutRepository,
+    private val exerciseRepository: IExerciseRepository
 ) : ViewModel() {
     var numberOfTrainings by mutableIntStateOf(0)
 
@@ -46,6 +50,27 @@ class CreateTrainingsViewModel @Inject constructor(
         }
     }
 
+    fun createExercise() {
+        viewModelScope.launch {
+            val result = handler.makeSafeApiCall {
+                exerciseRepository.addExercise(
+                    exerciseData.toRequest()
+                )
+            }
+
+            if (result is Result.Success) {
+                val updatedTrainingData = trainingsData.mapIndexed { index, training ->
+                    if (index == selectedTraining) {
+                        training.copy(exercises = training.exercises + result.data)
+                    } else {
+                        training
+                    }
+                }
+                trainingsData = updatedTrainingData
+            }
+        }
+    }
+
     fun fetchCategories() {
         viewModelScope.launch {
             val result = handler.makeSafeApiCall {
@@ -63,7 +88,7 @@ class CreateTrainingsViewModel @Inject constructor(
             is TrainingsFormEvent.OnCategoryChanged -> {
                 val newTrainingsData = trainingsData.toMutableList()
                 newTrainingsData[selectedTraining] =
-                    newTrainingsData[selectedTraining].copy(categoryId = event.id, category = event.category)
+                    newTrainingsData[selectedTraining].copy(category = event.category)
                 trainingsData = newTrainingsData
             }
 
@@ -142,14 +167,11 @@ class CreateTrainingsViewModel @Inject constructor(
             }
 
             ExerciseFormEvent.OnSubmit -> {
-                val updatedTrainingData = trainingsData.mapIndexed { index, training ->
-                    if (index == selectedTraining) {
-                        training.copy(exercises = training.exercises + exerciseData)
-                    } else {
-                        training
-                    }
-                }
-                trainingsData = updatedTrainingData
+               createExercise()
+            }
+
+            is ExerciseFormEvent.OnCategoryChanged -> {
+                exerciseData = exerciseData.copy(category = event.category, categoryId = event.id)
             }
         }
     }

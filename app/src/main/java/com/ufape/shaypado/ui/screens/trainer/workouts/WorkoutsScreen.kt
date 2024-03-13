@@ -80,7 +80,8 @@ fun WorkoutsScreen(
     }
 
     if (workoutsData is Result.Error) {
-        showSnackBar("Error fetching workouts")
+        showSnackBar((workoutsData as Result.Error).exception.getErrorMessage(context))
+
         return
     }
 

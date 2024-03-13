@@ -18,6 +18,9 @@ data class ExerciseState(
     @StringRes val repetitionsError: Int? = null,
     val time: String = "00:00",
     @StringRes val timeError: Int? = null,
+    val category: String = "",
+    val categoryId: String = "",
+    @StringRes val categoryIdError: Int? = null,
 )
 
 fun ExerciseState.toRequest() = CreateExerciseRequest(
@@ -26,7 +29,8 @@ fun ExerciseState.toRequest() = CreateExerciseRequest(
     videoUrl = videoUrl,
     series = series,
     repetitions = repetitions,
-    time = time
+    time = time,
+    workoutType = listOf(categoryId)
 )
 
 fun ExerciseState.toUpdateRequest() = UpdateExerciseRequest(

@@ -20,9 +20,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.CustomTextField
+import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
@@ -70,6 +72,30 @@ fun ProfileFormScreen(
             },
             navController = navController
         ) {
+
+            AppDropdown(
+                onItemSelected = { value, label ->
+                    viewModel.onPhysicalEvaluationDataEvent(
+                        UserPhysicalEvaluationFormEvent.OnGenderChanged(
+                            value
+                        )
+                    )
+                },
+                label = "Gênero",
+                error = viewModel.userPhysicalEvaluationDataState.genderError,
+                selectedValue = viewModel.userPhysicalEvaluationDataState.gender,
+                items = listOf(
+                    DropdownItem(
+                        value = "M",
+                        text = "Masculino"
+                    ),
+                    DropdownItem(
+                        value = "F",
+                        text = "Feminino"
+                    )
+                )
+            )
+
             CustomTextField(
                 value = viewModel.userPhysicalEvaluationDataState.weight,
                 errorMessage = viewModel.userPhysicalEvaluationDataState.weightError,

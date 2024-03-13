@@ -15,23 +15,23 @@ import retrofit2.http.Query
 
 interface ClassApi {
     @Headers("Content-Type: application/json")
-    @POST("/create_class")
+    @POST("/classes")
     suspend fun addClasses(@Body data : List<CreateClassRequest>) : Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @PUT("/update_class")
-    suspend fun updateClass(@Body data : UpdateClassRequest) : Response<ClassResponse>
+    @PUT("/classes/{id}")
+    suspend fun updateClass(@Path("id") id : String, @Body data : UpdateClassRequest) : Response<ClassResponse>
 
     @Headers("Content-Type: application/json")
-    @DELETE("/delete_class")
+    @DELETE("/classes/{id}")
     suspend fun deleteClass(@Path("id") id : String) : Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @GET("/get_classes")
+    @GET("/classes")
     suspend fun getClasses() : Response<List<ClassResponse>>
 
     @Headers("Content-Type: application/json")
-    @GET("/get_class")
-    suspend fun getClass(@Query("id") id: String) : Response<ClassResponse>
+    @GET("/classes/{id}")
+    suspend fun getClass(@Path("id") id: String) : Response<ClassResponse>
 }
 

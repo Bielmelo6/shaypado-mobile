@@ -47,6 +47,7 @@ fun CustomTextField(
     @StringRes errorMessage: Int? = null,
     onValueChange: (String) -> Unit = {},
     trailingIcon: @Composable (() -> Unit) = {},
+    enabled : Boolean = true,
     format: (String) -> String = { it },
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -76,6 +77,7 @@ fun CustomTextField(
                 val formattedData = format(it)
                 onValueChange(formattedData)
             },
+            enabled = enabled,
             isError = hasError,
             shape = RoundedCornerShape(8.dp),
             textStyle = MaterialTheme.typography.labelMedium.plus(TextStyle(color = textSecondary)),

@@ -53,6 +53,7 @@ fun UserAccountFormState.toRequest(physicalEvaluationData : UserPhysicalEvaluati
         objective = physicalEvaluationData.objective,
         exerciseExperience = physicalEvaluationData.exerciseExperience,
         spineProblem = physicalEvaluationData.spineProblem,
-        isSmoker = physicalEvaluationData.isSmoker
+        isSmoker = physicalEvaluationData.isSmoker,
+        gender = physicalEvaluationData.gender
     )
 }

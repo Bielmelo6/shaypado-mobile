@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -36,6 +37,9 @@ import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.EditButton
 import com.ufape.shaypado.ui.components.TimePicker
+import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.ui.screens.shimmers.ErrorScreen
+import com.ufape.shaypado.ui.screens.shimmers.TrainerHomeShimmer
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.ExerciseFormEvent
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.TrainingsFormEvent
 import com.ufape.shaypado.ui.screens.trainer.home.Dropdown
@@ -55,14 +59,23 @@ fun UpdateWorkoutScreen(
     var showEditExerciseDialog by rememberSaveable { mutableStateOf(false) }
 
     val updateWorkoutViewModel = hiltViewModel<UpdateWorkoutViewModel>()
-    val workoutData by updateWorkoutViewModel.workoutData.collectAsState(
-        initial = Result.Loading
-    )
+    var workoutData by remember { mutableStateOf<Result<WorkoutState>>(Result.Loading) }
 
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         updateWorkoutViewModel.fetchWorkout(workoutId)
+    }
+
+    LaunchedEffect(key1 = updateWorkoutViewModel.workoutData) {
+        updateWorkoutViewModel.workoutData.collect {
+            workoutData = if (it is Result.Error) {
+                showSnackBar(it.exception.getErrorMessage(context))
+                it
+            } else {
+                it
+            }
+        }
     }
 
     LaunchedEffect(key1 = updateWorkoutViewModel.workoutUpdateEvent) {
@@ -76,17 +89,13 @@ fun UpdateWorkoutScreen(
     }
 
     if (workoutData is Result.Error) {
-        AppText(
-            text = (workoutData as Result.Error).exception.getErrorMessage(LocalContext.current),
-        )
-        return
+       return ErrorScreen {
+            updateWorkoutViewModel.fetchWorkout(workoutId)
+       }
     }
 
     if (workoutData is Result.Loading) {
-        AppText(
-            text = R.string.loading,
-        )
-        return
+        return TrainerHomeShimmer()
     }
 
     val categories = updateWorkoutViewModel.categoriesData.map {
@@ -119,19 +128,20 @@ fun UpdateWorkoutScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        AppDropdown(
-            items = categories,
-            onItemSelected = { value, label ->
+
+        CustomTextField(
+            label = R.string.training_category,
+            value = updateWorkoutViewModel.workoutState.category,
+            onValueChange = {
                 updateWorkoutViewModel.onWorkoutEvent(
                     TrainingsFormEvent.OnCategoryChanged(
-                        id = value,
-                        category = label
+                        category = it
                     )
                 )
             },
-            label = "Categoria",
-            selectedValue = updateWorkoutViewModel.workoutState.categoryId,
+            placeholder = R.string.training_category_placeholder,
         )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -218,6 +228,23 @@ fun UpdateWorkoutScreen(
                 updateWorkoutViewModel.onCreateExerciseEvent(ExerciseFormEvent.OnTitleChanged(it))
             },
             placeholder = R.string.exercise_title_placeholder,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        AppDropdown(
+            items = categories,
+            onItemSelected = { value, label ->
+                updateWorkoutViewModel.onEditExerciseEvent(
+                    ExerciseFormEvent.OnCategoryChanged(
+                        id = value,
+                        category = label
+                    )
+                )
+            },
+            label = "Categoria",
+            selectedValue = updateWorkoutViewModel.editExerciseData.categoryId,
         )
 
         Spacer(modifier = Modifier.height(16.dp))

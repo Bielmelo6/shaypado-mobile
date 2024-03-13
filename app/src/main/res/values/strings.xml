@@ -240,5 +240,12 @@
     <string name="remove_exercise">Remover exercício</string>
     <string name="create_exercise">Criar exercício</string>
     <string name="update_exercise">Atualziar exercício</string>
+    <string name="error_loading_friends">Erro ao carregar amigos</string>
+    <string name="import_workouts">Importar treinos</string>
+    <string name="delete_class_confirmation">Tem certeza que deseja remover essa turma? Todos os alunos dela perderão acesso aos treinos.</string>
+    <string name="delete">Deletar</string>
+    <string name="workout_sheet">Ficha de treino</string>
+    <string name="try_again_message">Ops! Parece que houve algum erro ao obter\nesses dados.</string>
+    <string name="try_again">Tentar novamente</string>
 
 </resources>

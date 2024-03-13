@@ -36,7 +36,7 @@ class UpdateWorkoutViewModel @Inject constructor(
     var editExerciseData by mutableStateOf(ExerciseState())
     var categoriesData by mutableStateOf<List<CategoryState>>(emptyList())
 
-    private val _workoutData = Channel<Result<Unit>>()
+    private val _workoutData = Channel<Result<WorkoutState>>()
     val workoutData = _workoutData.receiveAsFlow()
 
     private val _workoutUpdateEvent = Channel<Result<Unit>>()
@@ -58,7 +58,7 @@ class UpdateWorkoutViewModel @Inject constructor(
 
             if (result is Result.Success && categories is Result.Success) {
                 categoriesData = categories.data
-                _workoutData.send(Result.Success(Unit))
+                _workoutData.send(Result.Success(result.data))
 
                 workoutState = workoutState.copy(
                     name = result.data.name,
@@ -66,7 +66,7 @@ class UpdateWorkoutViewModel @Inject constructor(
                     exercises = result.data.exercises
                 )
             } else {
-                _workoutData.send(Result.Error(Exception("Error fetching workout")))
+                _workoutData.send(result)
             }
         }
     }
@@ -75,7 +75,7 @@ class UpdateWorkoutViewModel @Inject constructor(
         when (event) {
             is TrainingsFormEvent.OnCategoryChanged -> {
                 workoutState =
-                    workoutState.copy(categoryId = event.id, category = event.category)
+                    workoutState.copy(category = event.category)
             }
 
             is TrainingsFormEvent.OnExercisesChanged -> {
@@ -148,7 +148,6 @@ class UpdateWorkoutViewModel @Inject constructor(
                     }
                 }
                 workoutState = workoutState.copy(exercises = newExercises)
-                _workoutData.send(Result.Success(Unit))
             } else if (result is Result.Error) {
                 _workoutData.send(result)
             }
@@ -183,6 +182,10 @@ class UpdateWorkoutViewModel @Inject constructor(
 
             is ExerciseFormEvent.OnVideoUrlChanged -> {
                 editExerciseData = editExerciseData.copy(videoUrl = event.videoUrl)
+            }
+
+            is ExerciseFormEvent.OnCategoryChanged -> {
+                editExerciseData = editExerciseData.copy(category = event.category, categoryId = event.id)
             }
 
             is ExerciseFormEvent.OnSubmit -> {
