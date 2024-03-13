@@ -226,8 +226,7 @@ fun CreateClassesScreen(
                     AddButton(
                         onClick = {
                             navController.navigate(TrainerNavigationScreen.ImportFriends.route)
-                            shouldShowForm = true
-                        }
+                            shouldShowForm = true                        }
                     )
                 }
             ) {

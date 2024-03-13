@@ -31,18 +31,15 @@ import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.screens.trainer.classDetails.ClassDetailsScreen
-import com.ufape.shaypado.ui.screens.trainer.classDetails.EditClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.createClass.CreateClassesScreen
 import com.ufape.shaypado.ui.screens.trainer.createTrainings.CreateTrainingsScreen
 import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
 import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassScreen
-import com.ufape.shaypado.ui.screens.trainer.editClass.EditClassViewModel
 import com.ufape.shaypado.ui.screens.trainer.friends.FriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.home.TrainerHomeScreen
 import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.importWorkouts.ImportWorkoutsScreen
-import com.ufape.shaypado.ui.screens.trainer.importFriends.ImportFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
@@ -124,6 +121,7 @@ sealed class TrainerNavigationScreen(
             R.drawable.ic_nav_settings
         )
     )
+
     data object UserFriends : TrainerNavigationScreen(
         "user_friends",
         BottomBarItemStyle(
@@ -222,17 +220,17 @@ sealed class TrainerNavigationScreen(
         shortName = "edit_workout"
     )
 
+    data object WorkoutSheet : TrainerNavigationScreen(
+        "workout_sheet/{studentId}",
+        shortName = "workout_sheet"
+    )
+
     data object ImportFriends : TrainerNavigationScreen(
         "friends_import"
     )
 
     data object ImportWorkouts : TrainerNavigationScreen(
         "workouts_import"
-    )
-
-    data object WorkoutSheet : TrainerNavigationScreen(
-        "workout_sheet/{studentId}",
-        shortName = "workout_sheet"
     )
 }
 
@@ -321,6 +319,13 @@ fun TrainerRoutes(
             }
 
             composable(TrainerNavigationScreen.ClassDetails.route) { backStackEntry ->
+                Container {
+                    ClassDetailsScreen(
+                        navController,
+                        classId = backStackEntry.arguments?.getString("classId")!!
+                    )
+                }
+            }
             composable(TrainerNavigationScreen.HomeUserLogado.route) {
                 Container {
                     HomeUserLogadoScreen(
@@ -369,6 +374,34 @@ fun TrainerRoutes(
                 }
             }
 
+            composable(
+                TrainerNavigationScreen.ImportFriends.route,
+            ) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    ImportFriendsScreen(
+                        navController = navController,
+                        onImport = createClassViewModel::importFriends,
+                    )
+                }
+            }
+
+            composable(
+                TrainerNavigationScreen.ImportWorkouts.route,
+            ) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    ImportWorkoutsScreen(
+                        navController = navController,
+                        onImport = createClassViewModel::importWorkouts,
+                    )
+                }
+            }
+
             composable(TrainerNavigationScreen.UserWorkout.route) {
                 Container {
                     UserWorkoutScreen(
@@ -394,7 +427,7 @@ fun TrainerRoutes(
             }
 
 
-            composable(TrainerNavigationScreen.ClassDetails.route) {
+            composable(TrainerNavigationScreen.ClassDetails.route) { backStackEntry ->
                 Container {
                     ClassDetailsScreen(
                         navController,
@@ -409,14 +442,14 @@ fun TrainerRoutes(
                     resetSnackBarMessage = { resetSnackBarMessage() }
                 ) {
                     EditClassScreen(
-                        navController,
+                        navController = navController,
                         classId = backStackEntry.arguments?.getString("classId")!!,
-                        showSnackbar = ::showSnackBar
+                        showSnackbar = ::showSnackBar,
                     )
                 }
             }
 
-            composable(TrainerNavigationScreen.StudentDetails.route) {backstackENtry ->
+            composable(TrainerNavigationScreen.StudentDetails.route) { backstackENtry ->
                 Container {
                     StudentDetailsScreen(
                         navController,
@@ -532,35 +565,6 @@ fun TrainerRoutes(
                 }
             }
 
-
-            composable(
-                TrainerNavigationScreen.ImportFriends.route,
-            ) {
-                Container(
-                    snackBarMessage = snackbarMessage,
-                    resetSnackBarMessage = { resetSnackBarMessage() }
-                ) {
-                    ImportFriendsScreen(
-                        navController = navController,
-                        onImport = createClassViewModel::importFriends,
-                    )
-                }
-            }
-
-            composable(
-                TrainerNavigationScreen.ImportWorkouts.route,
-            ) {
-                Container(
-                    snackBarMessage = snackbarMessage,
-                    resetSnackBarMessage = { resetSnackBarMessage() }
-                ) {
-                    ImportWorkoutsScreen(
-                        navController = navController,
-                        onImport = createClassViewModel::importWorkouts,
-                    )
-                }
-            }
-
             composable(
                 TrainerNavigationScreen.WorkoutSheet.route,
             ) { backStackEntry ->
@@ -572,20 +576,6 @@ fun TrainerRoutes(
                         navController = navController,
                         showSnackBar = ::showSnackBar,
                         studentId = backStackEntry.arguments?.getString("studentId")!!
-                    )
-                }
-            }
-
-
-
-            composable(TrainerNavigationScreen.ImportFriends.route) {
-                Container(
-                    snackBarMessage = snackbarMessage,
-                    resetSnackBarMessage = { resetSnackBarMessage() }
-                ) {
-                    ImportFriendsScreen(
-                        navController = navController,
-                        onImport = editClassViewModel::importFriends
                     )
                 }
             }
