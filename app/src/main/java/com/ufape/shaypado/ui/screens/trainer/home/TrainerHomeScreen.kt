@@ -51,10 +51,12 @@ import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AddButton
 import com.ufape.shaypado.ui.components.AppButton
+import com.ufape.shaypado.ui.components.AppHeader
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.screens.shimmers.ErrorScreen
 import com.ufape.shaypado.ui.screens.shimmers.TrainerHomeShimmer
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
@@ -77,19 +79,12 @@ fun TrainerHomeScreen(
 
     LaunchedEffect(key1 = viewModel.classesData) {
         viewModel.classesData.collect {
-            when (it) {
-                is Result.Loading -> {
-                    status = it
-                }
-
-                is Result.Success -> {
-                    status = it
-                }
-
+            status = when (it) {
                 is Result.Error -> {
                     showSnackBar(it.exception.getErrorMessage(context))
-                    status = it
+                    it
                 }
+                else -> it
             }
         }
     }
@@ -99,9 +94,9 @@ fun TrainerHomeScreen(
     }
 
     if (status is Result.Error) {
-        return AppText(
-            text = (status as Result.Error).exception.getErrorMessage(context)
-        )
+        return ErrorScreen {
+            viewModel.fetchClasses()
+        }
     }
 
     if (viewModel.classes.isEmpty()) {
@@ -123,13 +118,17 @@ fun TrainerHomeScreen(
         AppText(
             textType = TextType.HEADLINE_MEDIUM,
             textAlignment = TextAlign.Center,
-            text = R.string.edit_class,
+            text = R.string.home,
         )
 
+
         AddButton(onClick = {
-            navController.popBackStack()
+            navController.navigate(TrainerNavigationScreen.CreateClasses.route)
         })
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
 
     LazyRow(
         state = lazyListState,
@@ -311,12 +310,13 @@ fun ClassDetailsRenderItem(
     description: String = "Descrição",
     students: Int = 0,
     day: String = "S",
+    fillWidth: Boolean = false,
     onPress: (() -> Unit)? = null
 ) {
-    val modifier = if (onPress != null) Modifier.clickable { onPress() } else Modifier
+    var modifier = if (onPress != null) Modifier.clickable { onPress() } else Modifier
+    modifier = if (fillWidth) modifier.fillMaxWidth() else modifier.width(350.dp)
     Row(
         modifier = modifier
-            .width(350.dp)
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(8.dp)

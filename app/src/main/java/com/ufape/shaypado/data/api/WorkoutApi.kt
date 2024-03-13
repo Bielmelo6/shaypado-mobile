@@ -28,11 +28,11 @@ interface WorkoutApi {
     suspend fun deleteWorkout(@Path("id") id : String): Response<Unit>
 
     @Headers("Content-Type: application/json")
-    @GET("/workouts/workout")
+    @GET("/workouts/{id}")
     suspend fun getWorkout(@Query("id") id: String): Response<WorkoutResponse>
 
     @Headers("Content-Type: application/json")
-    @POST("/workouts//multiple-create-workouts")
+    @POST("/workouts/multiple-create-workouts")
     suspend fun createWorkouts(@Body data: List<CreateWorkoutRequest>): Response<Unit>
 
     @Headers("Content-Type: application/json")
@@ -40,7 +40,7 @@ interface WorkoutApi {
     suspend fun updateWorkout(@Body data: UpdateWorkoutRequest): Response<WorkoutResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/workouts/workout-types")
+    @GET("/workout/workout-types")
     suspend fun fetchWorkoutCategories(): Response<List<CategoryResponse>>
 
     @Multipart

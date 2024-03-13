@@ -49,7 +49,7 @@ fun NavGraphBuilder.authNavGraph(
         startDestination = AuthNavigationScreen.OnBoard.route
     ) {
         composable(AuthNavigationScreen.OnBoard.route) {
-            OnBoardScreen(navController)
+            OnBoardScreen()
         }
         composable(AuthNavigationScreen.Login.route) {
             LoginScreen(navController, authViewModel)

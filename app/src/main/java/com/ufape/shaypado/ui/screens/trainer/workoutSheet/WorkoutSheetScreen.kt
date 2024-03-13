@@ -10,7 +10,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +33,9 @@ import com.ufape.shaypado.ui.screens.trainer.createUser.CmLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.KgLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.MmLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.PercentageLabel
+import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsViewModel
+import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
 fun WorkoutSheetScreen(
@@ -35,7 +43,21 @@ fun WorkoutSheetScreen(
     showSnackBar: (String) -> Unit,
     studentId : String
 ) {
-    val viewModel = hiltViewModel<WorkoutSheetViewModel>()
+    val viewModel = hiltViewModel<StudentDetailsViewModel>()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchStudent(studentId)
+    }
+
+    LaunchedEffect(key1 = viewModel.studentData) {
+        viewModel.studentData.collect {
+            if (it is Result.Error) {
+                showSnackBar(it.exception.getErrorMessage(context))
+            }
+        }
+    }
+
     AppHeader(navController = navController, title = R.string.workout_sheet)
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -48,8 +70,9 @@ fun WorkoutSheetScreen(
     )
     {
         CustomTextField(
+            enabled = false,
             label = R.string.input_user_name,
-            value = viewModel.userName,
+            value = viewModel.physicalFormState.name,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -61,8 +84,8 @@ fun WorkoutSheetScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 CustomTextField(
-                    value = viewModel.studentsData.height,
-                    errorMessage = viewModel.studentsData.heightError,
+                    value = viewModel.physicalFormState.height,
+                    errorMessage = viewModel.physicalFormState.heightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
                         viewModel.onUserDataEvent(
@@ -81,8 +104,8 @@ fun WorkoutSheetScreen(
 
             ) {
                 CustomTextField(
-                    value = viewModel.studentsData.weight,
-                    errorMessage = viewModel.studentsData.weightError,
+                    value = viewModel.physicalFormState.weight,
+                    errorMessage = viewModel.physicalFormState.weightError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
                         viewModel.onUserDataEvent(
@@ -106,8 +129,8 @@ fun WorkoutSheetScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 CustomTextField(
-                    value = viewModel.studentsData.age,
-                    errorMessage = viewModel.studentsData.ageError,
+                    value = viewModel.physicalFormState.age,
+                    errorMessage = viewModel.physicalFormState.ageError,
                     keyboardType = KeyboardType.Number,
                     onValueChange = {
                         viewModel.onUserDataEvent(
@@ -134,8 +157,8 @@ fun WorkoutSheetScreen(
                         )
                     },
                     label = "Gênero",
-                    error = viewModel.studentsData.genderError,
-                    selectedValue = viewModel.studentsData.gender,
+                    error = viewModel.physicalFormState.genderError,
+                    selectedValue = viewModel.physicalFormState.gender,
                     items = listOf(
                         DropdownItem(
                             value = "M",
@@ -153,8 +176,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.armCircumference,
-            errorMessage = viewModel.studentsData.armCircumferenceError,
+            value = viewModel.physicalFormState.armCircumference,
+            errorMessage = viewModel.physicalFormState.armCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -169,8 +192,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.waistCircumference,
-            errorMessage = viewModel.studentsData.waistCircumferenceError,
+            value = viewModel.physicalFormState.waistCircumference,
+            errorMessage = viewModel.physicalFormState.waistCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -185,8 +208,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.abdomenCircumference,
-            errorMessage = viewModel.studentsData.abdomenCircumferenceError,
+            value = viewModel.physicalFormState.abdomenCircumference,
+            errorMessage = viewModel.physicalFormState.abdomenCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -201,8 +224,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.hipCircumference,
-            errorMessage = viewModel.studentsData.hipCircumferenceError,
+            value = viewModel.physicalFormState.hipCircumference,
+            errorMessage = viewModel.physicalFormState.hipCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -217,8 +240,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.thighCircumference,
-            errorMessage = viewModel.studentsData.thighCircumferenceError,
+            value = viewModel.physicalFormState.thighCircumference,
+            errorMessage = viewModel.physicalFormState.thighCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -235,8 +258,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.scapularFold,
-            errorMessage = viewModel.studentsData.scapularFoldError,
+            value = viewModel.physicalFormState.scapularFold,
+            errorMessage = viewModel.physicalFormState.scapularFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -251,8 +274,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.legCircumference,
-            errorMessage = viewModel.studentsData.legCircumferenceError,
+            value = viewModel.physicalFormState.legCircumference,
+            errorMessage = viewModel.physicalFormState.legCircumferenceError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -267,8 +290,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.tricepsFold,
-            errorMessage = viewModel.studentsData.tricepsFoldError,
+            value = viewModel.physicalFormState.tricepsFold,
+            errorMessage = viewModel.physicalFormState.tricepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -284,8 +307,8 @@ fun WorkoutSheetScreen(
 
 
         CustomTextField(
-            value = viewModel.studentsData.bicepsFold,
-            errorMessage = viewModel.studentsData.bicepsFoldError,
+            value = viewModel.physicalFormState.bicepsFold,
+            errorMessage = viewModel.physicalFormState.bicepsFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -300,8 +323,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.chestFold,
-            errorMessage = viewModel.studentsData.chestFoldError,
+            value = viewModel.physicalFormState.chestFold,
+            errorMessage = viewModel.physicalFormState.chestFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -316,8 +339,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.axialFold,
-            errorMessage = viewModel.studentsData.axialFoldError,
+            value = viewModel.physicalFormState.axialFold,
+            errorMessage = viewModel.physicalFormState.axialFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -332,8 +355,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.suprailiacFold,
-            errorMessage = viewModel.studentsData.suprailiacFoldError,
+            value = viewModel.physicalFormState.suprailiacFold,
+            errorMessage = viewModel.physicalFormState.suprailiacFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -348,8 +371,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.abdominalFold,
-            errorMessage = viewModel.studentsData.abdominalFoldError,
+            value = viewModel.physicalFormState.abdominalFold,
+            errorMessage = viewModel.physicalFormState.abdominalFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -364,8 +387,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.thighFold,
-            errorMessage = viewModel.studentsData.thighFoldError,
+            value = viewModel.physicalFormState.thighFold,
+            errorMessage = viewModel.physicalFormState.thighFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -380,8 +403,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.legFold,
-            errorMessage = viewModel.studentsData.legFoldError,
+            value = viewModel.physicalFormState.legFold,
+            errorMessage = viewModel.physicalFormState.legFoldError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -396,8 +419,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.healthIssue,
-            errorMessage = viewModel.studentsData.healthIssueError,
+            value = viewModel.physicalFormState.healthIssue,
+            errorMessage = viewModel.physicalFormState.healthIssueError,
             keyboardType = KeyboardType.Text,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -411,8 +434,8 @@ fun WorkoutSheetScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         CustomTextField(
-            value = viewModel.studentsData.fatPercentage,
-            errorMessage = viewModel.studentsData.fatPercentageError,
+            value = viewModel.physicalFormState.fatPercentage,
+            errorMessage = viewModel.physicalFormState.fatPercentageError,
             keyboardType = KeyboardType.Number,
             onValueChange = {
                 viewModel.onUserDataEvent(
@@ -428,7 +451,7 @@ fun WorkoutSheetScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = viewModel.studentsData.exerciseExperience,
+            isChecked = viewModel.physicalFormState.exerciseExperience,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
@@ -440,7 +463,7 @@ fun WorkoutSheetScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_spine_problem,
-            isChecked = viewModel.studentsData.spineProblem,
+            isChecked = viewModel.physicalFormState.spineProblem,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {
@@ -452,7 +475,7 @@ fun WorkoutSheetScreen(
 
         GroupedLabeledCheckbox(
             title = R.string.input_smoker,
-            isChecked = viewModel.studentsData.isSmoker,
+            isChecked = viewModel.physicalFormState.isSmoker,
             checkedLabel = R.string.yes,
             unCheckedLabel = R.string.no,
             onCheckedChange = {

@@ -18,11 +18,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,9 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.TextType
+import com.ufape.shaypado.ui.model.TrainerProfileData
 import com.ufape.shaypado.ui.routes.TrainerNavigationScreen
+import com.ufape.shaypado.ui.screens.shimmers.TextShimmer
 import com.ufape.shaypado.ui.theme.BarbellIcon
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.copyToClipboard
@@ -40,36 +43,29 @@ import com.ufape.shaypado.util.getErrorMessage
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    showSnackBar: (String) -> Unit
 ) {
     val context = LocalContext.current
 
     val viewModel = hiltViewModel<SettingsViewModel>()
-    val userProfileData by viewModel.userProfileData.collectAsState(
-        initial = Result.Loading
-    )
+    var userStatus by remember { mutableStateOf<Result<TrainerProfileData>>(Result.Loading) }
+
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfileData()
     }
 
-    if (userProfileData is Result.Error) {
-        AppText(
-            text = (userProfileData as Result.Error).exception.getErrorMessage(context),
-            color = Color.Red
-        )
-        return
+    LaunchedEffect(key1 = viewModel.userProfileData) {
+        viewModel.userProfileData.collect {
+            userStatus =  if (it is Result.Error){
+                showSnackBar(it.exception.getErrorMessage(context))
+                it
+            }else {
+                it
+            }
+        }
     }
-
-    if (userProfileData is Result.Loading) {
-        AppText(
-            text = "Loading",
-            color = Color.Black
-        )
-        return
-    }
-
-    val user = (userProfileData as Result.Success).data
 
     Row(
         modifier = Modifier
@@ -89,15 +85,22 @@ fun SettingsScreen(
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-            AppText(
-                text = user.name,
-                textType = TextType.HEADLINE_SMALL,
-            )
+            if (userStatus is Result.Success) {
+                val user = (userStatus as Result.Success).data
+                AppText(
+                    text = user.name,
+                    textType = TextType.HEADLINE_SMALL,
+                )
 
-            AppText(
-                text = user.email,
-                textType = TextType.TITLE_SMALL,
-            )
+                AppText(
+                    text = user.email,
+                    textType = TextType.TITLE_SMALL,
+                )
+            } else {
+                TextShimmer(0.8f)
+                Spacer(modifier = Modifier.height(4.dp))
+                TextShimmer(0.5f)
+            }
 
         }
     }
@@ -202,35 +205,57 @@ fun SettingsScreen(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(139.dp)
-                .border(
-                    width = 3.dp,
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    shape = RoundedCornerShape(size = 8.dp)
-                )
-                .clickable {
-                    context.copyToClipboard(
-                        label = "Código de amizade",
-                        text = user.friendshipCode
+        if (userStatus is Result.Success) {
+            val user = (userStatus as Result.Success).data
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(139.dp)
+                    .border(
+                        width = 3.dp,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(size = 8.dp)
                     )
-                },
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AppText(
-                text = "Seu código de amizade é",
-                textType = TextType.BODY_MEDIUM,
-            )
+                    .clickable {
+                        context.copyToClipboard(
+                            label = "Código de amizade",
+                            text = user.friendshipCode
+                        )
+                    },
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AppText(
+                    text = "Seu código de amizade é",
+                    textType = TextType.BODY_MEDIUM,
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            AppText(
-                text = user.friendshipCode,
-                textType = TextType.DISPLAY_LARGE,
-                color = MaterialTheme.colorScheme.outline
-            )
+                Spacer(modifier = Modifier.height(16.dp))
+                AppText(
+                    text = user.friendshipCode,
+                    textType = TextType.DISPLAY_LARGE,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(139.dp)
+                    .border(
+                        width = 3.dp,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextShimmer(0.8f)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextShimmer(0.5f)
+            }
         }
     }
 }

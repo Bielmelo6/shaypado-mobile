@@ -245,5 +245,7 @@
     <string name="delete_class_confirmation">Tem certeza que deseja remover essa turma? Todos os alunos dela perderão acesso aos treinos.</string>
     <string name="delete">Deletar</string>
     <string name="workout_sheet">Ficha de treino</string>
+    <string name="try_again_message">Ops! Parece que houve algum erro ao obter\nesses dados.</string>
+    <string name="try_again">Tentar novamente</string>
 
 </resources>

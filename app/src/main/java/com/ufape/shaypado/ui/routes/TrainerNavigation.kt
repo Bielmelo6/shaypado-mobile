@@ -276,7 +276,8 @@ fun TrainerRoutes(
                 Container {
                     SettingsScreen(
                         navController = navController,
-                        onLogout = logOutAction
+                        onLogout = logOutAction,
+                        showSnackBar = ::showSnackBar
                     )
                 }
             }

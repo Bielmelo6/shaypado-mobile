@@ -2,6 +2,7 @@ package com.ufape.shaypado.data.model
 
 import com.google.gson.annotations.SerializedName
 import com.ufape.shaypado.ui.model.UserState
+import com.ufape.shaypado.ui.model.UserWithWorkoutState
 
 data class UserRequest(
     @SerializedName("name")
@@ -126,7 +127,22 @@ data class UserResponse(
 )
 
 
-data class PhishycalEvaluation(
+data class UserResponseWithWorkouts(
+    @SerializedName("user")
+    val user: UserResponse,
+    @SerializedName("workouts")
+    val workouts: List<WorkoutResponse>
+)
+
+fun UserResponseWithWorkouts.toUiModel() = UserWithWorkoutState(
+    user = user.toUiModel(),
+    workouts = workouts.map { it.toUiModel() }
+)
+
+
+data class UpdatePhysicalFormRequest(
+    @SerializedName("id")
+    val id: String,
     @SerializedName("fat_percentage")
     val fatPercentage: String?,
     @SerializedName("arm_circumference")

@@ -57,7 +57,7 @@ fun Routes(authViewModel: AuthViewModel) {
     }
 
     fun navigateToRoot() {
-        navController.navigate(AuthNavigationScreen.NavRoot.route) {
+        navController.navigate(AuthNavigationScreen.Login.route) {
             popUpTo(AuthNavigationScreen.NavRoot.route) {
                 inclusive = true
             }
@@ -75,6 +75,8 @@ fun Routes(authViewModel: AuthViewModel) {
 
                     else -> navigateToRoot()
                 }
+            }else {
+                navigateToRoot()
             }
         }
     }

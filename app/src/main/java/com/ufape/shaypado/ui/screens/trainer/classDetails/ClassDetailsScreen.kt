@@ -96,7 +96,8 @@ fun ClassDetailsScreen(
     ClassDetailsRenderItem(
         name = classInfo.name,
         description = classInfo.startTime + " - " + classInfo.endTime,
-        students = classInfo.students.size
+        students = classInfo.students.size,
+        fillWidth = true
     )
 
     Spacer(modifier = Modifier.height(16.dp))
