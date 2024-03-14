@@ -84,6 +84,7 @@ fun TrainerHomeScreen(
                     showSnackBar(it.exception.getErrorMessage(context))
                     it
                 }
+
                 else -> it
             }
         }
@@ -243,6 +244,7 @@ fun TrainingDetailsRenderItem(
     trailingButtonDisabled: Boolean = false,
     onTrailingButtonPressed: () -> Unit = { },
     onLeadingButtonPressed: () -> Unit = { },
+    trailingIcon: @Composable () -> Unit = { },
 ) {
     Column(
         modifier = Modifier
@@ -253,17 +255,25 @@ fun TrainingDetailsRenderItem(
             )
             .padding(16.dp)
     ) {
-        AppText(
-            fillWidth = true,
-            textType = TextType.TITLE_MEDIUM,
-            text = title,
-        )
+        Row {
+            Column (
+                modifier = Modifier
+                    .weight(1f),
+            ) {
+                AppText(
+                    fillWidth = true,
+                    textType = TextType.TITLE_MEDIUM,
+                    text = title,
+                )
 
-        AppText(
-            fillWidth = true,
-            textType = TextType.TITLE_SMALL,
-            text = description,
-        )
+                AppText(
+                    fillWidth = true,
+                    textType = TextType.TITLE_SMALL,
+                    text = description,
+                )
+            }
+            trailingIcon()
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
