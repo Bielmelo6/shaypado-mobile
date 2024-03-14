@@ -1,5 +1,10 @@
 package com.ufape.shaypado.ui.routes
 
+import HomeUserLogadoScreen
+import PetNvlScreen
+import SocialNetworkScreen
+import UserDetailsPersonalScreen
+import UserStartWorkoutScreen
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -16,10 +21,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,8 +42,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
-import com.ufape.shaypado.ui.components.AddButton
-import com.ufape.shaypado.ui.screens.trainer.createUser.AddUserScreen
+import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
+import com.ufape.shaypado.ui.screens.trainer.userPersonalList.UserPersonalListScreen
+import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
 
 data class BottomBarItemStyle(
     @StringRes val title: Int,
@@ -76,18 +83,73 @@ sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomB
         BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_settings, R.drawable.ic_nav_settings)
     )
 
-    data object Tela : MobileNavigationScreen(
-        "tela_nome"
+    data object SocialNetwork : TrainerNavigationScreen(
+        "social_network",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserTraining : TrainerNavigationScreen(
+        "user_training",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserFriends : TrainerNavigationScreen(
+        "user_friends",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserWorkout : TrainerNavigationScreen(
+        "user_workout/{workoutId}",
+        shortName = "user_workout",
+        barItemStyle = BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object UserPersonalList : TrainerNavigationScreen(
+        "user_personal_list",
+    )
+
+    data object UserDetailsPersonal : TrainerNavigationScreen(
+        "user_details_personal",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
+    )
+
+    data object Notifications : TrainerNavigationScreen(
+        "trainer_notifications",
+        BottomBarItemStyle(
+            R.string.profile,
+            R.drawable.ic_notifications,
+            R.drawable.ic_notifications
+        )
     )
 }
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val bottomTabItems = listOf(
-        MobileNavigationScreen.Pet,
+        MobileNavigationScreen.Profile,
         MobileNavigationScreen.Progress,
         MobileNavigationScreen.Home,
-        MobileNavigationScreen.Profile,
+        MobileNavigationScreen.Pet,
         MobileNavigationScreen.Settings,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -202,6 +264,16 @@ fun MobileRoutes(
     logOutAction: () -> Unit
 ) {
     val navController: NavHostController = rememberNavController()
+    var snackbarMessage: String? by remember { mutableStateOf(null) }
+
+    fun showSnackBar(message: String) {
+        snackbarMessage = message
+    }
+
+    fun resetSnackBarMessage() {
+        snackbarMessage = null
+    }
+
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { innerPadding ->
@@ -211,51 +283,75 @@ fun MobileRoutes(
             Modifier.padding(innerPadding)
         ) {
             composable(MobileNavigationScreen.Home.route) {
-                Home(navController, logOutAction)
-            }
-            composable(MobileNavigationScreen.Pet.route) {
-                Pet(navController)
-            }
-            composable(MobileNavigationScreen.Progress.route) {
-                Progress(navController)
-            }
-            composable(MobileNavigationScreen.Profile.route) {
-                Profile(navController)
-            }
-            composable(MobileNavigationScreen.Settings.route) {
-                Settings(navController)
+                Container (
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = ::resetSnackBarMessage
+                ) {
+                    HomeUserLogadoScreen(
+                        navController = navController,
+                        showSnackbar = ::showSnackBar
+                    )
+                }
             }
 
-            composable(MobileNavigationScreen.Tela.route) {
-                Text(text = "Tela")
+            composable(MobileNavigationScreen.Profile.route) {
+                Container {
+                    UserProfileScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.SocialNetwork.route) {
+                Container {
+                    SocialNetworkScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.Pet.route) {
+                Container {
+                    PetNvlScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.Profile.route) {
+                Container {
+                    UserDetailsPersonalScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.UserPersonalList.route) {
+                Container {
+                    UserPersonalListScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.UserWorkout.route) {backStackEntry ->
+
+                Container {
+                    UserStartWorkoutScreen(
+                        navController = navController,
+                        showSnackbar = ::showSnackBar,
+                        workoutId = backStackEntry.arguments?.getString("workoutId")!!
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.UserFriends.route) {
+                Container {
+                    UserFriendsScreen(
+                        navController
+                    )
+                }
             }
         }
     }
-}
-
-@Composable
-fun Home(navController: NavController, logOutAction: () -> Unit) {
-    AddUserScreen(
-        navController, {}
-    )
-}
-
-@Composable
-fun Pet(navController: NavController) {
-    Text(text = "Pet")
-}
-
-@Composable
-fun Progress(navController: NavController) {
-    Text(text = "Progress")
-}
-
-@Composable
-fun Profile(navController: NavController) {
-    Text(text = "Profile")
-}
-
-@Composable
-fun Settings(navController: NavController) {
-    Text(text = "Settings")
 }
