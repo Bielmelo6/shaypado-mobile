@@ -1,10 +1,12 @@
 package com.ufape.shaypado.ui.screens.onBoard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,48 +30,39 @@ import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.model.UserType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.screens.login.AuthViewModel
+import com.ufape.shaypado.ui.theme.ShaypadoImage
 import com.ufape.shaypado.ui.theme.ShaypadoPetImage
 import com.ufape.shaypado.ui.theme.White
 
 @Composable
+@Preview
 fun OnBoardScreen() {
-
-    Box(
+    Column(
         modifier = Modifier
+            .fillMaxSize()
             .fillMaxSize()
             .background(
                 color = MaterialTheme.colorScheme.primary,
             )
-            .padding(top = 175.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        Spacer(modifier = Modifier.height(10.dp))
+
+        ShaypadoPetImage()
+
+        ShaypadoImage(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.onPrimary,
         )
-        {
-            AppText(
-                textType = TextType.TITLE_LARGE,
-                text = R.string.welcome,
-                color = White,
-                size = 59.sp,
-            )
-            AppText(
-                textType = TextType.TITLE_MEDIUM,
-                textAlignment = TextAlign.Center,
-                text = R.string.login_app_description,
-                color = White,
-            )
 
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
-            ShaypadoPetImage()
-
-            Spacer(modifier = Modifier.height(50.dp))
-
-            CircularProgressIndicator(
-                modifier = Modifier.width(64.dp),
-                color = White
-            )
-        }
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp),
+            color = White
+        )
     }
 }

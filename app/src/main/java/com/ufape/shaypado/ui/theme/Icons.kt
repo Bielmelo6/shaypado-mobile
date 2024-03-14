@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,8 +118,14 @@ fun BackIcon() {
 
 @Composable
 @Preview
-fun ShaypadoImage() {
+fun ShaypadoImage(
+    modifier: Modifier = Modifier,
+    color : Color? = null
+) {
     Image(
+        contentScale = ContentScale.FillWidth,
+        modifier = modifier,
+        colorFilter = color?.let { androidx.compose.ui.graphics.ColorFilter.tint(it) },
         painter = painterResource(id = R.drawable.ic_shaypado_name),
         contentDescription = "Shaypado"
     )
