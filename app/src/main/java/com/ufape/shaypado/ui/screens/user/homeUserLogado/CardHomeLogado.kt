@@ -19,22 +19,24 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.TextType
-import java.time.format.TextStyle
+import com.ufape.shaypado.ui.screens.user.homeUserLogado.HomeUserViewModel
 
 @Composable
-fun CardHomeLogado(navController: NavController) {
+fun CardHomeLogado(
+    title : String,
+    description : String,
+) {
     Spacer(modifier = Modifier.height(8.dp))
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -46,7 +48,9 @@ fun CardHomeLogado(navController: NavController) {
             .clickable {},
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxSize().padding(start = 16.dp, bottom = 14.dp, top = 14.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 16.dp, bottom = 14.dp, top = 14.dp)) {
             Box(
                 modifier = Modifier
                     .height(48.dp)

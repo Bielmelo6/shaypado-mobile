@@ -1,10 +1,6 @@
 package com.ufape.shaypado.ui.routes
 
-import HomeUserLogadoScreen
-import PetNvlScreen
-import SocialNetworkScreen
-import UserDetailsPersonalScreen
-import UserTrainingScreen
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,10 +41,6 @@ import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsScreen
 import com.ufape.shaypado.ui.screens.trainer.updateProfile.UpdateTrainerProfileScreen
 import com.ufape.shaypado.ui.screens.trainer.updateWorkout.UpdateWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workoutSheet.WorkoutSheetScreen
-import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
-import com.ufape.shaypado.ui.screens.trainer.userPersonalList.UserPersonalListScreen
-import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
-import com.ufape.shaypado.ui.screens.trainer.userProfile.UserWorkoutScreen
 import com.ufape.shaypado.ui.screens.trainer.workouts.WorkoutsScreen
 
 
@@ -95,86 +87,7 @@ sealed class TrainerNavigationScreen(
         )
     )
 
-    data object UserProfile : TrainerNavigationScreen(
-        "user_profile",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
 
-    data object SocialNetwork : TrainerNavigationScreen(
-        "social_network",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object UserTraining : TrainerNavigationScreen(
-        "user_training",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object UserFriends : TrainerNavigationScreen(
-        "user_friends",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object UserWorkout : TrainerNavigationScreen(
-        "user_workout",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object UserPersonalList : TrainerNavigationScreen(
-        "user_personal_list",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object UserDetailsPersonal : TrainerNavigationScreen(
-        "user_details_personal",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object HomeUserLogado : TrainerNavigationScreen(
-        "home_user_logado",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
-
-    data object PetNvl : TrainerNavigationScreen(
-        "pet_nvl",
-        BottomBarItemStyle(
-            R.string.profile,
-            R.drawable.ic_nav_settings,
-            R.drawable.ic_nav_settings
-        )
-    )
 
     data object ClassDetails : TrainerNavigationScreen(
         "class_details/{classId}",
@@ -326,53 +239,7 @@ fun TrainerRoutes(
                     )
                 }
             }
-            composable(TrainerNavigationScreen.HomeUserLogado.route) {
-                Container {
-                    HomeUserLogadoScreen(
-                        navController
-                    )
-                }
-            }
 
-            composable(TrainerNavigationScreen.UserProfile.route) {
-                Container {
-                    UserProfileScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.SocialNetwork.route) {
-                Container {
-                    SocialNetworkScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.PetNvl.route) {
-                Container {
-                    PetNvlScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.UserProfile.route) {
-                Container {
-                    UserDetailsPersonalScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.UserPersonalList.route) {
-                Container {
-                    UserPersonalListScreen(
-                        navController
-                    )
-                }
-            }
 
             composable(
                 TrainerNavigationScreen.ImportFriends.route,
@@ -398,30 +265,6 @@ fun TrainerRoutes(
                     ImportWorkoutsScreen(
                         navController = navController,
                         onImport = createClassViewModel::importWorkouts,
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.UserWorkout.route) {
-                Container {
-                    UserWorkoutScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.UserFriends.route) {
-                Container {
-                    UserFriendsScreen(
-                        navController
-                    )
-                }
-            }
-
-            composable(TrainerNavigationScreen.UserTraining.route) {
-                Container {
-                    UserTrainingScreen(
-                        navController
                     )
                 }
             }
@@ -456,18 +299,6 @@ fun TrainerRoutes(
                         studentId = backstackENtry.arguments?.getString("studentId")!!
                     )
                 }
-            }
-
-            composable(TrainerNavigationScreen.Networking.route) {
-                Progress(navController)
-            }
-
-            composable(TrainerNavigationScreen.Progress.route) {
-                Progress(navController)
-            }
-
-            composable(TrainerNavigationScreen.Notifications.route) {
-                Profile(navController)
             }
 
             composable(TrainerNavigationScreen.Settings.route) {

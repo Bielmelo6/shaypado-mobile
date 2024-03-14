@@ -1,13 +1,17 @@
 package com.ufape.shaypado.data.repositories.interfaces
 
+import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.util.Result
+
+
 interface IUserRepository {
-    fun fetchWorkouts()
-    fun fetchWorkout()
+    suspend fun fetchWorkouts() : Result<List<WorkoutState>>
+    suspend fun fetchWorkout(id : String) : Result<WorkoutState>
 
-    fun concludeWorkout()
-    fun concludeExercise()
+    suspend fun concludeWorkout()
+    suspend fun concludeExercise()
 
-    fun fetchProfessionals()
+    suspend fun fetchProfessionals()
 
-    fun fetchProfessional()
+    suspend fun fetchProfessional()
 }
