@@ -1,13 +1,16 @@
 package com.ufape.shaypado.ui.screens.signUp
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.model.BodyFatRequest
 import com.ufape.shaypado.data.model.TrainerRequest
 import com.ufape.shaypado.data.model.UserRequest
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
+import com.ufape.shaypado.data.repositories.interfaces.IIaRepository
 import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateAge
@@ -40,7 +43,8 @@ import java.lang.Exception
 class SignUpViewModel @Inject constructor(
     private val authRepository: IAuthRepository,
     private val handler: ISafeNetworkHandler,
-    private val trainerRepository: ITrainerRepository
+    private val trainerRepository: ITrainerRepository,
+    private val apiRepository: IIaRepository,
 ) : ViewModel() {
     var userAccountDataState by mutableStateOf(UserAccountFormState())
     var userPhysicalEvaluationDataState by mutableStateOf(UserPhysicalEvaluationFormState())
@@ -54,6 +58,8 @@ class SignUpViewModel @Inject constructor(
 
     private val userRegistrationEventChannel = Channel<Result<Unit>>()
     val userRegisterEvent = userRegistrationEventChannel.receiveAsFlow()
+
+    var imagePath by mutableStateOf<String?>(null)
 
     private fun registerUser() {
         if (validationStatus.value !is Result.Success) return
@@ -86,6 +92,27 @@ class SignUpViewModel @Inject constructor(
                 val result = handler.makeSafeApiCall { authRepository.registerTrainer(data) }
                 _trainerRegistrationEventChannel.send(result)
                 resetValidationStatus()
+            }
+        }
+    }
+
+    fun fetchBodyFat(imagePath: String) {
+        Log.d("SignUpViewModel", "fetchBodyFat: $imagePath")
+        viewModelScope.launch {
+            val result = handler.makeSafeApiCall {
+                apiRepository.fetchBodyFat(
+                    BodyFatRequest(
+                        image = imagePath,
+                        height = userPhysicalEvaluationDataState.height,
+                        gender = userPhysicalEvaluationDataState.gender
+                    )
+                )
+            }
+
+            Log.d("SignUpViewModel", "fetchBodyFat: $result")
+            if (result is Result.Success) {
+                userPhysicalEvaluationDataState =
+                    userPhysicalEvaluationDataState.copy(fatPercentage = result.data.category)
             }
         }
     }
@@ -124,9 +151,14 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             if (personalFormDataState.plansDocument != null) {
                 val plansDocumentId =
-                    handler.makeSafeApiCall { authRepository.uploadPlansDocument(personalFormDataState.plansDocument!!) }
+                    handler.makeSafeApiCall {
+                        authRepository.uploadPlansDocument(
+                            personalFormDataState.plansDocument!!
+                        )
+                    }
                 if (plansDocumentId is Result.Success) {
-                    personalFormDataState = personalFormDataState.copy(plansDocumentId = plansDocumentId.data.id)
+                    personalFormDataState =
+                        personalFormDataState.copy(plansDocumentId = plansDocumentId.data.id)
                 }
             }
 
@@ -136,7 +168,8 @@ class SignUpViewModel @Inject constructor(
                     authRepository.uploadProfilePicture(personalFormDataState.profilePicture!!)
                 }
                 if (profilePictureId is Result.Success) {
-                    personalFormDataState = personalFormDataState.copy(profilePictureId = profilePictureId.data.id)
+                    personalFormDataState =
+                        personalFormDataState.copy(profilePictureId = profilePictureId.data.id)
                 }
             }
 

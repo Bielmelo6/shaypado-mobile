@@ -6,6 +6,7 @@ import com.ufape.shaypado.data.api.AuthApi
 import com.ufape.shaypado.data.api.ClassApi
 import com.ufape.shaypado.data.api.ExerciseApi
 import com.ufape.shaypado.data.api.FriendApi
+import com.ufape.shaypado.data.api.IaApi
 import com.ufape.shaypado.data.api.TrainerApi
 import com.ufape.shaypado.data.api.UserApi
 import com.ufape.shaypado.data.api.WorkoutApi
@@ -25,6 +26,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
     val BASE_URL = "http://192.168.1.111:3001"
+    val IA_BASE_URL = "http://192.168.1.111:3001"
 
     @Singleton
     @Provides
@@ -82,7 +84,8 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideExerciseApi(retrofit: Retrofit): ExerciseApi = retrofit.create(ExerciseApi::class.java)
+    fun provideExerciseApi(retrofit: Retrofit): ExerciseApi =
+        retrofit.create(ExerciseApi::class.java)
 
     @Singleton
     @Provides
@@ -99,6 +102,19 @@ object ApiModule {
     @Singleton
     @Provides
     fun friendApi(retrofit: Retrofit): FriendApi = retrofit.create(FriendApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideIaApi(): IaApi {
+
+
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(IA_BASE_URL)
+            .build()
+
+        return retrofit.create(IaApi::class.java)
+    }
 
 
 }

@@ -29,13 +29,11 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.exceptions.ApiErrorException
 import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.AppButton
-import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.AppSnackBar
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.ui.theme.EmailIcon
-import com.ufape.shaypado.ui.theme.GoogleImage
 import com.ufape.shaypado.ui.theme.KeyIcon
 import com.ufape.shaypado.ui.theme.ShaypadoImage
 import com.ufape.shaypado.util.Result
@@ -133,16 +131,6 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                             authViewModel.onLoginDataEvent(LoginFormEvent.OnSubmit)
                         }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    AppButton(
-                        variant = ButtonVariant.TERTIARY,
-                        text = R.string.button_google,
-                        onClick = {
-                            authViewModel.mockedLogin()
-                        }
-                    ) {
-                        GoogleImage()
-                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),

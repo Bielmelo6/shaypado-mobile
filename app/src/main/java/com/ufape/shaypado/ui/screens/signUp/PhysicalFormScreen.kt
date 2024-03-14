@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +35,8 @@ import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.routes.AuthNavigationScreen
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
+import com.ufape.shaypado.ui.components.Camera
+import com.ufape.shaypado.util.compressImage
 
 @Composable
 fun PhysicalFormScreen(
@@ -40,6 +46,8 @@ fun PhysicalFormScreen(
 ) {
     val context = LocalContext.current
 
+    var showCamera by remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = viewModel.userRegisterEvent) {
         viewModel.userRegisterEvent.collect {
             if (it is Result.Success) {
@@ -48,6 +56,20 @@ fun PhysicalFormScreen(
                 showSnackbar(it.exception.getErrorMessage(context))
             }
         }
+    }
+
+    if (showCamera) {
+        return Camera(
+            onBackButton = {
+                showCamera = false
+            },
+            onPicture = {
+                val file = it.compressImage(context)
+                viewModel.fetchBodyFat(file!!.absolutePath)
+                showCamera = false
+            },
+            context = context
+        )
     }
 
     AppHeader(navController = navController, title = R.string.sign_up_person_data_title)
@@ -93,7 +115,11 @@ fun PhysicalFormScreen(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row{
-                CameraButton()
+                CameraButton(
+                    onClick = {
+                        showCamera = true
+                    }
+                )
             }
         }
 

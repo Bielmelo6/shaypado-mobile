@@ -9,8 +9,6 @@ import com.ufape.shaypado.data.model.LoginRequest
 import com.ufape.shaypado.data.repositories.interfaces.IAuthRepository
 import com.ufape.shaypado.ui.domain.use_case.hasError
 import com.ufape.shaypado.ui.domain.use_case.validateEmail
-import com.ufape.shaypado.ui.domain.use_case.validatePassword
-import com.ufape.shaypado.ui.model.UserType
 import com.ufape.shaypado.util.ISafeNetworkHandler
 import com.ufape.shaypado.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,14 +82,6 @@ class AuthViewModel @Inject constructor(
 
         return hasError(
             emailValidation,
-        )
-    }
-
-    fun mockedLogin() {
-        _sessionExpired.value = false
-        _loggedInState.value = LoggedState(
-            token = "token",
-            userType = UserType.TRAINER,
         )
     }
 
