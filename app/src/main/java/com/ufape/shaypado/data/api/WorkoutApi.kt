@@ -43,12 +43,6 @@ interface WorkoutApi {
     @GET("/workout/workout-types")
     suspend fun fetchWorkoutCategories(): Response<List<CategoryResponse>>
 
-    @Multipart
-    @POST("/body-fat")
-    suspend fun uploadBodyFat(
-        @Part("height") height: RequestBody,
-        @Part("gender") gender: RequestBody,
-        @Query("image") image: MultipartBody.Part,
-    ): Response<Unit>
+
 
 }

@@ -1,5 +1,8 @@
 package com.ufape.shaypado.data.model
 
+import com.google.gson.annotations.SerializedName
+import com.ufape.shaypado.ui.model.BodyFatState
+
 data class BodyFatRequest(
     val height: String,
     val gender: String,
@@ -7,6 +10,13 @@ data class BodyFatRequest(
 )
 
 data class BodyFatResponse(
-    val id: String,
-    val height: String,
+    @SerializedName("body_fat")
+    val bodyFat: Int,
+    @SerializedName("category")
+    val category: String,
+)
+
+fun BodyFatResponse.toUiModel() = BodyFatState(
+    bodyFat = bodyFat,
+    category = category
 )
