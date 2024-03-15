@@ -11,7 +11,7 @@ data class BodyFatRequest(
 
 data class BodyFatResponse(
     @SerializedName("body_fat")
-    val bodyFat: Int,
+    val bodyFat: Float,
     @SerializedName("category")
     val category: String,
 )

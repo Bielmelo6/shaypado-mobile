@@ -42,10 +42,11 @@ import com.ufape.shaypado.ui.components.AppText
 import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.model.WorkoutState
+import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.ui.screens.shimmers.ErrorScreen
 import com.ufape.shaypado.ui.screens.shimmers.TrainerHomeShimmer
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
-import com.ufape.shaypado.ui.screens.trainer.userTraining.UserWorkoutViewModel
+import com.ufape.shaypado.ui.screens.user.userTraining.UserWorkoutViewModel
 import com.ufape.shaypado.ui.theme.PerfilShaypado2Icon
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
@@ -66,6 +67,38 @@ fun UserStartWorkoutScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchWorkout(workoutId)
     }
+
+    LaunchedEffect(key1 = viewModel.workoutConclude) {
+        viewModel.workoutConclude.collect {
+            if (it is Result.Error) {
+                showSnackbar(it.exception.getErrorMessage(context))
+            } else if (it is Result.Success) {
+                showSnackbar("Treino concluído com sucesso")
+                navController.popBackStack()
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.exerciseUndo) {
+        viewModel.exerciseUndo.collect {
+            if (it is Result.Error) {
+                showSnackbar(it.exception.getErrorMessage(context))
+            } else if (it is Result.Success) {
+                showSnackbar("Exercício desmarcado como concluído")
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.exerciseConclude) {
+        viewModel.exerciseConclude.collect {
+            if (it is Result.Error) {
+                showSnackbar(it.exception.getErrorMessage(context))
+            } else if (it is Result.Success) {
+                showSnackbar("Exercício concluído com sucesso")
+            }
+        }
+    }
+
 
     LaunchedEffect(key1 = viewModel.workoutData) {
         viewModel.workoutData.collect {
@@ -162,16 +195,33 @@ fun UserStartWorkoutScreen(
                     },
                     trailingIcon = {
                         IconButton(
-                            onClick = {}, modifier = Modifier
-                                .height(52.dp).width(52.dp)
+                            onClick = {
+                                if (workout.exercises[index].isEndExercise) {
+                                    viewModel.undoExercise(workout.exercises[index].id)
+                                } else {
+                                    viewModel.concludeExercise(workout.exercises[index].id)
+                                }
+                            },
+                            modifier = Modifier
+                                .height(52.dp)
+                                .width(52.dp)
                         ) {
                             Icon(
+                                tint = if (workout.exercises[index].isEndExercise) {
+                                    MaterialTheme.colorScheme.onSurface
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                },
                                 imageVector = Icons.Outlined.CheckCircle,
                                 contentDescription = "check",
                                 modifier = Modifier
-                                    .height(52.dp).width(52.dp)
+                                    .height(52.dp)
+                                    .width(52.dp)
                             )
                         }
+                    },
+                    onPress = {
+                        navController.navigate(MobileNavigationScreen.ExerciseDetails.route)
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -181,6 +231,11 @@ fun UserStartWorkoutScreen(
     }
 
     Spacer(modifier = Modifier.height(16.dp))
-    AppButton(onClick = {}, variant = ButtonVariant.PRIMARY, text = "Finalizar")
+    AppButton(
+        onClick = {
+            viewModel.concludeWorkout(workoutId)
+        },
+        text = "Finalizar"
+    )
 
 }

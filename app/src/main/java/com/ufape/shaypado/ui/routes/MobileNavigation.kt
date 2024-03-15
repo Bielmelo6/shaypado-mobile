@@ -42,9 +42,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
 import com.ufape.shaypado.ui.screens.trainer.userPersonalList.UserPersonalListScreen
 import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
+import com.ufape.shaypado.ui.screens.user.exerciseDetails.ExerciseDetailsScreen
 
 data class BottomBarItemStyle(
     @StringRes val title: Int,
@@ -52,7 +54,10 @@ data class BottomBarItemStyle(
     @DrawableRes val iconFocused: Int,
 )
 
-sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomBarItemStyle? = null)  {
+sealed class MobileNavigationScreen(
+    val route: String,
+    val barItemStyle: BottomBarItemStyle? = null
+) {
     data object NavRoot : MobileNavigationScreen(
         "mobile_root",
         BottomBarItemStyle(R.string.home, R.drawable.ic_nav_weight, R.drawable.ic_nav_weight)
@@ -80,7 +85,11 @@ sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomB
 
     data object Settings : MobileNavigationScreen(
         "settings",
-        BottomBarItemStyle(R.string.settings, R.drawable.ic_nav_settings, R.drawable.ic_nav_settings)
+        BottomBarItemStyle(
+            R.string.settings,
+            R.drawable.ic_nav_settings,
+            R.drawable.ic_nav_settings
+        )
     )
 
     data object SocialNetwork : TrainerNavigationScreen(
@@ -141,6 +150,10 @@ sealed class MobileNavigationScreen(val route: String, val barItemStyle: BottomB
             R.drawable.ic_notifications
         )
     )
+
+    data object ExerciseDetails : TrainerNavigationScreen(
+        "exercise_details"
+    )
 }
 
 @Composable
@@ -168,8 +181,7 @@ fun BottomBar(navController: NavHostController) {
             .fillMaxWidth()
             .padding(
                 horizontal = 8.dp,
-            )
-        ,
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -224,7 +236,7 @@ fun BottomTabItem(
                 Icon(
                     painter = painterResource(id = style.icon),
                     contentDescription = "icon",
-                    tint =  MaterialTheme.colorScheme.onSecondaryContainer
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }
@@ -283,13 +295,28 @@ fun MobileRoutes(
             Modifier.padding(innerPadding)
         ) {
             composable(MobileNavigationScreen.Home.route) {
-                Container (
+                Container(
                     snackBarMessage = snackbarMessage,
                     resetSnackBarMessage = ::resetSnackBarMessage
                 ) {
                     HomeUserLogadoScreen(
                         navController = navController,
                         showSnackbar = ::showSnackBar
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.Settings.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = ::resetSnackBarMessage
+                ) {
+                    SettingsScreen(
+                        navController = navController,
+                        onLogout = {
+                            logOutAction()
+                        },
+                        showSnackBar = ::showSnackBar
                     )
                 }
             }
@@ -311,11 +338,9 @@ fun MobileRoutes(
             }
 
             composable(MobileNavigationScreen.Pet.route) {
-                Container {
                     PetNvlScreen(
                         navController
                     )
-                }
             }
 
             composable(MobileNavigationScreen.Profile.route) {
@@ -334,9 +359,11 @@ fun MobileRoutes(
                 }
             }
 
-            composable(MobileNavigationScreen.UserWorkout.route) {backStackEntry ->
-
-                Container {
+            composable(MobileNavigationScreen.UserWorkout.route) { backStackEntry ->
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = ::resetSnackBarMessage
+                ) {
                     UserStartWorkoutScreen(
                         navController = navController,
                         showSnackbar = ::showSnackBar,
@@ -349,6 +376,16 @@ fun MobileRoutes(
                 Container {
                     UserFriendsScreen(
                         navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.ExerciseDetails.route) {
+                Container {
+                    ExerciseDetailsScreen(
+                        navController,
+                        showSnackBar = ::showSnackBar,
+                        exerciseId = "1"
                     )
                 }
             }

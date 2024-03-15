@@ -22,11 +22,9 @@ class IaRepository (
 
         val tempGender = if (request.gender == "M") "male" else "female"
 
-        val height = request.height.toRequestBody(MultipartBody.FORM)
-        val gender = tempGender.toRequestBody(MultipartBody.FORM)
         val result = api.fetchBodyFat(
-            height = height,
-            gender  = gender,
+            height = request.height.toInt(),
+            gender  = tempGender,
             image = imageRequestFile
         )
         return if (result.isSuccessful) {

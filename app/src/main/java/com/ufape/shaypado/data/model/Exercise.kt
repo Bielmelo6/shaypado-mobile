@@ -55,6 +55,8 @@ data class ExerciseResponse(
     val repetitions: String,
     @SerializedName("time")
     val time: String,
+    @SerializedName("end_exercise")
+    val endExercise: Boolean = false
 )
 
 fun ExerciseResponse.toUiModel(): ExerciseState {
@@ -66,5 +68,6 @@ fun ExerciseResponse.toUiModel(): ExerciseState {
         series = this.series,
         repetitions = this.repetitions,
         time = this.time,
+        isEndExercise = this.endExercise
     )
 }
