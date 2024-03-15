@@ -1,5 +1,6 @@
 package com.ufape.shaypado.data.api
 
+import com.ufape.shaypado.data.model.TrainerResponse
 import com.ufape.shaypado.data.model.WorkoutResponse
 import com.ufape.shaypado.util.Result
 import retrofit2.Response
@@ -29,7 +30,11 @@ interface UserApi {
     @POST("/workouts_user/exercise/undo/{id}")
     suspend fun undoExercise(@Query("id") id : String) : Response<Unit>
 
-    suspend fun fetchProfessionals()
+    @Headers("Content-Type: application/json")
+    @GET("/professionals")
+    suspend fun fetchProfessionals() : Response<List<TrainerResponse>>
 
-    suspend fun fetchProfessional()
+    @Headers("Content-Type: application/json")
+    @GET("/professionals/{id}")
+    suspend fun fetchProfessional(@Query("id") id : String) : Response<TrainerResponse>
 }

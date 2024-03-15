@@ -1,8 +1,11 @@
 package com.ufape.shaypado.data.repositories.implementations
 
 import com.ufape.shaypado.data.api.UserApi
+import com.ufape.shaypado.data.model.TrainerResponse
 import com.ufape.shaypado.data.model.toUiModel
 import com.ufape.shaypado.data.repositories.interfaces.IUserRepository
+import com.ufape.shaypado.ui.model.TrainerProfileData
+import com.ufape.shaypado.ui.model.TrainerState
 import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getApiError
@@ -59,10 +62,22 @@ class UserRepository (
         }
     }
 
-    override suspend fun fetchProfessionals() {
+    override suspend fun fetchProfessionals(): Result<List<TrainerProfileData>> {
+        val result = api.fetchProfessionals()
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.map { it.toUiModel() })
+        } else {
+            Result.Error(result.getApiError())
+        }
     }
 
-    override suspend fun fetchProfessional() {
+    override suspend fun fetchProfessional(id : String): Result<TrainerProfileData> {
+        val result = api.fetchProfessional(id)
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.toUiModel())
+        } else {
+            Result.Error(result.getApiError())
+        }
     }
 
 }
