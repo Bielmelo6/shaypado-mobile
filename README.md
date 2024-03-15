@@ -33,8 +33,9 @@ A era moderna trouxe consigo um estilo de vida sedentário, contribuindo para di
     <img src="images/traier_setting_screen.png" alt="Shaypado Logo" width="150">
 </div>
 
-## Repositórios do Shaypado
+## Repositórios do Shaypado e documentação
 
+Toda a documentação envolvendo TAP, Estudos de Viabilidade, Plano de Projeto, protótipos, etc. Pode ser consultada no seguinte endereço: [Documentação do Shaypado](https://github.com/Projeto-Des-SW/shaypado-backend/tree/main/documentacao) 
 1. [Shaypado-Mobile](https://github.com/Projeto-Des-SW/shaypado-mobile) - Este repositório
 2. [Shaypado-Web](https://github.com/Projeto-Des-SW/shaypado-web) - Cliente Web do Shaypado para uso do Personal
 3. [Shaypado-backend](https://github.com/Projeto-Des-SW/shaypado-backend) - Backend dos projetos
