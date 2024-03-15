@@ -102,13 +102,6 @@ fun PhysicalFormScreen(
                             )
                         )
                     },
-                    trailingIcon = {
-                        AppText(
-                            color = MaterialTheme.colorScheme.primary,
-                            text = R.string.input_percentage,
-                            textType = TextType.LABEL_LARGE
-                        )
-                    },
                     placeholder = R.string.input_fat_percentage_placeholder,
                     label = R.string.input_fat_percentage
                 )

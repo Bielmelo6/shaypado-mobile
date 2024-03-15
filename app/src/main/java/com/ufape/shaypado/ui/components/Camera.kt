@@ -150,7 +150,7 @@ fun Camera(
                     contentDescription = "Switch Camera"
                 )
             }
-            Text("Camera permission not granted")
+            Text("Permissão de câmera negada")
         }
     } else {
 
@@ -267,7 +267,7 @@ fun DialogWithImage(
                     modifier = Modifier.height(160.dp)
                 )
                 Text(
-                    text = "This is a dialog with buttons and an image.",
+                    text = "Deseja usar essa imagem?",
                     modifier = Modifier.padding(16.dp),
                 )
                 Row(
@@ -278,13 +278,13 @@ fun DialogWithImage(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Dismiss")
+                        Text("Cancelar")
                     }
                     TextButton(
                         onClick = { onConfirmation() },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Confirm")
+                        Text("Confirmar")
                     }
                 }
             }
