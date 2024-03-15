@@ -117,6 +117,13 @@ dependencies {
     //MLKit
     implementation 'com.google.mlkit:pose-detection:18.0.0-beta3'
     implementation 'com.google.mlkit:pose-detection-accurate:18.0.0-beta3'
+
+    //Exo player
+    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
+
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
+
+
 }
 
 // Allow references to generated code

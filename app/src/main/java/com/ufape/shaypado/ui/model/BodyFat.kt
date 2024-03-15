@@ -1,6 +1,6 @@
 package com.ufape.shaypado.ui.model
 
 data class BodyFatState (
-    val bodyFat: Int,
+    val bodyFat: Float,
     val category: String
 )

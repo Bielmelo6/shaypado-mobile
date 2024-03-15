@@ -12,4 +12,5 @@ interface IExerciseRepository {
     ): Result<ExerciseState>
 
     suspend fun updateExercise(updateExerciseRequest: UpdateExerciseRequest): Result<ExerciseState>
+    suspend fun fetchExercise(id: String): Result<ExerciseState>
 }

@@ -10,8 +10,8 @@ import com.ufape.shaypado.ui.model.ExerciseState
 import com.ufape.shaypado.util.getApiError
 import com.ufape.shaypado.util.Result
 
-class ExerciseRepository (
-    private val api : ExerciseApi
+class ExerciseRepository(
+    private val api: ExerciseApi
 ) : IExerciseRepository {
     override suspend fun addExercise(addExerciseRequest: CreateExerciseRequest): Result<ExerciseState> {
         val result = api.createExercise(addExerciseRequest)
@@ -24,6 +24,15 @@ class ExerciseRepository (
 
     override suspend fun updateExercise(updateExerciseRequest: UpdateExerciseRequest): Result<ExerciseState> {
         val result = api.updateExercise(updateExerciseRequest)
+        return if (result.isSuccessful) {
+            Result.Success(result.body()!!.toUiModel())
+        } else {
+            Result.Error(result.getApiError())
+        }
+    }
+
+    override suspend fun fetchExercise(id: String): Result<ExerciseState> {
+        val result = api.fetchExercise(id)
         return if (result.isSuccessful) {
             Result.Success(result.body()!!.toUiModel())
         } else {

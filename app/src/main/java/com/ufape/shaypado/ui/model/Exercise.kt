@@ -21,6 +21,7 @@ data class ExerciseState(
     val category: String = "",
     val categoryId: String = "",
     @StringRes val categoryIdError: Int? = null,
+    val isEndExercise: Boolean = false
 )
 
 fun ExerciseState.toRequest() = CreateExerciseRequest(
