@@ -22,14 +22,16 @@ A era moderna trouxe consigo um estilo de vida sedentário, contribuindo para di
 
 ## Capturas de Telas
 
-<img src="images/login_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/trainer_home_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/user_home_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/pet_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/exercise_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/trainer_edit_class_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/friends_screen.png" alt="Shaypado Logo" width="150">
-<img src="images/traier_setting_screen.png" alt="Shaypado Logo" width="150">
+<div style="display: flex; flex-wrap: wrap;">
+    <img src="images/login_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/trainer_home_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/user_home_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/pet_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/exercise_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/trainer_edit_class_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/friends_screen.png" alt="Shaypado Logo" width="150">
+    <img src="images/traier_setting_screen.png" alt="Shaypado Logo" width="150">
+</div>
 
 ## Repositórios do Shaypado
 
