@@ -66,7 +66,7 @@
     <string name="sign_up_label">Cadastre-se aqui!</string>
     <string name="sign_up_no_account">Ainda não possui conta?</string>
     <string name="sign_up_saved_workout">Treinos pré-prontos</string>
-    <string name="sign_up_yourself">Eu mesmo</string>
+    <string name="sign_up_yourself">Eu mesmo!</string>
     <string name="sign_up_find_professional">Com um profissional</string>
     <string name="sign_up_find_professional_usertype">Sou um profissional</string>
     <string name="sign_up_find_normal_usertype">Sou um usuario!</string>
@@ -247,5 +247,7 @@
     <string name="workout_sheet">Ficha de treino</string>
     <string name="try_again_message">Ops! Parece que houve algum erro ao obter\nesses dados.</string>
     <string name="try_again">Tentar novamente</string>
+    <string name="select_training_type">Como deseja montar o seu treino</string>
+    <string name="personal_title">Selecione o profissional de sua escolha!</string>
 
 </resources>

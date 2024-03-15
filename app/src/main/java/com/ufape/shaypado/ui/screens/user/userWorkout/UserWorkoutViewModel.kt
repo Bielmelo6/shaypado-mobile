@@ -1,4 +1,4 @@
-package com.ufape.shaypado.ui.screens.user.userTraining
+package com.ufape.shaypado.ui.screens.user.userWorkout
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

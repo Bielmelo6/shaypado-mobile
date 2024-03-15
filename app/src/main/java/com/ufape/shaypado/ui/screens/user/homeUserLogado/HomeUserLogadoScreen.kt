@@ -107,8 +107,11 @@ fun HomeUserLogadoScreen(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.fillMaxWidth()
         ) {
-            EditButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {})
-            AddButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {})
+            EditButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {
+            })
+            AddButton(variant = ButtonVariant.SECONDARY_CONTAINER, onClick = {
+                navController.navigate(MobileNavigationScreen.ChooseWorkoutType.route)
+            })
         }
 
         Spacer(modifier = Modifier.height(12.dp))

@@ -1,5 +1,8 @@
 package com.ufape.shaypado.data.repositories.interfaces
 
+import com.ufape.shaypado.data.model.TrainerResponse
+import com.ufape.shaypado.ui.model.TrainerProfileData
+import com.ufape.shaypado.ui.model.TrainerState
 import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.util.Result
 
@@ -16,7 +19,6 @@ interface IUserRepository {
 
     suspend fun undoExercise(id : String) : Result<Unit>
 
-
-    suspend fun fetchProfessionals()
-    suspend fun fetchProfessional()
+    suspend fun fetchProfessionals() : Result<List<TrainerProfileData>>
+    suspend fun fetchProfessional(id : String) : Result<TrainerProfileData>
 }

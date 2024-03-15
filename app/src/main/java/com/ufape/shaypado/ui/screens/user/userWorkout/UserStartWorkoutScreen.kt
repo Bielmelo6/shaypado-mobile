@@ -1,7 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,14 +38,13 @@ import androidx.navigation.NavController
 import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppText
-import com.ufape.shaypado.ui.components.ButtonVariant
 import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.model.WorkoutState
 import com.ufape.shaypado.ui.routes.MobileNavigationScreen
 import com.ufape.shaypado.ui.screens.shimmers.ErrorScreen
 import com.ufape.shaypado.ui.screens.shimmers.TrainerHomeShimmer
 import com.ufape.shaypado.ui.screens.trainer.home.UserDetailsRenderItem
-import com.ufape.shaypado.ui.screens.user.userTraining.UserWorkoutViewModel
+import com.ufape.shaypado.ui.screens.user.userWorkout.UserWorkoutViewModel
 import com.ufape.shaypado.ui.theme.PerfilShaypado2Icon
 import com.ufape.shaypado.util.Result
 import com.ufape.shaypado.util.getErrorMessage
@@ -221,7 +219,7 @@ fun UserStartWorkoutScreen(
                         }
                     },
                     onPress = {
-                        navController.navigate(MobileNavigationScreen.ExerciseDetails.route)
+                        navController.navigate(MobileNavigationScreen.ExerciseDetails.shortName + "/${workout.exercises[index].id}")
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

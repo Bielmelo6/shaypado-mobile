@@ -42,10 +42,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ufape.shaypado.R
+import com.ufape.shaypado.ui.screens.trainer.createTrainings.CreateTrainingsScreen
 import com.ufape.shaypado.ui.screens.trainer.settings.SettingsScreen
 import com.ufape.shaypado.ui.screens.trainer.userFriends.UserFriendsScreen
-import com.ufape.shaypado.ui.screens.trainer.userPersonalList.UserPersonalListScreen
+import com.ufape.shaypado.ui.screens.user.personalList.UserPersonalListScreen
 import com.ufape.shaypado.ui.screens.trainer.userProfile.UserProfileScreen
+import com.ufape.shaypado.ui.screens.user.createWorkoutSelector.CreateWorkoutTypeSelectorScreen
 import com.ufape.shaypado.ui.screens.user.exerciseDetails.ExerciseDetailsScreen
 
 data class BottomBarItemStyle(
@@ -56,7 +58,8 @@ data class BottomBarItemStyle(
 
 sealed class MobileNavigationScreen(
     val route: String,
-    val barItemStyle: BottomBarItemStyle? = null
+    val barItemStyle: BottomBarItemStyle? = null,
+    val shortName: String = "",
 ) {
     data object NavRoot : MobileNavigationScreen(
         "mobile_root",
@@ -152,7 +155,21 @@ sealed class MobileNavigationScreen(
     )
 
     data object ExerciseDetails : TrainerNavigationScreen(
-        "exercise_details"
+        "exercise_details/{exerciseId}",
+        shortName = "exercise_details",
+    )
+
+    data object ChooseWorkoutType : MobileNavigationScreen(
+        "choose_workout_type"
+    )
+
+    data object CreateWorkouts : MobileNavigationScreen(
+        "create_workouts"
+    )
+
+    data object PersonalProfile : MobileNavigationScreen(
+        "personal_profile/{personalId}",
+        shortName = "personal_profile"
     )
 }
 
@@ -343,10 +360,11 @@ fun MobileRoutes(
                     )
             }
 
-            composable(MobileNavigationScreen.Profile.route) {
+            composable(MobileNavigationScreen.PersonalProfile.route) { backStackEntry ->
                 Container {
                     UserDetailsPersonalScreen(
-                        navController
+                        navController,
+                        personalId = backStackEntry.arguments?.getString("personalId")!!
                     )
                 }
             }
@@ -380,12 +398,32 @@ fun MobileRoutes(
                 }
             }
 
-            composable(MobileNavigationScreen.ExerciseDetails.route) {
+            composable(MobileNavigationScreen.ExerciseDetails.route) {backStackEntry ->
                 Container {
                     ExerciseDetailsScreen(
                         navController,
                         showSnackBar = ::showSnackBar,
-                        exerciseId = "1"
+                        exerciseId = backStackEntry.arguments?.getString("exerciseId")!!
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.ChooseWorkoutType.route) {
+                Container {
+                    CreateWorkoutTypeSelectorScreen(
+                        navController
+                    )
+                }
+            }
+
+            composable(MobileNavigationScreen.CreateWorkouts.route) {
+                Container(
+                    snackBarMessage = snackbarMessage,
+                    resetSnackBarMessage = { resetSnackBarMessage() }
+                ) {
+                    CreateTrainingsScreen(
+                        navController = navController,
+                        showSnackBar = ::showSnackBar
                     )
                 }
             }
