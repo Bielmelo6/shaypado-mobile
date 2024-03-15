@@ -71,7 +71,7 @@ fun WorkoutsScreen(
     LaunchedEffect(key1 = workoutViewModel.removeWorkoutEvent) {
         workoutViewModel.removeWorkoutEvent.collect {
             if (it is Result.Success) {
-                showSnackBar("Workout deleted successfully")
+                showSnackBar("Treino deletado com sucesso!")
                 showDeleteDialog = false
             }else if (it is Result.Error) {
                 showSnackBar(it.exception.getErrorMessage(context))
@@ -179,10 +179,7 @@ fun WorkoutsScreen(
                                 textType = TextType.TITLE_MEDIUM
                             )
                             Row {
-                                AppText(
-                                    text = workouts[index].name,
-                                    textType = TextType.TITLE_MEDIUM
-                                )
+
                                 AppText(
                                     text = workouts[index].category,
                                     textType = TextType.LABEL_SMALL
