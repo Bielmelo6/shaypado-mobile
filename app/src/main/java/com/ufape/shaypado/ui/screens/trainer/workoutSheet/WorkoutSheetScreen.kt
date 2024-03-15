@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,9 +28,13 @@ import com.ufape.shaypado.R
 import com.ufape.shaypado.ui.components.AppButton
 import com.ufape.shaypado.ui.components.AppDropdown
 import com.ufape.shaypado.ui.components.AppHeader
+import com.ufape.shaypado.ui.components.AppText
+import com.ufape.shaypado.ui.components.Camera
+import com.ufape.shaypado.ui.components.CameraButton
 import com.ufape.shaypado.ui.components.CustomTextField
 import com.ufape.shaypado.ui.components.DropdownItem
 import com.ufape.shaypado.ui.components.GroupedLabeledCheckbox
+import com.ufape.shaypado.ui.components.TextType
 import com.ufape.shaypado.ui.screens.signUp.UserPhysicalEvaluationFormEvent
 import com.ufape.shaypado.ui.screens.trainer.createUser.AgesLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.CmLabel
@@ -35,6 +43,7 @@ import com.ufape.shaypado.ui.screens.trainer.createUser.MmLabel
 import com.ufape.shaypado.ui.screens.trainer.createUser.PercentageLabel
 import com.ufape.shaypado.ui.screens.trainer.studentDetails.StudentDetailsViewModel
 import com.ufape.shaypado.util.Result
+import com.ufape.shaypado.util.compressImage
 import com.ufape.shaypado.util.getErrorMessage
 
 @Composable
@@ -45,6 +54,9 @@ fun WorkoutSheetScreen(
 ) {
     val viewModel = hiltViewModel<StudentDetailsViewModel>()
     val context = LocalContext.current
+
+    var showCamera by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         viewModel.fetchStudent(studentId)
@@ -57,6 +69,21 @@ fun WorkoutSheetScreen(
             }
         }
     }
+
+    if (showCamera) {
+        return Camera(
+            onBackButton = {
+                showCamera = false
+            },
+            onPicture = {
+                val file = it.compressImage(context)
+                viewModel.fetchBodyFat(file!!.absolutePath)
+                showCamera = false
+            },
+            context = context
+        )
+    }
+
 
     AppHeader(navController = navController, title = R.string.workout_sheet)
 
@@ -74,6 +101,39 @@ fun WorkoutSheetScreen(
             label = R.string.input_user_name,
             value = viewModel.physicalFormState.name,
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
+        )
+        {
+            Row (
+                modifier = Modifier.weight(1f)
+            ) {
+                CustomTextField(
+                    value = viewModel.physicalFormState.fatPercentage,
+                    errorMessage = viewModel.physicalFormState.fatPercentageError,
+                    keyboardType = KeyboardType.Number,
+                    onValueChange = {
+                        viewModel.onUserDataEvent(
+                            UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(it)
+                        )
+                    },
+                    placeholder = R.string.input_fat_percentage_placeholder,
+                    label = R.string.input_fat_percentage
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Row{
+                CameraButton(
+                    onClick = {
+                        showCamera = true
+                    }
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -429,22 +489,6 @@ fun WorkoutSheetScreen(
             },
             placeholder = R.string.input_health_issue_placeholder,
             label = R.string.input_health_issue
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CustomTextField(
-            value = viewModel.physicalFormState.fatPercentage,
-            errorMessage = viewModel.physicalFormState.fatPercentageError,
-            keyboardType = KeyboardType.Number,
-            onValueChange = {
-                viewModel.onUserDataEvent(
-                    UserPhysicalEvaluationFormEvent.OnFatPercentageChanged(it)
-                )
-            },
-            trailingIcon = { PercentageLabel() },
-            placeholder = R.string.input_fat_percentage_placeholder,
-            label = R.string.input_fat_percentage
         )
 
         Spacer(modifier = Modifier.height(16.dp))

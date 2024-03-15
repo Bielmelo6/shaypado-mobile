@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ufape.shaypado.data.model.BodyFatRequest
+import com.ufape.shaypado.data.repositories.interfaces.IIaRepository
 import com.ufape.shaypado.data.repositories.interfaces.ITrainerRepository
 import com.ufape.shaypado.ui.model.PhysicalFormState
 import com.ufape.shaypado.ui.model.UserWithWorkoutState
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class StudentDetailsViewModel @Inject constructor(
     private val trainerRepository: ITrainerRepository,
-    private val handler: ISafeNetworkHandler
+    private val handler: ISafeNetworkHandler,
+    private val apiRepository: IIaRepository
 ) : ViewModel() {
 
     private val _studentData = Channel<Result<UserWithWorkoutState>>()
@@ -42,6 +45,24 @@ class StudentDetailsViewModel @Inject constructor(
                 physicalFormState = result.data.getPhysicalData()
             } else if (result is Result.Error) {
                 _studentData.send(Result.Error(result.exception))
+            }
+        }
+    }
+
+    fun fetchBodyFat(imagePath: String) {
+        viewModelScope.launch {
+            val result = handler.makeSafeApiCall {
+                apiRepository.fetchBodyFat(
+                    BodyFatRequest(
+                        image = imagePath,
+                        height = physicalFormState.height,
+                        gender = physicalFormState.gender
+                    )
+                )
+            }
+
+            if (result is Result.Success) {
+                physicalFormState = physicalFormState.copy(fatPercentage = result.data.category)
             }
         }
     }

@@ -285,7 +285,8 @@ fun TrainingDetailsRenderItem(
                 enabled = !leadingButtonDisabled,
                 onClick = onLeadingButtonPressed,
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer
                 )
             ) {
                 Icon(
@@ -300,8 +301,8 @@ fun TrainingDetailsRenderItem(
                 enabled = !trailingButtonDisabled,
                 onClick = onTrailingButtonPressed,
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                )
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer                )
             ) {
                 Icon(
                     imageVector = Icons.Default.ChevronRight,

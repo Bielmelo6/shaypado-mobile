@@ -1,5 +1,6 @@
 package com.ufape.shaypado.data.repositories.implementations
 
+import android.util.Log
 import com.ufape.shaypado.data.api.WorkoutApi
 import com.ufape.shaypado.data.model.CreateWorkoutRequest
 import com.ufape.shaypado.data.model.UpdateWorkoutRequest

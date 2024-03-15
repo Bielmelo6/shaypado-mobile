@@ -227,7 +227,7 @@ fun EditClassScreen(
                 }
             ) {
                 LazyColumn(
-                    modifier = Modifier.height(800.dp),
+                    modifier = Modifier.height(200.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(editClassViewModel.classInfo.workouts.size) {
@@ -263,7 +263,7 @@ fun EditClassScreen(
                 }
             ) {
                 LazyColumn(
-                    modifier = Modifier.height(800.dp),
+                    modifier = Modifier.height(200.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(editClassViewModel.classInfo.students.size) {
